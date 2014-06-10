@@ -22,8 +22,16 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 	}
 	
 	/**
+	 * Truncates tweet items.
+	 */
+	protected function _truncateTweetArrays( & $aTweets, $iCount ) {
+		if ( is_numeric( $iCount ) ) {
+			array_splice( $aTweets, ( int ) $iCount );
+		}
+	}
+	
+	/**
 	 * Sorts tweet array elements.
-	 * 
 	 */
 	protected function _sortTweetArrays( & $aTweets, $sOrderedBy='descending' ) {
 		switch( strtolower( $sOrderedBy ) ) {
@@ -59,13 +67,13 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 	 * @since			2.3.1			
 	 */
 	protected function _formatTweetArrays( & $aTweets, $aArgs ) {
-				
+
 		// To prevent duplicates.
 		$_aTweetIDs = array();
 		
 		foreach( $aTweets as $__iIndex => &$_aTweet ) {
 			
-			if ( ! is_array( $_aTweet ) ) {
+			if ( ! is_array( $_aTweet ) || ! isset( $_aTweet['id_str'] ) ) {
 				continue;
 			}
 			
@@ -93,9 +101,7 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 		$this->_sortTweetArrays( $aTweets, $aArgs['sort'] ); 
 
 		// Truncate the array.
-		if ( $aArgs['count'] && is_numeric( $aArgs['count'] ) ) {
-			array_splice( $aTweets, $aArgs['count'] );
-		}
+		$this->_truncateTweetArrays( $aTweets, $aArgs['count'] );
 		
 		// Take care of embedded media - do this after truncating the array as this is slow.
 		foreach ( $aTweets as &$__aTweet ) {
@@ -104,7 +110,7 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 		
 	}
 		/**
-		 * Replaces the media links to an embedded element.
+		 * Replaces the media links with the embedded element.
 		 * 
 		 * This is supposed to be called from the front-end. So if the external embedded media element does not exist in the response array, do nothing. 
 		 * The background caching system will take care of it.
@@ -112,6 +118,10 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 		 * @since			2.3.1
 		 */
 		protected function _replceEmbeddedMedia( & $aTweet, $fTwitterMedia, $fExternalMedia ) {
+			
+			if ( ! isset( $aTweet['text'] ) ) { 
+				return; 
+			}
 			
 			// Insert external media files at the bottom of the tweet.
 			if ( $fExternalMedia ) {
@@ -133,42 +143,41 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 		 * 
 		 * @remark			The profile image size won't be passed unless the call is made from a widget or shortcode with direct argument.
 		 * In other words, for preview pages, the profile image url needs to be taken cared of separately.
+		 * @remark			It's possible that a response array of a custom query can be passed. This means that it might not be an array of tweets.
 		 */
-		protected function formatTweetArray( $arrTweet, $intProfileImageSize=48 ) {
+		protected function formatTweetArray( $aTweet, $iProfileImageSize=48 ) {
 			
-			// Avoid undefined index warnings.
-			$arrTweet = $arrTweet + array( 
-				'text' => null,
-				'created_at' => null,
-				'entities' => null,
-				'user' => null,
-			);	
-			$arrTweet['entities'] = $arrTweet['entities'] + array(
-				'hashtags' => null,
-				'symbols' => null,
-				'urls' => null,
-				'user_mentions' => null,
-				'media'	=> null,
-			);
-			$arrTweet['user'] = $arrTweet['user'] + array(
-				'profile_image_url' => null, 		
-				'profile_image_url_https' => null,
-			);
-					
 			// Make the urls in the text hyper-links.
-			$arrTweet['text'] = $this->makeClickableLinks( $arrTweet['text'], $arrTweet['entities']['urls'] );
-			$arrTweet['text'] = $this->makeClickableMedia( $arrTweet['text'], $arrTweet['entities']['media'] );	
-			$arrTweet['text'] = $this->makeClickableHashTags( $arrTweet['text'], $arrTweet['entities']['hashtags'] );	
-			$arrTweet['text'] = $this->makeClickableUsers( $arrTweet['text'], $arrTweet['entities']['user_mentions'] );
+			if ( isset( $aTweet['text'], $aTweet['entities'] ) ) {	
+				$aTweet['entities'] = $aTweet['entities'] + array(
+					'hashtags' => null,
+					'symbols' => null,
+					'urls' => null,
+					'user_mentions' => null,
+					'media'	=> null,
+				);
+				$aTweet['text'] = $this->makeClickableLinks( $aTweet['text'], $aTweet['entities']['urls'] );
+				$aTweet['text'] = $this->makeClickableMedia( $aTweet['text'], $aTweet['entities']['media'] );	
+				$aTweet['text'] = $this->makeClickableHashTags( $aTweet['text'], $aTweet['entities']['hashtags'] );	
+				$aTweet['text'] = $this->makeClickableUsers( $aTweet['text'], $aTweet['entities']['user_mentions'] );
+			}
 									
 			// Adjust the profile image size.
-			$arrTweet['user']['profile_image_url'] = $this->adjustProfileImageSize( $arrTweet['user']['profile_image_url'], $intProfileImageSize );
-			$arrTweet['user']['profile_image_url_https'] = $this->adjustProfileImageSize( $arrTweet['user']['profile_image_url_https'], $intProfileImageSize );
+			if ( isset( $aTweet['user'] ) ) {
+				$aTweet['user'] = $aTweet['user'] + array(
+					'profile_image_url' => null, 		
+					'profile_image_url_https' => null,
+				);				
+				$aTweet['user']['profile_image_url'] = $this->adjustProfileImageSize( $aTweet['user']['profile_image_url'], $iProfileImageSize );
+				$aTweet['user']['profile_image_url_https'] = $this->adjustProfileImageSize( $aTweet['user']['profile_image_url_https'], $iProfileImageSize );
+			}
 
 			// Convert the 'created_at' value to be numeric time.
-			$arrTweet['created_at'] = strtotime( $arrTweet['created_at'] );		
-			
-			return $arrTweet;
+			if ( isset( $aTweet['created_at'] ) ) {
+				$aTweet['created_at'] = strtotime( $aTweet['created_at'] );		
+			}
+
+			return $aTweet;
 			
 		}
 		
@@ -263,13 +272,23 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 		return $strText;
 		
 	}
+	
+	/**
+	 * @deprecated
+	 * @remark	since current format contains the entities element, this method is not used. However, at later some point, this may be used for other occasions.
+	 */
 	protected function makeClickableLinksByRegex( $strText ) {	
-		// since current format contains the entities element, this method is not used. However, at later some point, this may be used for other occasions.
 		return preg_replace( '@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@' , '<a href="$1" target="_blank">$1</a>', $strText );
 	}	
+	/**
+	 * @deprecated
+	 */	
 	protected function makeClickableUsersByRegex( $strText ) {
 		return preg_replace( '/@(\w+?)(\W|$)/', '<a href="https://twitter.com/$1" target="_blank">@$1</a>$2', $strText );
 	}
+	/**
+	 * @deprecated
+	 */	
 	protected function makeClickableHashTagByRegex( $strText ) {
 		// e.g. https://twitter.com/search?q=%23PHP&src=hash
 		return preg_replace( '/#(\w+?)(\W|$)/', '<a href="https://twitter.com/search?q=%23$1&src=hash" target="_blank">#$1</a>$2', $strText );

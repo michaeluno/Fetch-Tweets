@@ -54,9 +54,9 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 	 *	height_unit - 
 	 *	avatar_size - default: 48 
 	 * 
-	 * */	
+	 */	
 	public function drawTweets( $aArgs ) {
-		
+
 		$aRawArgs = ( array ) $aArgs; 
 		$aArgs = FetchTweets_Utilities::uniteArrays( $aRawArgs, $this->oOption->aOptions['default_values'], $this->oOption->aStructure_DefaultParams, $this->oOption->aStructure_DefaultTemplateOptions );
 		$aArgs['id'] = isset( $aArgs['ids'] ) && ! empty( $aArgs['ids'] ) ? $aArgs['ids'] : $aArgs['id'];	// backward compatibility
@@ -69,10 +69,6 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 		// return;		
 
 		$_aTweets = $this->getTweetsAsArray( $aArgs, $aRawArgs );
-		if ( isset( $_aTweets['_debug'] ) && $_aTweets['_debug'] ) {
-			$this->_includeTemplate( $_aTweets, $aArgs, $this->oOption->aOptions );
-			return;			
-		}
 		if ( empty( $_aTweets ) || ! is_array( $_aTweets ) ) {
 			_e( 'No result could be fetched.', 'fetch-tweets' );
 			return;
@@ -82,6 +78,7 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 			return;
 		}
 		else if ( isset( $_aTweets['error'], $_aTweets['request'] ) && $_aTweets['error'] && is_string( $_aTweets['error'] ) ) {
+
 			echo '<strong>Fetch Tweets</strong>: ' . $_aTweets['error'];	
 			return;
 		}
@@ -89,7 +86,7 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 		// Format the tweet response array.
 		$this->_formatTweetArrays( $_aTweets, $aArgs ); // the array is passed as reference.
 	
-		/* Include the template to render the output - this method is also called from filter callbacks( which requires a return value ) but go ahead and render the output. */		
+		// Include the template to render the output - this method is also called from filter callbacks( which requires a return value ) but go ahead and render the output. 
 		$this->_includeTemplate( $_aTweets, $aArgs, $this->oOption->aOptions );
  		
 	}
@@ -127,7 +124,6 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 		protected function _getTweetsAsArrayByPostIDs( $vPostIDs, & $aArgs, $aRawArgs ) {	
 		
 			$_aTweets = array();
-			$_fDebug = false;
 			foreach( ( array ) $vPostIDs as $_iPostID ) {
 				
 				$aArgs['tweet_type'] = get_post_meta( $_iPostID, 'tweet_type', true );
@@ -181,7 +177,6 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 						$aArgs['response_key'] = get_post_meta( $_iPostID, 'response_key', true );
 						$aArgs = FetchTweets_Utilities::uniteArrays( $aRawArgs, $aArgs ); // The direct input takes its precedence.
 						$_aRetrievedTweets = $this->_getResponseWithCustomRequest( $aArgs['custom_query'], $aArgs['response_key'], $aArgs['cache'] );
-						$_fDebug = true;
 						break;
 					case 'tweet_id':
 						$aArgs['tweet_id'] = get_post_meta( $_iPostID, 'tweet_id', true );
@@ -200,11 +195,7 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 				$_aTweets = array_merge( $_aRetrievedTweets, $_aTweets );
 					
 			}
-			
-			if ( $_fDebug ) {
-				$_aTweets['_debug'] = true;
-			}
-			
+
 			return $_aTweets;
 			
 		}

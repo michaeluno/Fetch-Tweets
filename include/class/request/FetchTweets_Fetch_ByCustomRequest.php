@@ -23,8 +23,14 @@ abstract class FetchTweets_Fetch_ByCustomRequest extends FetchTweets_Fetch_ByFee
 		}
 		
 		$_aResponse = $this->doAPIRequest_Get( $sRequestURI, $sResponseKey, $iCacheDuration );
-		return $_aResponse;
 		
+// Mark each response element as the custom_query request type so that the formatting method will ignore this type of elements.
+// foreach( $_aResponse as &$__aItem ) {
+	// if ( ! is_array( $__aItem ) ) continue;
+	// $__aItem['_request_type'] = 'custom_query';
+// }
+		
+		return $_aResponse;
 		
 	}
 	

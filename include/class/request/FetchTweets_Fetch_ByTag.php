@@ -9,20 +9,31 @@
  */
 abstract class FetchTweets_Fetch_ByTag extends FetchTweets_Fetch_Template {
 	
-	public function getTweetsOutputByTag( $arrArgs ) {
+	/**
+	 * Returns the output of tweets with the tag taxonomy associated with the rules.
+	 * 
+	 * @remark	This is called when the argument array contains the 'tag' or 'tags' key.
+	 * @return	string	The rendering output.
+	 */
+	public function getTweetsOutputByTag( $aArgs ) {
 		
-		// Called from the shortcode callback.
 		// Capture the output buffer
 		ob_start(); // start buffer
-		$this->drawTweetsByTag( $arrArgs );
-		$strContent = ob_get_contents(); // assign the content buffer to a variable
+		$this->drawTweetsByTag( $aArgs );
+		$_sContent = ob_get_contents(); // assign the content buffer to a variable
 		ob_end_clean(); // end buffer and remove the buffer		
-		return $strContent;
+		return $_sContent;
 		
 	}	
+	
+	/**
+	 * Renders the tweets with the passed arguments.
+	 * 
+	 * @remark	Called from either the above getTweetsOutputByTag() method for the shortcode callbeck or fetchTweets() function.	
+	 * @return	void
+	 */
 	public function drawTweetsByTag( $arrArgs ) {
 
-		// Called from either the above getTweetsOutputByTag() method for the shortcode callbeck or fetchTweets() function.
 		$arrArgs['tag'] = isset( $arrArgs['tags'] ) && ! empty( $arrArgs['tags'] ) 
 			? $arrArgs['tags'] 
 			: ( isset( $arrArgs['tag'] ) 
@@ -56,8 +67,9 @@ abstract class FetchTweets_Fetch_ByTag extends FetchTweets_Fetch_Template {
 	 */
 	public function getPostIDsByTag( $arrTermSlugs, $strFieldType='slug', $strOperator='AND' ) {	
 
-		if ( empty( $arrTermSlugs ) )
+		if ( empty( $arrTermSlugs ) ) {
 			return array();
+		}
 			
 		$strFieldType = $this->sanitizeFieldKey( $strFieldType );
 

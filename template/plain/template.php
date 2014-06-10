@@ -91,7 +91,7 @@ $sGMTOffset = ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 $fIsSSL = is_ssl();
 
 /*
- * For debug - uncomment the following line to see the contents of the arrays.
+ * For debugging - uncomment the following lines to see the contents of the arrays.
  */ 
 // echo "<pre>" . htmlspecialchars( print_r( $aTweets, true ) ) . "</pre>";	 
 // echo "<pre>" . htmlspecialchars( print_r( $aArgs, true ) ) . "</pre>";	 
