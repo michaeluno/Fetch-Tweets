@@ -12,40 +12,41 @@
  * 
 */
 
-final class FetchTweets_Commons {
+final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	
-	public static $sPluginPath = '';
-	public static $sPluginKey = 'fetch_tweets';
-	public static $sAdminKey = 'fetch_tweets_admin';
-	public static $sOptionKey = 'fetch_tweets_option';
+	public static $sPluginPath          = '';
+	public static $sPluginKey           = 'fetch_tweets';
+	public static $sAdminKey            = 'fetch_tweets_admin';
+	public static $sOptionKey           = 'fetch_tweets_option';
 	
 	// The below properties will be assigned automatically
-	public static $sPluginDirPath = '';
-	public static $sPluginName = '';
-	public static $sPluginURI = '';
-	public static $sPluginVersion = '';
-	public static $sPluginDescription = '';
-	public static $sPluginAuthor = '';
-	public static $sPluginAuthorURI = '';
-	public static $sPluginTextDomain = '';
-	public static $sPluginDomainPath = '';
-	public static $sPluginNetwork = '';
-	public static $sPluginSiteWide = '';
-	public static $sPluginStoreURI = '';
+	public static $sPluginDirPath       = '';
+	public static $sPluginName          = '';
+	public static $sPluginURI           = '';
+	public static $sPluginVersion       = '';
+	public static $sPluginDescription   = '';
+	public static $sPluginAuthor        = '';
+	public static $sPluginAuthorURI     = '';
+	public static $sPluginTextDomain    = '';
+	public static $sPluginDomainPath    = '';
+	public static $sPluginNetwork       = '';
+	public static $sPluginSiteWide      = '';
+	public static $sPluginStoreURI      = '';
 	
-	const TextDomain = 'fetch-tweets';
-	const PluginName = 'Fetch Tweets';
-	const PostTypeSlug = 'fetch_tweets';
-	const PostTypeSlugAccounts = 'fetchtweets_accounts';		// post type slugs cannot exceed 20 characters. 
-	const TagSlug = 'fetch_tweets_tag';
-	const AdminOptionKey = 'fetch_tweets_admin';
-	const PageSettingsSlug = 'fetch_tweets_settings';
-	const TransientPrefix = 'FTWS';
-	const ConsumerKey = '97LqHiMs06VhV2rf5tUQw';
-	const ConsumerSecret = 'FIH9cr0eXtd7q9caYVqBjd5mvfUS6hZqREYsUhh9wA';
+	const TextDomain                    = 'fetch-tweets';
+	const PluginName                    = 'Fetch Tweets';
+	const PostTypeSlug                  = 'fetch_tweets';
+	const PostTypeSlugAccounts          = 'fetchtweets_accounts';		// post type slugs cannot exceed 20 characters. 
+	const TagSlug                       = 'fetch_tweets_tag';
+	const AdminOptionKey                = 'fetch_tweets_admin';
+	const PageSettingsSlug              = 'fetch_tweets_settings';
+	const TransientPrefix               = 'FTWS';
+	const ConsumerKey                   = '97LqHiMs06VhV2rf5tUQw';
+	const ConsumerSecret                = 'FIH9cr0eXtd7q9caYVqBjd5mvfUS6hZqREYsUhh9wA';
 	
 	static public function setUp( $sPluginFilePath ) {
 		self::$sPluginPath = $sPluginFilePath;
+// @todo: retrieve the data from the constants of the base class, not by reading the plugin file.
 		self::_setUpStaticProperties( $sPluginFilePath );
 	}
 		static function _setUpStaticProperties( $sPluginFilePath ) {
@@ -68,7 +69,7 @@ final class FetchTweets_Commons {
 					'sPluginSiteWide' => 'Site Wide Only',	// Site Wide Only is deprecated in favor of Network.
 					'sPluginStoreURI' => 'Store URI',
 				),
-				'plugin' 
+				''  // context
 			);
 			
 			foreach( $_aPluginData as $_sKey => $_sValue ) {
