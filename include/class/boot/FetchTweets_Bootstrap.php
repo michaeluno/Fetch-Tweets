@@ -231,10 +231,10 @@ final class FetchTweets_Bootstrap {
             if ( 'edit.php' !== $GLOBALS['pagenow'] ) {
                 return false;                
             }
-            if ( ! isset( $GLOBALS['post_type'] ) ) {
+            if ( ! isset( $_GET['post_type'] ) ) {
                 return false;
             }
-            $_bIsPluginAdminPage = ( FetchTweets_Commons::PostTypeSlug === $GLOBALS['post_type'] );
+            $_bIsPluginAdminPage = ( FetchTweets_Commons::PostTypeSlug === $_GET['post_type'] );
             return $_bIsPluginAdminPage;
                 
         }

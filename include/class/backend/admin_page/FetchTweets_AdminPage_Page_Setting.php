@@ -1,10 +1,70 @@
 <?php
-abstract class FetchTweets_AdminPage_Connect extends FetchTweets_AdminPage_Template {
+/**
+ * Defines the Setting page.
+ * 
+ * @action	fetch_tweets_action_updated_credentials - triggered when the main credentials are updated.
+ */
+abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_Page_Template {
 			
 	/*
-	 * Authentication In-Page Tabs
+	 * Settings Page
 	 */
-	
+	public function do_before_fetch_tweets_settings() {	// do_before_ + page slug
+		$this->setPageTitleVisibility( false );
+	}
+            
+	// The connect page
+	public function do_form_fetch_tweets_settings_twitter_connect() {	// do_form_ + page slug + _ + tab slug
+		FetchTweets_TwitterAPI_Verification::renderStatus( $this->_getVerificationStatus() );				
+	}
+	public function do_form_fetch_tweets_settings_authentication() {	// do_form_ + page slug + _ + tab slug
+		FetchTweets_TwitterAPI_Verification::renderStatus( $this->_getVerificationStatus() );		
+	}
+
+        /**
+         * Retrieves the verification status with the saved access keys.
+         * 
+         * This method first checks with the manually set authentication keys and if it fails, it checks with the automatically set authentication keys.
+         * 
+         * @since			1.3.0
+         * @return			array			The array which contains the verification status.
+         */
+        protected function _getVerificationStatus() {
+
+            // If it is disconnected, return an empty array.
+            if ( ! $this->oOption->isConnected() ) {			
+                return array();
+            }
+            
+            // If the access token and access secret keys have been manually set,
+            $_aStatus = $this->oOption->isAuthKeysManuallySet()
+                ? $this->_getAuthenticationStatus( $this->oOption->getConsumerKey(), $this->oOption->getConsumerSecret(), $this->oOption->getAccessToken(), $this->oOption->getAccessTokenSecret() )
+                : array();
+                
+            if ( ! empty( $_aStatus ) ) return $_aStatus;
+                
+            // If the access token and secret keys have been automatically set,
+            if ( $this->oOption->isAuthKeysAutomaticallySet() ) {
+                $_aStatus = $this->_getAuthenticationStatus( FetchTweets_Commons::ConsumerKey, FetchTweets_Commons::ConsumerSecret, $this->oOption->getAccessTokenAuto(), $this->oOption->getAccessTokenSecretAuto() );
+            }
+        
+            return $_aStatus;
+        
+        }
+            /**
+             * Checks the API credential is valid or not.
+             * 	 
+             * @since			1.3.0
+             * @return			array			the retrieved data.
+             * @remark			The returned data is a merged result of 'account/verify_credientials' and 'rate_limit_status'.
+             */
+            private function _getAuthenticationStatus( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret ) {
+                
+                $oTwitterOAuth_Verification = new FetchTweets_TwitterAPI_Verification( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret );
+                return $oTwitterOAuth_Verification->getStatus();
+                
+            }        
+
 	/**
 	 * Redirects to the twitter to get authenticated.
 	 * 
@@ -51,7 +111,7 @@ abstract class FetchTweets_AdminPage_Connect extends FetchTweets_AdminPage_Templ
 	 * 
 	 * @remark			This method is triggered when the user get redirected back to the admin page
 	 */
-	public function load_fetch_tweets_settings_twitter_callback() {
+	public function load_fetch_tweets_settings_twitter_callback() { // load + page slug + tab slug
 				
 		/* If the oauth_token is old redirect to the authentication page. */
 		$_aTemporaryTokens = get_transient( FetchTweets_Commons::TransientPrefix . '_oauth' );
@@ -130,6 +190,6 @@ abstract class FetchTweets_AdminPage_Connect extends FetchTweets_AdminPage_Templ
 		}
 		die( wp_redirect( $_sRediretURL ) );
 	
-	}	
-						
+	}	            
+					
 }

@@ -1,2 +1,2 @@
 <?php
-class FetchTweets_AdminPage extends FetchTweets_AdminPage_ {}
+class FetchTweets_AdminPage extends FetchTweets_AdminPage_SetUp {}

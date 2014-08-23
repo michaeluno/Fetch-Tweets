@@ -1,20 +1,27 @@
 <?php
-abstract class FetchTweets_AdminPage_SetUp_Form extends FetchTweets_AdminPage_SetUp_Page {
-			
-	protected function _setUpForm() {
+/**
+ * Defines the form elements and their behavior of the Setting page.
+ * 
+ * @filter			fetch_tweets_filter_authenticated_accounts - receives an array holding accounts IDs and the screen name connected to Twitter.
+ * @filter			fetch_tweets_filter_credentials - receives an array holding accounts credentials and the account ID. 
+ */
+abstract class FetchTweets_AdminPage_Form_Setting extends FetchTweets_AdminPage_Start {
 	
-		/*
-		 * Form Elements
-		 */
+   /**
+     * Sets up form elements of the 'fetch_tweets_settings' page.
+     */
+    public function load_fetch_tweets_settings( $oAdminPage ) { // load_{page slug}
+
+        // Add sections.
 		$this->addSettingSections(
-			'fetch_tweets_settings',
+			'fetch_tweets_settings',    // target page slug
 			array(
-				'section_id'		=> 'twitter_connect',
+				'section_id'	=> 'twitter_connect',   
 				'tab_slug'		=> 'twitter_connect',
 				'title'			=> __( 'Authenticate', 'fetch-tweets' ),
 			),		
 			array(
-				'section_id'		=> 'authentication_keys',
+				'section_id'	=> 'authentication_keys',
 				'tab_slug'		=> 'authentication',
 				'title'			=> __( 'Authentication Keys', 'fetch-tweets' ),
 				'description'	=> __( 'These keys are required to process oAuth requests of the twitter API.', 'fetch-tweets' ),
@@ -32,72 +39,32 @@ abstract class FetchTweets_AdminPage_SetUp_Form extends FetchTweets_AdminPage_Se
 				'title'			=> __( 'Cache Settings', 'fetch-tweets' ),
 			),
 			array(
-				'section_id'		=> 'search',
+				'section_id'	=> 'search',
 				'tab_slug'		=> 'general',
 				'title'			=> __( 'Search', 'fetch-tweets' ),
 			),				
 			array(
-				'section_id'		=> 'capabilities',
-				'capability'		=> 'manage_options',
+				'section_id'	=> 'capabilities',
+				'capability'	=> 'manage_options',
 				'tab_slug'		=> 'misc',
 				'title'			=> __( 'Access Rights', 'fetch-tweets' ),
 				'description'	=> __( 'Set the access levels to the plugin setting pages.', 'fetch-tweets' ),
 			),			
 			array(
-				'section_id'		=> 'reset_settings',
-				'capability'		=> 'manage_options',
+				'section_id'	=> 'reset_settings',
+				'capability'	=> 'manage_options',
 				'tab_slug'		=> 'reset',
 				'title'			=> __( 'Reset Settings', 'fetch-tweets' ),
 				'description'	=> __( 'If you get broken options, initialize them by performing reset.', 'fetch-tweets' ),
 			),
 			array(
-				'section_id'		=> 'caches',
+				'section_id'	=> 'caches',
 				'tab_slug'		=> 'reset',
 				'title'			=> __( 'Caches', 'fetch-tweets' ),
 				'description'	=> __( 'If you need to refresh the fetched tweets, clear the caches.', 'fetch-tweets' ),
 			)			
 		);	
-		$this->addSettingSections(
-			'fetch_tweets_add_rule_by_list',
-			array(
-				'section_id'	=> 'add_rule_by_list',
-				'title'			=> __( 'Specify the Screen Name', 'fetch-tweets' ),
-				'description'	=> __( 'In order to select list, the user name(screen name) of the account that owns the list must be specified.', 'fetch-tweets' ),
-			)		
-		);
-		
-		$this->addSettingFields(
-			'add_rule_by_list',	// target section id
-			array(	
-				'field_id' => 'list_owner_accounts',
-				'title' => __( 'Owner Accounts', 'fetch-tweets' ),
-				'description' => __( 'Select the screen name that owns the list.', 'fetch-tweets' ),
-				'type' => 'select',
-				'value' => '',
-			),			
-			array(	
-				'field_id' => 'list_owner_screen_name',
-				'title' => __( 'Owner Screen Name', 'fetch-tweets' ) . ' <span class="optional">(' . __( 'optional', 'fetch-tweets' ) . ')</span>',
-				'description' => __( 'The screen name(user name) that owns the list. When the target screen name is not listed above, specify here.', 'fetch-tweets' ) . '<br />'
-					. 'e.g. miunosoft',
-				'type' => 'text',
-				'value' => '',
-				'attributes'	=>	array(
-					'size'	=>	40,
-				),				
-			),
-			array(  // single button
-				'field_id' => 'list_proceed',
-				'type' => 'submit',
-				'before_field' => "<div class='right-button'>",
-				'after_field' => "</div>",
-				'label' => __( 'Proceed', 'fetch-tweets' ),
-				'attributes'	=>	array(
-					'class'	=>	'button button-primary',
-				),					
-			)		
-		);		
-		
+        
 		// Add setting fields
  		$this->addSettingFields(
 			'twitter_connect',
@@ -295,16 +262,6 @@ abstract class FetchTweets_AdminPage_SetUp_Form extends FetchTweets_AdminPage_Se
 					// 'template' => __( 'Template related options', 'fetch-tweets' ),
 				),
 			),
-			// array(  // single button
-				// 'field_id' => 'submit_reset_settings',
-				// 'section_id' => 'reset_settings',
-				// 'type' => 'submit',
-				// 'before_field' => "<div class='right-button'>",
-				// 'after_field' => "</div>",
-				// 'vLabelMinWidth' => 0,
-				// 'label' => __( 'Perform', 'fetch-tweets' ),
-				// 'vClassAttribute' => 'button button-primary',
-			// ),
 			array()
 		);
 		$this->addSettingFields(
@@ -326,8 +283,162 @@ abstract class FetchTweets_AdminPage_SetUp_Form extends FetchTweets_AdminPage_Se
 					'class'	=>	'button button-primary',
 				),
 			)			
-		);
-
-	}	
+		);        
+    
+    }
+	
+	/**
+	 * Filters the output of the Connect To Twitter button.
+	 * 
+	 * If it's not authenticated yet, the label becomes "Connect"; otherwise, "Disconnect"
+	 */
+	public function field_FetchTweets_AdminPage_twitter_connect_connect_to_twitter( $sField ) {		// field_{instantiated class name}_{section id}_{field id}
+		
+		return ( ! $this->oOption->isConnected() )
+			? $sField		// the connect button
+			: '<span style="display: inline-block; min-width:120px;">'
+					. '<input id="twitter_connect_connect_to_twitter__0" class="button button-primary" type="submit" name="disconnect_from_twitter" value="' . __( 'Disconnect', 'fetch-tweets' ) . '">&nbsp;&nbsp;'
+				.'</span>'; // the disconnect button
 				
+	}
+	
+    /**
+     * Validates the submit data of the 'fetch_tweets_settings' page.
+     */        
+	public function validation_fetch_tweets_settings( $aInput, $aOriginal, $oAdminPage ) {   // validation_{page slug}
+		
+		// If the Disconnect button is pressed, delete the authentication keys.
+		if ( isset( $_POST['disconnect_from_twitter'] ) ) {
+
+			$aInput = is_array( $aInput ) ? $aInput : array();	// in WP v3.4.2, when the Disconnect button is pressed an $aInput was passed as an empty string. Something went wrong.
+			
+			// the transient needs to be removed 
+			delete_transient( FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->oOption->getConsumerKey(), $this->oOption->getConsumerSecret(), $this->oOption->getAccessToken(), $this->oOption->getAccessTokenSecret() ) ) ) );
+			delete_transient( FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( FetchTweets_Commons::ConsumerKey, FetchTweets_Commons::ConsumerSecret, $this->oOption->getAccessTokenAuto(), $this->oOption->getAccessTokenSecretAuto() ) ) ) );
+			
+			$aInput['authentication_keys'] = array();
+			$aInput['twitter_connect'] = array();
+			do_action( 'fetch_tweets_action_updated_credentials', array() );
+			
+		}
+
+		return $aInput;
+		
+	}
+	
+	/**
+	 * Triggered when the manual keys are set and submitted.
+	 * 
+	 * @since			2
+	 */
+	public function validation_FetchTweets_AdminPage_authentication_keys( $aInput, $aOldInput ) {	// valiudation_{class name}_{section id}
+
+		// Check the connection
+		$_oConnect = new FetchTweets_TwitterAPI_Verification( 
+			$aInput['consumer_key'],
+			$aInput['consumer_secret'],
+			$aInput['access_token'],
+			$aInput['access_secret']
+		);
+		$_aStatus = $_oConnect->getStatus();	
+		
+		// If it's connected, add the connection status
+		if ( isset( $_aStatus['id_str'] ) ) {
+			
+			$aInput['user_id'] = $_aStatus['id_str'];
+			$aInput['screen_name'] = $_aStatus['screen_name'];
+			$aInput['is_connected'] = true;
+			$aInput['connect_method'] = 'manual';
+			
+		} else {
+			$aInput['is_connected'] = false;
+			$aInput['connect_method'] = 'manual';
+		}
+		
+		do_action( 'fetch_tweets_action_updated_credentials', $aInput );
+		return $aInput;
+		
+	}
+
+    /**
+     * Validates the submit data of the 'general' tab of the 'fetch_tweets_settings' page.
+     */    
+    public function validation_fetch_tweets_settings_general( $arrInput, $arrOriginal ) {
+		
+		$arrInput['default_values']['count'] = $this->oUtil->fixNumber(
+			$arrInput['default_values']['count'],
+			$GLOBALS['oFetchTweets_Option']->aStructure_DefaultParams['count'],
+			1
+		);
+		
+		return $arrInput;
+		
+	}
+    
+    /**
+     * Validates the submit data of the 'reset' tab of the 'fetch_tweets_settings' page.
+     */
+	public function validation_fetch_tweets_settings_reset( $arrInput, $arrOriginal ) {
+				
+		// Variables
+		$fChanged = false;
+				
+		// Make it one dimensional.
+		$arrSubmit = array();
+		foreach ( $arrInput as $strSection => $arrFields ) 
+			$arrSubmit = $arrSubmit + $arrFields;				
+			
+		// If the Perform button is not set, return.
+		if ( ! isset( $arrSubmit['submit_reset_settings'] ) ) {
+			$this->setSettingNotice( __( 'Nothing changed.', 'fetch-tweets' ) );	
+			return $arrOriginal;
+		}
+
+		if ( isset( $arrSubmit['clear_caches'] ) && $arrSubmit['clear_caches'] ) {
+			FetchTweets_Transient::clearTransients();
+			$fChanged = true;
+			$this->setSettingNotice( __( 'The caches have been cleared.', 'fetch-tweets' ) );
+		}
+		
+		// $this->oDebug->getArray( $arrSubmit, dirname( __FILE__ ) . '/submit.txt' );
+		// $this->oDebug->getArray( $GLOBALS['oFetchTweets_Option']->aOptions, dirname( __FILE__ ) . '/options.txt' );
+		
+		if ( isset( $arrSubmit['option_sections'] ) ) {
+			if ( isset( $arrSubmit['option_sections']['all'] ) && $arrSubmit['option_sections']['all'] ) {
+				$fChanged = true;
+				add_action( 'shutdown', array( $this, 'deleteOptions_All' ), 999 );
+			}
+			if ( isset( $arrSubmit['option_sections']['genaral'] ) && $arrSubmit['option_sections']['general'] ) {
+				$fChanged = true;
+				add_action( 'shutdown', array( $this, 'deleteOptions_General' ), 999 );
+			}
+			if ( isset( $arrSubmit['option_sections']['template'] ) && $arrSubmit['option_sections']['template'] ) {
+				$fChanged = true;
+				add_action( 'shutdown', array( $this, 'deleteOptions_Template' ), 999 );
+			}		
+		}
+		
+		if ( ! $fChanged ) {
+			$this->setSettingNotice( __( 'Nothing changed.', 'fetch-tweets' ) );	
+		}
+		return $arrOriginal;	// no need to update the options.
+		
+	}
+        public function deleteOptions_All() {
+            delete_option( FetchTweets_Commons::AdminOptionKey );
+        }
+        public function deleteOptions_General() {
+            // Currently not working: Somehow the options get recovered.
+            unset( $GLOBALS['oFetchTweets_Option']->aOptions );
+            $GLOBALS['oFetchTweets_Option']->saveOptions();		
+        }
+        public function deleteOptions_Template() {		
+            // Currently not working: Somehow the options get recovered.
+
+            unset( $GLOBALS['oFetchTweets_Option']->aOptions['arrTemplates'] );
+            unset( $GLOBALS['oFetchTweets_Option']->aOptions['arrDefaultTemplate'] );		
+            $GLOBALS['oFetchTweets_Option']->saveOptions();
+
+        }
+  		
 }

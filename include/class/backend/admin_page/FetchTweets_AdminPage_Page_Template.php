@@ -1,5 +1,8 @@
 <?php
-abstract class FetchTweets_AdminPage_Template extends FetchTweets_AdminPage_Extension {
+/**
+ * Defines the template page.
+ */
+abstract class FetchTweets_AdminPage_Page_Template extends FetchTweets_AdminPage_Page_Extension {
 		
 	protected $arrColumnOption = array (
 		'strClassAttr' 				=>	'fetch_tweets_multiple_columns',
@@ -33,9 +36,6 @@ abstract class FetchTweets_AdminPage_Template extends FetchTweets_AdminPage_Exte
             <?php $this->oTemplateListTable->display() ?>
         </form>		
 		<?php
-	
-// echo "<h3>Properties</h3>";			
-// echo $this->oDebug->getArray( $this->oProp );
 			
 	}
 	public function do_fetch_tweets_templates_get_templates() {
@@ -106,6 +106,5 @@ abstract class FetchTweets_AdminPage_Template extends FetchTweets_AdminPage_Exte
 		echo '<div class="ftws_extension_container">' . $strOut . '</div>';
 		
 	}
-	
 					
 }

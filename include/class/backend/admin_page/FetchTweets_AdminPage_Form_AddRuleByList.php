@@ -1,11 +1,61 @@
 <?php
 /**
+ * Defines the form elements and their behavior of the Add Rule by List page.
  * 
  * @filter			fetch_tweets_filter_authenticated_accounts - receives an array holding accounts IDs and the screen name connected to Twitter.
  * @filter			fetch_tweets_filter_credentials - receives an array holding accounts credentials and the account ID. 
  */
-abstract class FetchTweets_AdminPage_AddRuleByList extends FetchTweets_AdminPage_Setting {
+abstract class FetchTweets_AdminPage_Form_AddRuleByList extends FetchTweets_AdminPage_Form_Setting {
 		
+        
+   /**
+     * Sets up form elements of the 'fetch_tweets_add_rule_by_list' page.
+     */
+    public function load_fetch_tweets_add_rule_by_list( $oAdminPage ) { // load_{page slug}
+
+		$this->addSettingSections(
+			'fetch_tweets_add_rule_by_list',    // target page slug
+			array(
+				'section_id'	=> 'add_rule_by_list',
+				'title'			=> __( 'Specify the Screen Name', 'fetch-tweets' ),
+				'description'	=> __( 'In order to select list, the user name(screen name) of the account that owns the list must be specified.', 'fetch-tweets' ),
+			)		
+		);
+		
+		$this->addSettingFields(
+			'add_rule_by_list',	// target section id
+			array(	
+				'field_id' => 'list_owner_accounts',
+				'title' => __( 'Owner Accounts', 'fetch-tweets' ),
+				'description' => __( 'Select the screen name that owns the list.', 'fetch-tweets' ),
+				'type' => 'select',
+				'value' => '',
+			),			
+			array(	
+				'field_id' => 'list_owner_screen_name',
+				'title' => __( 'Owner Screen Name', 'fetch-tweets' ) . ' <span class="optional">(' . __( 'optional', 'fetch-tweets' ) . ')</span>',
+				'description' => __( 'The screen name(user name) that owns the list. When the target screen name is not listed above, specify here.', 'fetch-tweets' ) . '<br />'
+					. 'e.g. miunosoft',
+				'type' => 'text',
+				'value' => '',
+				'attributes'	=>	array(
+					'size'	=>	40,
+				),				
+			),
+			array(  // single button
+				'field_id' => 'list_proceed',
+				'type' => 'submit',
+				'before_field' => "<div class='right-button'>",
+				'after_field' => "</div>",
+				'label' => __( 'Proceed', 'fetch-tweets' ),
+				'attributes'	=>	array(
+					'class'	=>	'button button-primary',
+				),					
+			)		
+		);		
+        
+    }
+    
 	/**
 	 * Field definition callbacks
 	 */

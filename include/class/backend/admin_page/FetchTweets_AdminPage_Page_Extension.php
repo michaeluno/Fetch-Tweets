@@ -1,9 +1,9 @@
 <?php
-abstract class FetchTweets_AdminPage_Extension extends FetchTweets_AdminPage_Authentication {
+/**
+ * Defines the extension page.
+ */
+abstract class FetchTweets_AdminPage_Page_Extension extends FetchTweets_AdminPage_Form_AddRuleByList {
 				
-	/*
-	 * Extension page
-	 */ 
 	public function do_before_fetch_tweets_extensions() {	// do_before_ + page slug
 		$this->setPageTitleVisibility( false );
 	}
