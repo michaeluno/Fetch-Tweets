@@ -23,7 +23,7 @@
 
 // Make sure that SimplePie has been already loaded. This is very important. Without this line, the cache setting breaks. 
 // Do not include class-simplepie.php, which causes the unknown class warning.
-if ( ! class_exists( 'SimplePie' ) ) include_once( ABSPATH . WPINC . '/class-feed.php' );		
+if ( ! class_exists( 'SimplePie' ) ) include( ABSPATH . WPINC . '/class-feed.php' );		
 
 // If the WordPress version is below 3.5, which uses SimplePie below 1.3,
 if ( version_compare( get_bloginfo( 'version' ) , '3.5', "<" ) ) {	
