@@ -15,9 +15,10 @@
 final class FetchTweets_Bootstrap {
 	
 	function __construct( $sPluginFilePath ) {
-	
-		$this->_sFilePath = $sPluginFilePath;	//FetchTweets_Commons::getPluginPath();
-		$this->_bIsAdmin = is_admin();
+        
+        // 0. Properties
+		$this->_sFilePath   = $sPluginFilePath;	
+		$this->_bIsAdmin    = is_admin();
 		
 		// 1. Define constants.
 		// $this->_defineConstants();
@@ -26,7 +27,7 @@ final class FetchTweets_Bootstrap {
 		$this->_setGlobalVariables();
 		
 		// 3. Set up auto-load classes.
-		$this->_loadClasses( $this->_sFilePath );
+		$this->_include( $this->_sFilePath );
 		
 		// 4. Set up activation hook.
 		register_activation_hook( $this->_sFilePath, array( $this, '_replyToDoWhenPluginActivates' ) );
@@ -49,31 +50,33 @@ final class FetchTweets_Bootstrap {
 	
 	private function _setGlobalVariables() {
 		
-		$GLOBALS['oFetchTweets_Option'] = null;	// stores the option object
-		$GLOBALS['oFetchTweets_Templates'] = null;	// stores the template object
+		$GLOBALS['oFetchTweets_Option']         = null;	// stores the option object
+		$GLOBALS['oFetchTweets_Templates']      = null;	// stores the template object
 		
 		// Stores custom registering class paths
-		$GLOBALS['arrFetchTweets_FinalClasses'] = isset( $GLOBALS['arrFetchTweets_FinalClasses'] ) && is_array( $GLOBALS['arrFetchTweets_FinalClasses'] ) ? $GLOBALS['arrFetchTweets_FinalClasses'] : array();
-		$GLOBALS['arrFetchTweets_Classes'] = isset( $GLOBALS['arrFetchTweets_Classes'] ) && is_array( $GLOBALS['arrFetchTweets_Classes'] ) ? $GLOBALS['arrFetchTweets_Classes'] : array();
+		$GLOBALS['arrFetchTweets_FinalClasses'] = isset( $GLOBALS['arrFetchTweets_FinalClasses'] ) && is_array( $GLOBALS['arrFetchTweets_FinalClasses'] ) 
+            ? $GLOBALS['arrFetchTweets_FinalClasses'] 
+            : array();
+		$GLOBALS['arrFetchTweets_Classes']      = isset( $GLOBALS['arrFetchTweets_Classes'] ) && is_array( $GLOBALS['arrFetchTweets_Classes'] ) 
+            ? $GLOBALS['arrFetchTweets_Classes'] 
+            : array();
 				
-		$GLOBALS['arrFetchTweets_oEmbed'] = array();		
+		$GLOBALS['arrFetchTweets_oEmbed']       = array();		
 				
 	}
 	
-	private function _loadClasses( $sFilePath ) {
+	private function _include( $sFilePath ) {
 		
 		$_sPluginDir =  dirname( $sFilePath );
 		
-		// Auto-loads classes placed in the finals folder.
-		if ( ! class_exists( 'FetchTweets_AutoLoad' ) ) {
-			include_once( $_sPluginDir . '/include/class/boot/registry/FetchTweets_AutoLoad.php' );	
-		}
-		
-		// Register the classes for boot now.
-		new FetchTweets_AutoLoad( $_sPluginDir . '/include/class/boot', $GLOBALS['arrFetchTweets_FinalClasses'] );
-		
+        // Include the include list files.
+        $_aBootClassFiles = array();
+        include( $_sPluginDir . '/include/fetch-tweets-include-class-file-list-boot.php' );
+        
+        new FetchTweets_RegisterClasses( '', array(), $_aBootClassFiles );
+        
 		// Schedule to register regular classes when all the plugins are loaded. This allows other scripts to modify the loading class files.
-		add_action( 'plugins_loaded', array( $this, '_replyToRegisterOtherClasses' ) );		
+		add_action( 'plugins_loaded', array( $this, '_replyToIncludeOtherFiles' ) );		
 		
 		FetchTweets_Commons::setUp( $sFilePath );
 		
@@ -82,18 +85,25 @@ final class FetchTweets_Bootstrap {
 		 * Registers regular classes to be auto loaded.
 		 * 
 		 */
-		public function _replyToRegisterOtherClasses() {
+		public function _replyToIncludeOtherFiles() {
 			
-			$_sIncludeDir = dirname( $this->_sFilePath ) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'class';
-			new FetchTweets_AutoLoad( 
-				$_sIncludeDir, 
-				$GLOBALS['arrFetchTweets_Classes'], 
-				array( 'exclude_dirs' => $_sIncludeDir . DIRECTORY_SEPARATOR . '/boot' )
-			);
+            $_sPluginDir = dirname( $this->_sFilePath );
+            
+            include( $_sPluginDir . '/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php' );
+            require( $_sPluginDir . '/include/library/TwitterOAuth/twitteroauth.php' );
+            
+            $_aClassFiles = array();
+            $_aAdminClassFiles = array();
+            include( $_sPluginDir . '/include/fetch-tweets-include-class-file-list.php' );
+            if ( $this->_bIsAdmin ) {
+                include( $_sPluginDir . '/include/fetch-tweets-include-class-file-list-admin.php' );
+            }
+            new FetchTweets_RegisterClasses( '', array(), $GLOBALS['arrFetchTweets_Classes'] + $_aClassFiles + $_aAdminClassFiles );
 						
 		}
 	/**
-	 * 
+	 * Checks if the server suffices for the plugin requirements.
+     * 
 	 * @since			2.1
 	 */
 	public function _replyToCheckRequirements() {
@@ -155,11 +165,7 @@ final class FetchTweets_Bootstrap {
 	public function _replyToLoadPluginComponents() {
 		
 		// All the necessary classes have been already loaded.
-		
-		// 1. Load Necessary libraries
-		include_once( dirname( FetchTweets_Commons::getPluginFilePath() ) . '/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php' );
-		require_once( dirname( FetchTweets_Commons::$sPluginPath ) . '/include/library/TwitterOAuth/twitteroauth.php' );
-		
+				
 		// 2. Option Object
 		$GLOBALS['oFetchTweets_Option'] = new FetchTweets_Option( FetchTweets_Commons::$sAdminKey );
 
@@ -167,7 +173,7 @@ final class FetchTweets_Bootstrap {
 		$GLOBALS['oFetchTweets_Templates'] = new FetchTweets_Templates;		
 		$GLOBALS['oFetchTweets_Templates']->loadFunctionsOfActiveTemplates();
 		add_action( 'wp_enqueue_scripts', array( $GLOBALS['oFetchTweets_Templates'], 'enqueueActiveTemplateStyles' ) );
-		if ( $this->_bIsAdmin ) {
+		if ( $this->_isInPluginAdminPage() ) {
 			$GLOBALS['oFetchTweets_Templates']->loadSettingsOfActiveTemplates();
 		}
 		
@@ -195,7 +201,7 @@ final class FetchTweets_Bootstrap {
 		new FetchTweets_Event;	
 		
 		// 10. MISC
-		if ( $this->_bIsAdmin ) {
+		if ( $this->_isInPluginAdminPage() ) {
 			$GLOBALS['oFetchTweetsUserAds'] = isset( $GLOBALS['oFetchTweetsUserAds'] ) ? $GLOBALS['oFetchTweetsUserAds'] : new FetchTweets_UserAds;
 		}
 		
@@ -203,7 +209,35 @@ final class FetchTweets_Bootstrap {
 		$this->_defineConstantesForBackwardCompatibility();
 		
 	}
-
+        /**
+         * Checks whether the page is loaded in one of the plugin admin pages.
+         * 
+         * @since       2.3.5
+         */
+        private function _isInPluginAdminPage() {
+            
+            static $_bIsPluginAdminPage;
+            
+            if ( isset( $_bIsPluginAdminPage ) ) {
+                return $_bIsPluginAdminPage;
+            }
+            
+            if ( ! $this->_bIsAdmin ) {
+                return false;
+            }
+            if ( ! isset( $GLOBALS['pagenow'] ) ) {
+                return false;
+            }
+            if ( 'edit.php' !== $GLOBALS['pagenow'] ) {
+                return false;                
+            }
+            if ( ! isset( $GLOBALS['post_type'] ) ) {
+                return false;
+            }
+            $_bIsPluginAdminPage = ( FetchTweets_Commons::PostTypeSlug === $GLOBALS['post_type'] );
+            return $_bIsPluginAdminPage;
+                
+        }
 	/**
 	 * Registers plugin specific meta boxes.
 	 * 
@@ -211,8 +245,11 @@ final class FetchTweets_Bootstrap {
 	 */
 	protected function _registerMetaBoxes() {
 		
-		$_bIsUpdatePost = ( empty( $_GET ) && $GLOBALS['pagenow'] == 'post.php' );	// when saving the meta data, the GET array is empty
-		$_sTweetType = $this->_getTweetType();
+        if ( ! isset( $GLOBALS['pagenow'] ) ) { return; }
+        if ( ! in_array( $GLOBALS['pagenow'], array( 'post-new.php', 'post.php' ) ) ) { return; }
+        
+		$_bIsUpdatePost = ( empty( $_GET ) && 'post.php' === $GLOBALS['pagenow'] );	// when saving the meta data, the GET array is empty
+		$_sTweetType    = $this->_getTweetType();
 		if ( 'search' == $_sTweetType || $_bIsUpdatePost ) {
 			new FetchTweets_MetaBox_Search(
 				'fetch_tweets_meta_box_search',	// meta box ID
@@ -336,6 +373,5 @@ final class FetchTweets_Bootstrap {
 			if ( ! defined( 'YEAR_IN_SECONDS' ) ) define( 'YEAR_IN_SECONDS',  365 * DAY_IN_SECONDS    );	
 
 		}
-		
-	
+
 }

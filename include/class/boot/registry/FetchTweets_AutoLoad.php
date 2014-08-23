@@ -6,8 +6,8 @@
  * @copyright   Copyright (c) 2013, Michael Uno
  * @authorurl	http://michaeluno.jp
  * @since		2.1
+ * @deprecated  2.3.5
  */
-
 final class FetchTweets_AutoLoad {
 	
 	/**
