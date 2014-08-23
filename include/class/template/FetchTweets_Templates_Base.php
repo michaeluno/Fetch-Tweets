@@ -242,7 +242,7 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 			if ( ! $_sFunctionsPath ) {
 				continue;
 			}
-			include_once( $_sFunctionsPath );
+			include( $_sFunctionsPath );
 						
 		}
 		
@@ -264,7 +264,7 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 			if ( ! $_sSettingsPath ) {
 				continue;
 			}
-			include_once( $_sSettingsPath );
+			include( $_sSettingsPath );
 						
 		}
 	}
