@@ -5,7 +5,14 @@
  * @action			fetch_tweets_action_updated_credentials - triggered when updating the main credentials.
  */
 abstract class FetchTweets_Option_ {
-	
+
+    /**
+     * Stores the self-instance.
+     * 
+     * @since       2.3.5
+     */
+    static public $oInstance;	
+    
 	protected static $aStructure_Options = array(		
 		'authentication_keys' => array(
 			'consumer_key' => '',
@@ -96,8 +103,8 @@ abstract class FetchTweets_Option_ {
 		 
 	public function __construct( $sOptionKey ) {
 		
-		$this->sOptionKey = $sOptionKey;
-		$this->aOptions = $this->setOption( $sOptionKey );
+		$this->sOptionKey   = $sOptionKey;
+		$this->aOptions     = $this->setOption( $sOptionKey );
 		
 	}	
 	
@@ -111,9 +118,11 @@ abstract class FetchTweets_Option_ {
 		$_fOptionsModified = false;
 		
 		// Set up the options array.
-		$vOption = get_option( $sOptionKey );
-		$vOption = ( false === $vOption ) ? array() : $vOption;		// Avoid casting array because it causes a zero key when the subject is null.
-		$aOptions = FetchTweets_Utilities::uniteArrays( $vOption, self::$aStructure_Options ); 	// Now $vOption is an array so merge with the default option to avoid undefined index warnings.
+		$_vOptions   = get_option( $sOptionKey, array() );
+		$aOptions   = FetchTweets_Utilities::uniteArrays( 
+            ( false === $_vOptions ) ? array() : ( array ) $_vOptions, 
+            self::$aStructure_Options 
+        ); 	
 		
 		// If the v1 option array structure is present, format the options for backward compatibility
 		if ( isset( $aOptions['fetch_tweets_settings'] ) || isset( $aOptions['fetch_tweets_templates'] ) ) {
@@ -368,5 +377,58 @@ abstract class FetchTweets_Option_ {
 		update_option( $this->sOptionKey, $aOptions ? $aOptions : $this->aOptions );
 
 	}
+    
+     /**
+     * Returns the specified option value.
+     * 
+     * @since       2.3.5
+     */
+    static public function get( $asKey=null, $vDefault=null ) {
+                
+        $_oOption = self::getInstance();
+        
+        // If the key is not set or false, return the entire option array.
+        if ( ! $asKey ) {
+            return empty( $_oOption->aOptions )
+                ? $vDefault
+                : $_oOption->aOptions;
+        }
+
+        // Now either the section ID or field ID is given. 
+        return FetchTweets_AdminPageFramework_WPUtility::getArrayValueByArrayKeys( 
+            $_oOption->aOptions, 
+            array_values( FetchTweets_AdminPageFramework_WPUtility::getAsArray( $asKey ) ), 
+            $vDefault 
+        );
+        
+    }
+    /**
+     * Returns the instance of the class.
+     * 
+     * This is to ensure only one instance exists.
+     */
+    static public function getInstance() {
+        
+        self::$oInstance = self::$oInstance 
+            ? self::$oInstance 
+            : ( isset( $GLOBALS['oFetchTweets_Option'] ) && ( $GLOBALS['oFetchTweets_Option'] instanceof FetchTweets_Option )
+                ? $GLOBALS['oFetchTweets_Option']
+                : new FetchTweets_Option( FetchTweets_Commons::$sAdminKey )
+            );
+        return self::$oInstance;
+        
+    }
+    
+    /**
+     * Resets the cached options.
+     * 
+     * It will re-retrieve the options.
+     */
+    static public function refresh() {
+        
+        self::$oInstanc = null;
+        return self::getInstance();
+        
+    }
 	
 }
