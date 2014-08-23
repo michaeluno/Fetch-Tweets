@@ -172,7 +172,7 @@ class FetchTweets_Template_Settings_Plain extends FetchTweets_Template_Settings 
 		$aFields[ $this->sSectionID ]['fetch_tweets_template_plain_visibilities'] = array(
 			'field_id' => 'fetch_tweets_template_plain_visibilities',
 			'section_id' => $this->sSectionID,
-			'title' => __( 'Visibilities', 'fetch-tweets' ),
+			'title' => __( 'Visibility', 'fetch-tweets' ),
 			'type' => 'checkbox',
 			'label' => array(
 				'avatar'			=> __( 'Profile Image', 'fetch-tweets' ),

@@ -183,7 +183,7 @@ class FetchTweets_Template_Settings_Single extends FetchTweets_Template_Settings
 		$aFields[ $this->sSectionID ]['fetch_tweets_template_single_visibilities'] = array(	// visibilities
 			'field_id' => 'fetch_tweets_template_single_visibilities',
 			'section_id' => $this->sSectionID,
-			'title' => __( 'Visibilities', 'fetch-tweets' ),
+			'title' => __( 'Visibility', 'fetch-tweets' ),
 			'type' => 'checkbox',
 			'label' => array(
 				'avatar'			=> __( 'Profile Image', 'fetch-tweets' ),
