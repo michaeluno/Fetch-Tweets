@@ -1,4 +1,6 @@
 == Change log ==
+= 2.3.5 =
+Escaped attributes and urls.
 
 = 2.3 =
 Added the `border-radius` property to the profile image element.
