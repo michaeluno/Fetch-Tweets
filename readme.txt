@@ -68,7 +68,7 @@ In order to set multiple IDs, pass them with commas as the delimiter. e.g.
 
 `[fetch_tweets id="123, 234, 345"]`
 
-`<?php fetchTweets( array( 'id' => 123, 234, 345 ) ); ?>`
+`<?php fetchTweets( array( 'id' => '123, 234, 345' ) ); ?>`
 
 * **tag** - the tag(s) associated with the rule sets. This cannot be used with the `id`, `q`, or `screen_name` parameter. e.g.
 
@@ -108,7 +108,7 @@ In order to set multiple tags, pass them with commas as the delimiter. e.g.
 
 `[fetch_tweets id="456, 567" count="10" ]`
 
-`<?php fetchTweets( array( 'id' => 456, 567, 'count' => 10 ) ); ?>`
+`<?php fetchTweets( array( 'id' => '456, 567', 'count' => 10 ) ); ?>`
 
 * **avatar_size** - the size( max-width ) of the profile image in pixel. e.g.
 
@@ -164,21 +164,23 @@ Include a thumbnail image. Prepare an image with the name screenshot.jpg, screen
 
 Create a folder named **fetch-tweets** in the theme folder. If you use, for instance, Twenty Twelve, the location would be `.../wp-content/themes/twentytwelve/fetch-tweets/`.
 
-Place the working folder( the copied and renamed one in step 1 ) in there. The plugin will automatically detect it and the template will be listed in the Template page of the admin page.
+Place the working folder (the copied and renamed one in step 1) in there. The plugin will automatically detect it and the template will be listed in the Template page of the admin page.
 
 Optionally, a template can be added via a plugin. If you do so, add the template directory with the <code>fetch_tweets_filter_template_directories</code> filter hook.
 
 e.g.
-`add_filter( 'fetch_tweets_filter_template_directories', 'FetchTweets_AddSampleTemplateDirPath' );
-function FetchTweets_AddSampleTemplateDirPath( $arrDirPaths ) {
+`
+function FetchTweets_AddSampleTemplateDirPath( $aDirPaths ) {
 	
 	// Add the template directory to the passed array.
-	$arrDirPaths[] = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'sample';
-	return $arrDirPaths;
+	$aDirPaths[] = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'sample';
+	return $aDirPaths;
 	
-}`
+}
+add_filter( 'fetch_tweets_filter_template_directories', 'FetchTweets_AddSampleTemplateDirPath' );
+`
 
-You can check an example template [here](https://github.com/michaeluno/fetch-tweets-sample-template).
+An example template is available [here](https://github.com/michaeluno/fetch-tweets-sample-template).
 
 == Frequently Asked Questions ==
 
@@ -200,7 +202,7 @@ See the How to Create Own Template section of the **[Other Notes](http://wordpre
 
 = Why don't tweets update? =
 
-It could be that your host disables WP Cron. In that case, try the intense caching mode which can be configured via `Dashboard` -> `Fetch Tweets` -> `Settings` -> `General` -> `Cache Settings` -> `Caching Mode`.
+It could be that your host disables WP Cron. In that case, try the `intense` caching mode which can be configured via `Dashboard` -> `Fetch Tweets` -> `Settings` -> `General` -> `Cache Settings` -> `Caching Mode`.
 
 == Screenshots ==
 
@@ -212,7 +214,7 @@ It could be that your host disables WP Cron. In that case, try the intense cachi
 
 == Changelog ==
 
-= 2.3.5 =
+= 2.3.5 - 08/25/2014 =
 - Optimized the performance.
 - Tweaked the built-in templates to escape certain strings in HTML attributes.
 - Added warning messages to be displayed in the widget outputs when no rule or tag is selected.

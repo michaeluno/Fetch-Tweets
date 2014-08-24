@@ -184,7 +184,7 @@ abstract class FetchTweets_AdminPage_Form_Setting extends FetchTweets_AdminPage_
 				'field_id'		=> 'cache_for_errors',
 				'title'			=> __( 'Cache for Errors', 'fetch-tweets' ),
 				'type'			=> 'checkbox',
-				'label'			=> __( 'Cache fetched results even for an error.', 'fetch-tweets' ),
+				'label'			=> __( 'Cache fetched results even for errors.', 'fetch-tweets' ),
 				'description'	=> __( 'This reduces the chances to reach the Twitter API rate limit.', 'fetch-tweets' ),
 			),
 			array(

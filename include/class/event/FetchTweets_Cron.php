@@ -51,15 +51,19 @@ class FetchTweets_Cron  {
 		$aActionHooks = ( array ) $aActionHooks;
 		
 		// If not called from the background, return.
-		if ( isset( $_GET['doing_wp_cron'] ) ) return;	// WP Cron
-		if ( isset( $GLOBALS['pagenow'] ) && $GLOBALS['pagenow'] == 'admin-ajax.php' ) return;	// WP Heart-beat API
-		
+		if ( isset( $_GET['doing_wp_cron'] ) ) { return; }	// WP Cron
+		if ( isset( $GLOBALS['pagenow'] ) && $GLOBALS['pagenow'] == 'admin-ajax.php' ) { return; }	// WP Heart-beat API
+		if ( defined( 'DOING_AJAX') && DOING_AJAX  ) { return; }
+        
 		if ( ! $this->isBackground() ) return;
 	
 		// Do not process if a delay is not set.
 		if ( ! $this->isBackground( true ) ) {	
 			die( $this->_loadBackgroundPageWithDelay( 2, $_GET ) );	// give 2 seconds delay
 		}
+        
+        if ( ! defined( 'DOING_CRON' ) ) { define( 'DOING_CRON', true ); }                
+        ignore_user_abort( true );        
 
 		// At this point, the page is loaded in the background with some delays.
 		$this->_handleCronTasks( $aActionHooks );
@@ -75,8 +79,9 @@ class FetchTweets_Cron  {
 	static public function isBackground( $fIsDelayed=false ) {
 		
 		$_sKey = md5( get_class() );
-		if ( ! $fIsDelayed )  
+		if ( ! $fIsDelayed ) {
 			return isset( $_COOKIE[ $_sKey ] );
+        }
 			
 		return isset( $_COOKIE[ 'delay' ], $_COOKIE[ $_sKey ] );
 		

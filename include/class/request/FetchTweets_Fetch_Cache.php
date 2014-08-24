@@ -139,7 +139,7 @@ abstract class FetchTweets_Fetch_Cache {
             $_iRemaining    = $_oRateLimit->getRemaining( $aRateLimitKeys );            
 // FetchTweets_Debug::log( 'remaining: ' . $_iRemaining );
             if ( ! $_iRemaining ) {
-                return array( 'error' => __( 'The rate limit exceeded. Please try it later.', 'fetch-tweets' ) );
+                return array( 'error' => __( 'The number of API requests exceeded the rate limit. Please try it later.', 'fetch-tweets' ) );
             }
         }
 		        

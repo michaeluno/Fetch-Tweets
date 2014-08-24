@@ -39,7 +39,7 @@ abstract class FetchTweets_Fetch_APIRequest extends FetchTweets_Fetch_Cache {
 			
 			// Check the cache expiration.
 			if ( ( $arrTransient['mod'] + ( ( int ) $intCacheDuration ) ) < time() ) { 	// expired
-FetchTweets_Debug::log( 'expired: ' . $strRequestURI );
+
                 // these keys will be checked in the cache renewal events.
 				$this->arrExpiredTransientsRequestURIs[ $this->_sanitizeRequstURI( $strRequestURI ) ] = array( 
 					'URI'	                => $strRequestURI, 	
@@ -49,10 +49,6 @@ FetchTweets_Debug::log( 'expired: ' . $strRequestURI );
                 
 			}
             
-FetchTweets_Debug::log( 'cache is used. cache duration: ' . $intCacheDuration 
-    . ' mod: ' . $arrTransient['mod']
-    . ' now: ' . time()
-    . ' url: ' . $strRequestURI );
 			return ( array ) $this->oBase64->decode( $arrTransient['data'] );
 			
 		} 

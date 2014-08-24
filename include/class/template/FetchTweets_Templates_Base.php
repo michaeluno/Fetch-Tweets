@@ -103,10 +103,9 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 				? $aTemplate['strTemplatePath']
 				: dirname( $aTemplate['strCSSPath'] ) . DIRECTORY_SEPARATOR . 'template.php';
 				
-// TODO: convert backslashes to slashes in the relative path.				
 			$aTemplate['strDirRelativePath'] = $aTemplate['strDirRelativePath'] 
 				? $aTemplate['strDirRelativePath']
-				: untrailingslashit( FetchTweets_Utilities::getRelativePath( ABSPATH, $aTemplate['strDirPath'] ) );
+				: str_replace( '\\', '/', untrailingslashit( FetchTweets_Utilities::getRelativePath( ABSPATH, $aTemplate['strDirPath'] ) ) );                
 				
 			// Check mandatory files. Consider the possibility that the user may directly delete the template files/folders.
 			if ( ! FetchTweets_WPUtilities::getReadableFilePath( $aTemplate['strDirPath'] . DIRECTORY_SEPARATOR . 'style.css', $aTemplate['strDirRelativePath'] . DIRECTORY_SEPARATOR . 'style.css' ) ) {
@@ -171,15 +170,13 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 		$sDirPath = isset( $sDirPath ) && $sDirPath
 			? $sDirPath
 			: FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'plain';
-// TODO: convert backslashes to slashes in the relative path.
-		$_sRelativePathToABSPATH = untrailingslashit( FetchTweets_Utilities::getRelativePath( ABSPATH, $sDirPath ) );
-		
+
 		return array(
 				'fIsActive'				=> true,	// a default template must be active.
 				'fIsDefault'			=> true,
 				'strCSSPath'			=> $sDirPath . DIRECTORY_SEPARATOR . 'style.css',
 				'strDirPath'			=> $sDirPath,
-				'strDirRelativePath'	=> $_sRelativePathToABSPATH,	// 2.3.5+
+				'strDirRelativePath'	=> str_replace( '\\', '/', untrailingslashit( FetchTweets_Utilities::getRelativePath( ABSPATH, $sDirPath ) ) ),	// 2.3.5+
 				'strFunctionPath'		=> @is_file( $sDirPath . DIRECTORY_SEPARATOR . 'functions.php' ) ? $sDirPath . DIRECTORY_SEPARATOR . 'functions.php' : null,					
 				'strTemplatePath'		=> @is_file( $sDirPath . DIRECTORY_SEPARATOR . 'template.php' ) ? $sDirPath . DIRECTORY_SEPARATOR . 'template.php' : null,					
 				'strSettingsPath'		=> @is_file( $sDirPath . DIRECTORY_SEPARATOR . 'settings.php' ) ? $sDirPath . DIRECTORY_SEPARATOR . 'settings.php' : null,	// this is optional.
