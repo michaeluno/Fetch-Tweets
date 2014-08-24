@@ -33,7 +33,7 @@ abstract class FetchTweets_Fetch_ByHomeTimeline extends FetchTweets_Fetch_ByScre
 			'access_secret'		=>	$_aAccessKeys['access_secret'],
 		);
 		$_sRequestURI = add_query_arg( $_aQueryArgs, "https://api.twitter.com/1.1/statuses/home_timeline.json" );
-		return $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration );					
+		return $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration, array( 'statuses', '/statuses/home_timeline' ) );
 		
 	}
 	

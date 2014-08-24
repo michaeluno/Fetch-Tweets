@@ -1,63 +1,52 @@
 <?php
 
-abstract class FetchTweets_PostType_ extends FetchTweets_AdminPageFramework_PostType {
+abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_PostType {
 // abstract class FetchTweets_PostType_ extends AdminPageFramework_PostType {
 	
 	// public function setUp() {
-	public function start_FetchTweets_PostType() {
+	public function start() {
 
 		$this->oOption = $GLOBALS['oFetchTweets_Option'];
 
 		$this->setPostTypeArgs(
 			array(			// argument - for the array structure, refer to http://codex.wordpress.org/Function_Reference/register_post_type#Arguments
-				'labels' => array(
-					'name' => __( 'Fetch Tweets', 'fetch-tweets' ),
-					'all_items' => __( 'Manage Rules', 'fetch-tweets' ),	// sub menu label
-					'singular_name' => __( 'Fetch Tweets Rule', 'fetch-tweets' ),
-					'menu_name' => __( 'Fetch Tweets', 'fetch-tweets' ),	// this changes the root menu name 
-					'add_new' => __( 'Add Rule by Screen Name', 'fetch-tweets' ),
-					'add_new_item' => __( 'Add New Rule', 'fetch-tweets' ),
-					'edit' => __( 'Edit', 'fetch-tweets' ),
-					'edit_item' => __( 'Edit Rule', 'fetch-tweets' ),
-					'new_item' => __( 'New Rule', 'fetch-tweets' ),
-					'view' => __( 'View', 'fetch-tweets' ),
-					'view_item' => __( 'View Fetched Tweets', 'fetch-tweets' ),
-					'search_items' => __( 'Search Rules', 'fetch-tweets' ),
-					'not_found' => __( 'No rule found for fetching tweets', 'fetch-tweets' ),
-					'not_found_in_trash' => __( 'No Rule Found for Fetching Tweets in Trash', 'fetch-tweets' ),
-					'parent' => 'Parent Rule',
-				),
-				'public' => true,
-				'menu_position' => 110,
-				// 'supports' => array( 'title', 'editor', 'comments', 'thumbnail' ),	// 'custom-fields'
-				'supports' => array( 'title' ),
-				'taxonomies' => array( '' ),
-				'menu_icon' => FetchTweets_Commons::getPluginURL( '/asset/image/menu_icon_16x16.png' ),
-				'has_archive' => true,
-				'hierarchical' => false,
+				// 'labels'            => $this->oProp->bIsAdmin 
+                    // ? $this->_getPostTypeLabelArguments() 
+                    // : array(),
+				'labels'            => $this->_getPostTypeLabelArguments(),
+				'public'            => true,
+				'menu_position'     => 110,
+				'supports'          => array( 'title' ),
+				'taxonomies'        => array( '' ),
+				'menu_icon'         => $this->oProp->bIsAdmin 
+                    ? FetchTweets_Commons::getPluginURL( '/asset/image/menu_icon_16x16.png' ) 
+                    : '',
+				'has_archive'       => true,
+				'hierarchical'      => false,
 				'show_admin_column' => true,
-				'screen_icon' => FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" ),
-				// 'capabilities' => array(
-					// 'create_posts' => false,
-				// ),			
-				'exclude_from_search' => ! $this->oOption->aOptions['search']['is_searchable'],
+				'screen_icon'       => $this->oProp->bIsAdmin
+                    ? FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
+                    : '',		
+				'exclude_from_search' => ! FetchTweets_Option::get( array( 'search', 'is_searchable' ) ),
+				// 'exclude_from_search' => ! $this->oOption->aOptions['search']['is_searchable'],
+                
 			)		
 		);
 
 		$this->addTaxonomy( 
-			'fetch_tweets_tag', 
+			FetchTweets_Commons::PrimaryTaxonomySlug, 
 			array(
-				'labels' => array(
-					'name' => __( 'Tags', 'fetch-tweets' ),
-					'add_new_item' => __( 'Add New Tag', 'fetch-tweets' ),
-					'new_item_name' => __( 'New Tag', 'fetch-tweets' ),
-				),
-				'show_ui' => true,
-				'show_tagcloud' => false,
-				'hierarchical' => false,
-				'show_admin_column' => true,
-				'show_in_nav_menus' => false,
-				'show_table_filter' => true,		// framework specific key
+				// 'labels'                => $this->oProp->bIsAdmin 
+                    // ? $this->_getTaxonomyTagLabelArgumnents()
+                    // : array(),
+				'labels'                =>  $this->_getTaxonomyTagLabelArgumnents(),                    
+
+				'show_ui'               => true,
+				'show_tagcloud'         => false,
+				'hierarchical'          => false,
+				'show_admin_column'     => true,
+				'show_in_nav_menus'     => false,
+				'show_table_filter'     => true,		// framework specific key
 				'show_in_sidebar_menus' => true,	// framework specific key
 			)
 		);
@@ -79,7 +68,33 @@ abstract class FetchTweets_PostType_ extends FetchTweets_AdminPageFramework_Post
 		add_filter( 'the_content', array( $this, '_replyToPreviewTweets' ) );	
 				
 	}
-	
+        private function _getPostTypeLabelArguments() {            
+            return array(
+                'name'                  => __( 'Fetch Tweets', 'fetch-tweets' ),
+                'all_items'             => __( 'Manage Rules', 'fetch-tweets' ),	// sub menu label
+                'singular_name'         => __( 'Fetch Tweets Rule', 'fetch-tweets' ),
+                'menu_name'             => __( 'Fetch Tweets', 'fetch-tweets' ),	// this changes the root menu name 
+                'add_new'               => __( 'Add Rule by Screen Name', 'fetch-tweets' ),
+                'add_new_item'          => __( 'Add New Rule', 'fetch-tweets' ),
+                'edit'                  => __( 'Edit', 'fetch-tweets' ),
+                'edit_item'             => __( 'Edit Rule', 'fetch-tweets' ),
+                'new_item'              => __( 'New Rule', 'fetch-tweets' ),
+                'view'                  => __( 'View', 'fetch-tweets' ),
+                'view_item'             => __( 'View Fetched Tweets', 'fetch-tweets' ),
+                'search_items'          => __( 'Search Rules', 'fetch-tweets' ),
+                'not_found'             => __( 'No rule found for fetching tweets', 'fetch-tweets' ),
+                'not_found_in_trash'    => __( 'No Rule Found for Fetching Tweets in Trash', 'fetch-tweets' ),
+                'parent'                => __( 'Parent Rule', 'fetch-tweets' ),
+            );
+        }
+        private function _getTaxonomyTagLabelArgumnents() {
+            return array(
+                'name' => __( 'Tags', 'fetch-tweets' ),
+                'add_new_item' => __( 'Add New Tag', 'fetch-tweets' ),
+                'new_item_name' => __( 'New Tag', 'fetch-tweets' ),
+            );
+            
+        }
 	public function _replyToChangeTitleMetaBoxFieldLabel( $sText ) {
 		return __( 'Set the rule name here.', 'fetch-tweets' );		
 	}

@@ -119,7 +119,7 @@ abstract class FetchTweets_Option_ {
 		
 		// Set up the options array.
 		$_vOptions   = get_option( $sOptionKey, array() );
-		$aOptions   = FetchTweets_Utilities::uniteArrays( 
+		$aOptions    = FetchTweets_Utilities::uniteArrays( 
             ( false === $_vOptions ) ? array() : ( array ) $_vOptions, 
             self::$aStructure_Options 
         ); 	

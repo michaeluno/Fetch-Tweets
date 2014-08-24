@@ -51,6 +51,38 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
 		
 	}
 	
+    /**
+     * Returns the number of remaining requests from the given key.
+     * 
+     * @since       2.3.5
+     */
+    public function getRemaining( array $aDimensionalKeys ) {
+        
+        $aDimensionalKeys[] = 'remaining';
+        $_aStatuses  = $this->getStatus();
+        $_aResources = isset( $_aStatuses['resources'] ) ? $_aStatuses['resources'] : array();
+        return $this->_getDimensionalElement( $_aResources, $aDimensionalKeys );
+        
+    }
+        private function _getDimensionalElement( $aSubject, array $aDimensionalKeys ) {
+                        
+            if ( ! is_array( $aSubject ) ) {
+                return $aSubject;
+            }
+                        
+            if ( ! isset( $aDimensionalKeys[ 0 ] ) ) {
+                return -1;
+            }
+            if ( ! isset( $aSubject[ $aDimensionalKeys[ 0 ] ] ) ) {
+                 return -1;
+            } 
+            $aSubject = $aSubject[ $aDimensionalKeys[ 0 ] ];
+            unset( $aDimensionalKeys[ 0 ] );
+            $aDimensionalKeys = array_values( $aDimensionalKeys );
+            return $this->_getDimensionalElement( $aSubject, $aDimensionalKeys );
+            
+        }
+        
 	/**
 	 * Renders the output of status table.
 	 */

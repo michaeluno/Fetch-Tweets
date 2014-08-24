@@ -39,7 +39,9 @@ final class FetchTweets_Bootstrap {
 		$this->_localize();
 		
 		// 7. Check requirements.
-		add_action( 'admin_init', array( $this, '_replyToCheckRequirements' ) );
+        if ( $this->_bIsAdmin ) {
+            add_action( 'admin_init', array( $this, '_replyToCheckRequirements' ) );
+        }
 		
 		// 8. Schedule to call start up functions when all the plugins get loaded.
 		add_action( 'plugins_loaded', array( $this, '_replyToLoadPluginComponents' ), 999, 1 );
@@ -136,6 +138,9 @@ final class FetchTweets_Bootstrap {
 		// Schedule transient set-ups
 		wp_schedule_single_event( time(), 'fetch_tweets_action_setup_transients' );		
 		
+        // For the post type preview page.
+        flush_rewrite_rules( false );
+        
 	}
 	
 	public function _replyToDoWhenPluginDeactivates() {
@@ -205,7 +210,7 @@ final class FetchTweets_Bootstrap {
 			$GLOBALS['oFetchTweetsUserAds'] = isset( $GLOBALS['oFetchTweetsUserAds'] ) ? $GLOBALS['oFetchTweetsUserAds'] : new FetchTweets_UserAds;
 		}
 		
-		// 10. WordPress version backward compatibility.
+		// 11. WordPress version backward compatibility.
 		$this->_defineConstantesForBackwardCompatibility();
 		
 	}

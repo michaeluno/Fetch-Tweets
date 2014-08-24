@@ -61,7 +61,9 @@ abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_
             private function _getAuthenticationStatus( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret ) {
                 
                 $oTwitterOAuth_Verification = new FetchTweets_TwitterAPI_Verification( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret );
-                return $oTwitterOAuth_Verification->getStatus();
+                $_aStatuses = $oTwitterOAuth_Verification->getStatus();
+// FetchTweets_Debug::log( $_aStatuses );
+                return $_aStatuses;
                 
             }        
 

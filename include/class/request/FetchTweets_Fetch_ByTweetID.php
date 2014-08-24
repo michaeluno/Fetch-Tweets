@@ -26,7 +26,7 @@ abstract class FetchTweets_Fetch_ByTweetID extends FetchTweets_Fetch_ByCustomReq
 				'id'				=>	$__sTweetID,
 			);
 			$_sRequestURI = add_query_arg( $_aQueryArgs, "https://api.twitter.com/1.1/statuses/show.json" );			
-			$_aResponse[] = $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration );
+			$_aResponse[] = $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration, array( 'statuses', '/statuses/show/:id' ) );
 			
 		}
 		return $_aResponse;

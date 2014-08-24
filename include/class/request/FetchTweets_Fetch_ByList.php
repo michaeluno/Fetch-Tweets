@@ -46,7 +46,7 @@ abstract class FetchTweets_Fetch_ByList extends FetchTweets_Fetch_BySearch {
 			. "&access_secret=" . $_aAccessKeys['access_secret']		// 	this is not an API parameter but for the plugin transient ID
 		;
 			
-		return $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration );
+		return $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration, array( 'lists', '/lists/list' ) );
 		
 	}
 	
@@ -86,7 +86,7 @@ abstract class FetchTweets_Fetch_ByList extends FetchTweets_Fetch_BySearch {
 			$_aQueryArgs['access_secret'] = $_aAccessKeys['access_secret'];
 		}
 		$_sRequestURI = add_query_arg( $_aQueryArgs, "https://api.twitter.com/1.1/lists/statuses.json" );		
-		return $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration );
+		return $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration, array( 'lists', '/lists/statuses' ) );
 	
 	}
 	

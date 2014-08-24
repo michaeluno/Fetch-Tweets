@@ -10,20 +10,23 @@
  * @filter			fetch_tweets_filter_random_credentials
  */
 abstract class FetchTweets_Fetch_Cache {
-
-	protected $arrExpiredTransientsRequestURIs = array(); // stores the expired transients' request URIs
+    
+    /**
+     * Stores the expired transients' request URIs
+     */
+	protected $arrExpiredTransientsRequestURIs = array();
 	
 	public function __construct( $sConsumerKey='', $sConsumerSecret='', $sAccessToken='', $sAccessSecret='' ) {
 	
 		// Set up the connection.
 		$this->oOption = & $GLOBALS['oFetchTweets_Option'];		
 		
-		$_aApplicationKeys = $this->_getApplicationKeys( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret );
-		$this->oTwitterOAuth =  new FetchTweets_TwitterOAuth( 
-			$_aApplicationKeys['consumer_key'],
-			$_aApplicationKeys['consumer_secret'],
-			$_aApplicationKeys['access_token'],
-			$_aApplicationKeys['access_secret']
+		$this->_aApplicationKeys    = $this->_getApplicationKeys( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret );
+		$this->oTwitterOAuth        =  new FetchTweets_TwitterOAuth( 
+			$this->_aApplicationKeys['consumer_key'],
+			$this->_aApplicationKeys['consumer_secret'],
+			$this->_aApplicationKeys['access_token'],
+			$this->_aApplicationKeys['access_secret']
 		);
 						
 		$this->oBase64 = new FetchTweets_Base64;	
@@ -62,9 +65,11 @@ abstract class FetchTweets_Fetch_Cache {
 	 * 
 	 * @since			2.1
 	 * @remark			The scope is public as the event class calls it.
+     * @remark          This is not for Twitter API requests.
 	 */
 	public function setGETRequestCache( $sRequestURI ) {
 	
+        $sRequestURI = trim( $sRequestURI );
 		$_aResponse = wp_remote_get( $sRequestURI, array( 'timeout' => 15, 'sslverify' => false ) );
 
 		if ( is_wp_error( $_aResponse ) ) {
@@ -80,7 +85,7 @@ abstract class FetchTweets_Fetch_Cache {
 		// If the result is not an array, something went wrong.
 		if ( ! is_array( $_aTweets ) ) return ( array ) $_aTweets;		
 		
-		$this->setTransient( trim( $sRequestURI ), $_aTweets );
+		$this->setTransient( $sRequestURI, $_aTweets );
 		return $_aTweets;
 		
 	}
@@ -88,14 +93,30 @@ abstract class FetchTweets_Fetch_Cache {
 	/**
 	 * Performs the API request and sets the cache.
 	 * 
-	 * @access			public
-	 * @remark			The scope is public since the cache renewal event also uses it.
+	 * @access      public
+	 * @remark      The scope is public since the cache renewal event also uses it.
+     * @param       string      $sRawRequestURI     The request URI that MAY contain embedded access keys in the query keys.
+     * @param       string      $sArrayKey          The array key in the response array. For the search API request, a certain key is need to be set.
+     * @param       array       $aRateLimitKeys     The representation of dimensional keys for the rate limit status-resource array. 
 	 */
-	public function setAPIGETRequestCache( $strRequestURI, $strArrayKey=null ) {
+	public function setAPIGETRequestCache( $sRawRequestURI, $sArrayKey=null, $aRateLimitKeys=array() ) {
 
-		// Check if a custom access keys are set.
-		$_aAccessKeys = $this->_getAccessKeysFromQueryURI( $strRequestURI );
-		$_sSanitizedRequestURI = $this->_sanitizeRequstURI( $strRequestURI );
+        /**
+         * Stores requested URIs to prevent multiple requests per a page load which causes the rate limit to exceed.
+         */
+        static $_aRequestedURIs = array();
+                
+        $sRawRequestURI = trim( $sRawRequestURI );
+        $_sRequestURI   = $this->_sanitizeRequstURI( $sRawRequestURI );
+        
+        // Check if it has been already requested. If so return an error.
+        if ( in_array( $_sRequestURI, $_aRequestedURIs ) ) {
+            return array( 'error' => __( 'Excessive requests have been made. Please reload the page.', 'fetch-tweets' ) );
+        }        
+        $_aRequestedURIs[ $_sRequestURI ] = $_sRequestURI;        
+        
+        // Check if a custom access keys are set.
+		$_aAccessKeys           = $this->_getAccessKeysFromQueryURI( $sRawRequestURI );
 		$_oOriginalTwitterOAuth = $this->oTwitterOAuth;
 		if ( ! empty( $_aAccessKeys ) ) {
 			$this->oTwitterOAuth = new FetchTweets_TwitterOAuth( 
@@ -105,39 +126,57 @@ abstract class FetchTweets_Fetch_Cache {
 				$_aAccessKeys['access_secret']
 			);
 		}
-		
+        
+        // Check the rate limit.
+        if ( ! empty( $aRateLimitKeys ) ) {
+			
+            $_oRateLimit = new FetchTweets_TwitterAPI_Verification( 
+                isset( $_aAccessKeys['consumer_key'] ) ? $_aAccessKeys['consumer_key'] : $this->_aApplicationKeys['consumer_key'], 
+                isset( $_aAccessKeys['consumer_secret'] ) ? $_aAccessKeys['consumer_secret'] : $this->_aApplicationKeys['consumer_secret'],
+                isset( $_aAccessKeys['access_token'] ) ? $_aAccessKeys['access_token'] : $this->_aApplicationKeys['access_token'],
+                isset( $_aAccessKeys['access_secret'] ) ? $_aAccessKeys['access_secret'] : $this->_aApplicationKeys['access_secret']
+            );
+            $_iRemaining    = $_oRateLimit->getRemaining( $aRateLimitKeys );            
+// FetchTweets_Debug::log( 'remaining: ' . $_iRemaining );
+            if ( ! $_iRemaining ) {
+                return array( 'error' => __( 'The rate limit exceeded. Please try it later.', 'fetch-tweets' ) );
+            }
+        }
+		        
 		// Perform the API request.
-		$arrTweets =  $this->oTwitterOAuth->get( $_sSanitizedRequestURI );		
+		$_aTweets =  $this->oTwitterOAuth->get( $_sRequestURI );		
 			
 		// Restore the original Twitter oAuth object.
 		$this->oTwitterOAuth = $_oOriginalTwitterOAuth;
 		
 		// If the array key is specified, return the contents of the key element. Otherwise, return the retrieved array intact.
-		if ( ! is_null( $strArrayKey ) && isset( $arrTweets[ $strArrayKey ] ) )
-			$arrTweets = $arrTweets[ $strArrayKey ];
+		if ( ! is_null( $sArrayKey ) && isset( $_aTweets[ $sArrayKey ] ) ) {
+			$_aTweets = $_aTweets[ $sArrayKey ];
+        }
 					
 		// If empty, return an empty array.
-		if ( empty( $arrTweets ) ) return array();
+		if ( empty( $_aTweets ) ) { return array(); }
 		
 		// If the result is not an array, something went wrong.
-		if ( ! is_array( $arrTweets ) )
-			return ( array ) $arrTweets;
+		if ( ! is_array( $_aTweets ) ) {
+			return ( array ) $_aTweets;
+        }
 		
 		// If an error occurs, do not set the cache.	
 		if ( ! $this->oOption->aOptions['cache_settings']['cache_for_errors'] ) {
-			if ( isset( $arrTweets['errors'][ 0 ]['message'], $arrTweets['errors'][ 0 ]['code'] ) ) {
-				$arrTweets['errors'][ 0 ]['message'] .= "<!-- Request URI: {$_sSanitizedRequestURI} -->";	
-				return ( array ) $arrTweets;
+			if ( isset( $_aTweets['errors'][ 0 ]['message'], $_aTweets['errors'][ 0 ]['code'] ) ) {
+				$_aTweets['errors'][ 0 ]['message'] .= "<!-- Request URI: {$_sRequestURI} -->";	
+				return ( array ) $_aTweets;
 			}
 		}
 		
 		// Save the cache		
-		$this->setTransient( trim( $strRequestURI ), $arrTweets );
+		$this->setTransient( $_sRequestURI, $_aTweets );
 
-		return ( array ) $arrTweets;
+		return ( array ) $_aTweets;
 		
 	}
-		
+        		
 		/**
 		 * Returns an array of access keys from the given request URI.
 		 * 
@@ -168,7 +207,7 @@ abstract class FetchTweets_Fetch_Cache {
 		 * @since			2
 		 */
 		protected function _sanitizeRequstURI( $sRequestURI ) {
-			return remove_query_arg( array( 'consumer_key', 'consumer_secret', 'access_token', 'access_secret' ), $sRequestURI );
+			return remove_query_arg( array( 'consumer_key', 'consumer_secret', 'access_token', 'access_secret' ), trim( $sRequestURI ) );
 		}
 	
 	/**
@@ -177,41 +216,46 @@ abstract class FetchTweets_Fetch_Cache {
 	 * @since			1.2.0
 	 * @since			1.3.0			Made it public as the event method uses it.
 	 */
-	public function setTransient( $sRequestURI, $vData, $iTime=null, $fIgnoreLock=false ) {
+	public function setTransient( $sRequestURI, $vData, $iTime=null, $bIgnoreLock=false ) {
 
-		$_sTransientKey = FetchTweets_Commons::TransientPrefix . "_" . md5( $sRequestURI );
-		$_sLockTransient = FetchTweets_Commons::TransientPrefix . '_' . md5( "Lock_" . $_sTransientKey );
+		$_sTransientKey     = FetchTweets_Commons::TransientPrefix . "_" . md5( $sRequestURI );
+		$_sLockTransient    = FetchTweets_Commons::TransientPrefix . '_' . md5( "Lock_" . $_sTransientKey );
 		
-		// Give some time to the server to store transients in case simultaneous accesses cursors.
+		// Give some time to the server to store transients in case of simultaneous accesses.
 		if ( FetchTweets_Cron::isBackground() ) {
 			sleep( 1 );
 		}
 		
-		// Check if the transient is locked
-		if ( ! $fIgnoreLock && false !== get_transient( $_sLockTransient ) ) {
+		// Check if the transient is locked.
+		if ( ! $bIgnoreLock && false !== get_transient( $_sLockTransient ) ) {
 			return;	// it means the cache is being modified.
 		}
 		
 		// Set a lock flag transient that indicates the transient is being renewed.
-		if ( ! $fIgnoreLock ) {			
+		if ( ! $bIgnoreLock ) {			
 			set_transient(
 				$_sLockTransient, 
 				'locked', // the value can be anything that yields true
 				10
 			);	
 		}
-	
-		// Store the cache
-		set_transient(
-			$_sTransientKey, 
-			array( 'mod' => $iTime ? $iTime : time(), 'data' => $this->oBase64->encode( $vData ) )
-		);
-// FetchTweets_Debug::logArray( 'set transient: ' . $sRequestURI );
 
-		// Schedules the action to run in the background with WP Cron. If already scheduled, skip.
+		// Store the cache
+		$_bIsSet = set_transient(
+			$_sTransientKey, 
+			array( 
+                'mod' => $iTime ? $iTime : time(),
+                'data' => $this->oBase64->encode( $vData ),
+            )
+		);
+        if ( ! $_bIsSet ) {
+            return;
+        }
+        
+		// Schedule the action to run in the background with WP Cron. If already scheduled, skip.
 		// This adds the embedding elements which takes some time to process.
 		$_aArgs = array( $sRequestURI );
-		if ( $iTime || wp_next_scheduled( 'fetch_tweets_action_transient_add_oembed_elements', $_aArgs ) ) return;
+		if ( $iTime || wp_next_scheduled( 'fetch_tweets_action_transient_add_oembed_elements', $_aArgs ) ) { return; }
 		wp_schedule_single_event( 
 			time(), 
 			'fetch_tweets_action_transient_add_oembed_elements', 	// the FetchTweets_Event class will check this action hook and executes it with WP Cron.
@@ -224,7 +268,6 @@ abstract class FetchTweets_Fetch_Cache {
 			wp_remote_get( site_url( "/wp-cron.php" ), array( 'timeout' => 0.01, 'sslverify'   => false, ) );
 		}
 		
-
 		// Delete the lock transient
 		// delete_transient( $_sLockTransient );
 
@@ -244,54 +287,68 @@ abstract class FetchTweets_Fetch_Cache {
 		$_vData = get_transient( $sTransientKey );
 		
 		// if it's false, no transient is stored. Otherwise, some values are in there.
-		if ( $_vData === false ) return false;
+		if ( false === $_vData ) { return false; }
 							
 		// If it does not have to be an array. Return the raw result.
-		if ( ! $fForceArray ) return $_vData;
+		if ( ! $fForceArray ) { return $_vData; }
 		
 		// If it's array, okay.
-		if ( is_array( $_vData ) ) return $_vData;
-		
+		if ( is_array( $_vData ) ) { return $_vData; }
 		
 		// Maybe it's encoded
-		if ( is_string( $_vData ) && is_serialized( $_vData ) ) 
+		if ( is_string( $_vData ) && is_serialized( $_vData ) ) {
 			return unserialize( $_vData );
-		
+        }
 			
 		// Maybe it's an object. In that case, convert it to an associative array.
-		if ( is_object( $_vData ) )
+		if ( is_object( $_vData ) ) {
 			return get_object_vars( $_vData );
+        }
 			
 		// It's an unknown type. So cast array and return it.
 		return ( array ) $_vData;
 			
 	}
 	
+    /**
+     * The flag to indicate whether the cache update tasks are called or not.
+     */
+    static private $_bUpdateCacheCalled = null;
+    
 	/*
-	 * Callbacks
+	 * Schedules the update cache task.
+     * 
+     * This is for the shutdown hook
 	 * */
-	public function _replyToUpdateCacheItems() {	// for the shutdown hook
+	public function _replyToUpdateCacheItems() {	
+
+        if ( null !== self::$_bUpdateCacheCalled ) {
+            return;
+        }
+        self::$_bUpdateCacheCalled = true;
+        
+		if ( empty( $this->arrExpiredTransientsRequestURIs ) ) { return; }
 		
-		if ( empty( $this->arrExpiredTransientsRequestURIs ) ) return;
-		
-		// Perform multi-dimensional array_unique()
-		$this->arrExpiredTransientsRequestURIs = array_map( "unserialize", array_unique( array_map( "serialize", $this->arrExpiredTransientsRequestURIs ) ) );
+        // Perform multi-dimensional array_unique()
+		// @deprecated As of v2.3.5 the request URI is set to the key, so it is already unique by default.
+		// $this->arrExpiredTransientsRequestURIs = array_map( "unserialize", array_unique( array_map( "serialize", $this->arrExpiredTransientsRequestURIs ) ) );
 		
 		$_iScheduled = 0;
 		foreach( $this->arrExpiredTransientsRequestURIs as $_aExpiredCacheRequest ) {
 			
 			/* the structure of $_aExpiredCacheRequest = array(
-				'URI'	=> the API request URI
-				'key'	=> the array key that holds the result. e.g. for search results, the 'statuses' key holds the fetched tweets.
+				'URI'	                => the API request URI
+				'key'	                => the array key that holds the result. e.g. for search results, the 'statuses' key holds the fetched tweets.
+                'rate_limit_status_key' => the array holding the representation of the rate limit status dimensional key.
 			*/
 			
 			// Check if the URI key holds a valid url.
-			if ( ! filter_var( $_aExpiredCacheRequest['URI'], FILTER_VALIDATE_URL ) ) continue;
+			if ( ! filter_var( $_aExpiredCacheRequest['URI'], FILTER_VALIDATE_URL ) ) { continue; }
 			
 			// Schedules the action to run in the background with WP Cron.
 			// If already scheduled, skip.
 			$_aArgs = array( $_aExpiredCacheRequest );
-			if ( wp_next_scheduled( 'fetch_tweets_action_transient_renewal', $_aArgs ) ) continue; 
+			if ( wp_next_scheduled( 'fetch_tweets_action_transient_renewal', $_aArgs ) ) { continue; }
 			wp_schedule_single_event( 
 				time(), 
 				'fetch_tweets_action_transient_renewal', 	// the FetchTweets_Event class will check this action hook and executes it with WP Cron.
@@ -300,14 +357,19 @@ abstract class FetchTweets_Fetch_Cache {
 			$_iScheduled++;
 			
 		}
-		if ( $_iScheduled && 'intense' == $this->oOption->aOptions['cache_settings']['caching_mode'] ) {
+        
+        if ( ! $_iScheduled ) {
+            return;
+        }
+        
+        // Call the background process.
+		if ( 'intense' == $this->oOption->aOptions['cache_settings']['caching_mode'] ) {
 			FetchTweets_Cron::see();	
-		} else {
-			wp_remote_get( site_url( "/wp-cron.php" ), array( 'timeout' => 0.01, 'sslverify'   => false, ) );
-		}
+            return;
+		} 
+		wp_remote_get( site_url( "/wp-cron.php" ), array( 'timeout' => 0.01, 'sslverify'   => false, ) );		
 				
 	}
-	
 	
 		/**
 		 * Retrieves the server set allowed maximum PHP script execution time.
@@ -324,4 +386,5 @@ abstract class FetchTweets_Fetch_Cache {
 				: $_iSetTime;
 			
 		}
+        
 }

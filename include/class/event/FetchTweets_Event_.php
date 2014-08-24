@@ -103,7 +103,7 @@ abstract class FetchTweets_Event_ {
 		if ( '_not_api_request' == $aRequest['key'] ) {
 			$_oFetch->setGETRequestCache( $aRequest['URI'] );
 		} else {
-			$_oFetch->setAPIGETRequestCache( $aRequest['URI'], $aRequest['key'] );
+			$_oFetch->setAPIGETRequestCache( $aRequest['URI'], $aRequest['key'], $aRequest['rate_limit_status_key'] );
 		}
 		
 	}

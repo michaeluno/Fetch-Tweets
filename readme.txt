@@ -215,8 +215,9 @@ It could be that your host disables WP Cron. In that case, try the intense cachi
 = 2.3.5 =
 - Optimized the performance.
 - Tweaked the built-in templates to escape certain strings in HTML attributes.
-- Fixed an issue that tweets displayed with tags could not be formatted properly.
 - Added warning messages to be displayed in the widget outputs when no rule or tag is selected.
+- Fixed an issue that excessive API requests could be made in a single page load when multiple shortcodes or plugin PHP functions are used in the page.
+- Fixed an issue that tweets displayed with tags could not be formatted properly.
 
 = 2.3.4 - 05/15/2014 =
 - Fixed an issue on some non GNU systems, like Solaris, that a fatal error occurred when the plugin is loaded.

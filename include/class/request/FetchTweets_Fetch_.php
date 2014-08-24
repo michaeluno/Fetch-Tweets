@@ -57,10 +57,10 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 	 */	
 	public function drawTweets( $aArgs ) {
 
-		$aRawArgs = ( array ) $aArgs; 
-		$aArgs = FetchTweets_Utilities::uniteArrays( $aRawArgs, $this->oOption->aOptions['default_values'], $this->oOption->aStructure_DefaultParams, $this->oOption->aStructure_DefaultTemplateOptions );
-		$aArgs['id'] = isset( $aArgs['ids'] ) && ! empty( $aArgs['ids'] ) ? $aArgs['ids'] : $aArgs['id'];	// backward compatibility
-		$aArgs['id'] = is_array( $aArgs['id'] ) ? $aArgs['id'] : preg_split( "/[,]\s*/", trim( ( string ) $aArgs['id'] ), 0, PREG_SPLIT_NO_EMPTY );
+		$aRawArgs       = ( array ) $aArgs; 
+		$aArgs          = FetchTweets_Utilities::uniteArrays( $aRawArgs, $this->oOption->aOptions['default_values'], $this->oOption->aStructure_DefaultParams, $this->oOption->aStructure_DefaultTemplateOptions );
+		$aArgs['id']    = isset( $aArgs['ids'] ) && ! empty( $aArgs['ids'] ) ? $aArgs['ids'] : $aArgs['id'];	// backward compatibility
+		$aArgs['id']    = is_array( $aArgs['id'] ) ? $aArgs['id'] : preg_split( "/[,]\s*/", trim( ( string ) $aArgs['id'] ), 0, PREG_SPLIT_NO_EMPTY );
 
 		// Debug
 		// echo var_dump( $aArgs );
@@ -77,8 +77,7 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 			echo '<strong>Fetch Tweets</strong>: ' . $_aTweets['errors'][ 0 ]['message'] . ' ' . __( 'Code', 'fetch-tweets' ) . ':' . $_aTweets['errors'][ 0 ]['code'];	
 			return;
 		}
-		else if ( isset( $_aTweets['error'], $_aTweets['request'] ) && $_aTweets['error'] && is_string( $_aTweets['error'] ) ) {
-
+		if ( isset( $_aTweets['error'] ) && $_aTweets['error'] && is_string( $_aTweets['error'] ) ) {
 			echo '<strong>Fetch Tweets</strong>: ' . $_aTweets['error'];	
 			return;
 		}
@@ -101,19 +100,31 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 	 */
 	public function getTweetsAsArray( & $aArgs, $aRawArgs ) {	
 
-		if ( isset( $aArgs['q'] ) )	// custom call by search keyword
+        // custom call by search keyword
+		if ( isset( $aArgs['q'] ) )	{
 			return $this->getTweetsBySearch( $aArgs['q'], $aArgs['count'], $aArgs['lang'], $aArgs['result_type'], $aArgs['until'], $aArgs['geocode'], $aArgs['cache'] );
-		else if ( isset( $aArgs['screen_name'] ) )	// custom call by screen name
+        }
+        
+        // custom call by screen name
+		if ( isset( $aArgs['screen_name'] ) ) {
 			return $this->getTweetsByScreenNames( $aArgs['screen_name'], $aArgs['count'], $aArgs['include_rts'], $aArgs['exclude_replies'], $aArgs['cache'] );
-		else if ( isset( $aArgs['list_id'] ) ) 	// only public list can be fetched with this method
+        }
+        
+        // only public list can be fetched with this method
+		if ( isset( $aArgs['list_id'] ) ) {
 			return $this->_getTweetsByListID( $aArgs['list_id'], $aArgs['include_rts'], $aArgs['cache'] );
-		else if ( isset( $aArgs['account_id'] ) )
+        }
+        
+		if ( isset( $aArgs['account_id'] ) ) {
 			return $this->_getTweetsByHomeTimeline( $aArgs['account_id'], $aArgs['exclude_replies'], $aArgs['include_rts'] );
-		else if ( isset( $aArgs['tweet_id'] ) ) {
+        }
+		
+        if ( isset( $aArgs['tweet_id'] ) ) {
 			return $this->_getResponseByTweetID( $aArgs['tweet_id'], $aArgs['cache'] );
 		}
-		else	// normal
-			return $this->_getTweetsAsArrayByPostIDs( $aArgs['id'], $aArgs, $aRawArgs );
+		
+        // normal
+		return $this->_getTweetsAsArrayByPostIDs( $aArgs['id'], $aArgs, $aRawArgs );
 		
 	}
 		/**
@@ -126,12 +137,12 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
 			$_aTweets = array();
 			foreach( ( array ) $vPostIDs as $_iPostID ) {
 				
-				$aArgs['tweet_type'] = get_post_meta( $_iPostID, 'tweet_type', true );
-				$aArgs['count'] = get_post_meta( $_iPostID, 'item_count', true );
-				$aArgs['include_rts'] = get_post_meta( $_iPostID, 'include_rts', true );
-				$aArgs['cache'] = get_post_meta( $_iPostID, 'cache', true );
+				$aArgs['tweet_type']    = get_post_meta( $_iPostID, 'tweet_type', true );
+				$aArgs['count']         = get_post_meta( $_iPostID, 'item_count', true );
+				$aArgs['include_rts']   = get_post_meta( $_iPostID, 'include_rts', true );
+				$aArgs['cache']         = get_post_meta( $_iPostID, 'cache', true );
 				
-				$_aRetrievedTweets = array();
+				$_aRetrievedTweets      = array();
 				switch ( $aArgs['tweet_type'] ) {
 					case 'search':
 						$aArgs['q'] = get_post_meta( $_iPostID, 'search_keyword', true );	

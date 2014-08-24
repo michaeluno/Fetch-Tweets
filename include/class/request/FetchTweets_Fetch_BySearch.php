@@ -27,7 +27,7 @@ abstract class FetchTweets_Fetch_BySearch extends FetchTweets_Fetch_ByTag {
 			. ( empty( $strUntil ) ? "" : "&until={$strUntil}" )
 			. ( empty( $strGeoCode ) ? "" : "&geocode={$strGeoCode}" )
 			. "&include_entities=1";		
-		return $this->doAPIRequest_Get( $strRequestURI, 'statuses', $intCacheDuration );
+		return $this->doAPIRequest_Get( $strRequestURI, 'statuses', $intCacheDuration, array( 'search', '/search/tweets' ) );
 					
 	}
 	

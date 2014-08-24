@@ -18,10 +18,11 @@ abstract class FetchTweets_Fetch_ByScreenName extends FetchTweets_Fetch_ByList {
 	 */
 	protected function getTweetsByScreenNames( $strUsers, $intCount, $fIncludeRetweets=false, $fExcludeReplies=false, $intCacheDuration=1200 ) {
 
-		$arrTweets = array();
+		$arrTweets      = array();
 		$arrScreenNames = FetchTweets_Utilities::convertStringToArray( $strUsers, ',' );
-		foreach( $arrScreenNames as $strScreenName ) 			
-			$arrTweets = array_merge( $this->_getTweetsByScreenName( $strScreenName, $intCount, $fIncludeRetweets, $fExcludeReplies, $intCacheDuration ), $arrTweets );
+		foreach( $arrScreenNames as $strScreenName ) {
+			$arrTweets  = array_merge( $this->_getTweetsByScreenName( $strScreenName, $intCount, $fIncludeRetweets, $fExcludeReplies, $intCacheDuration ), $arrTweets );
+        }		
 			
 		return $arrTweets;
 		
@@ -44,7 +45,7 @@ abstract class FetchTweets_Fetch_ByScreenName extends FetchTweets_Fetch_ByList {
 				. "&include_rts=" . ( $fIncludeRetweets ? 1 : 0 )
 				. "&exclude_replies=" . ( $fExcludeReplies ? 1 : 0 );
 			
-			return $this->doAPIRequest_Get( $strRequestURI, null, $intCacheDuration );
+			return $this->doAPIRequest_Get( $strRequestURI, null, $intCacheDuration, array( 'statuses', '/statuses/user_timeline' ) );
 					
 		}
 	

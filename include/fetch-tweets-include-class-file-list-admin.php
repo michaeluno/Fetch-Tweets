@@ -1,7 +1,6 @@
 <?php 
 $_aAdminClassFiles = array( 
 	"FetchTweets_Redirects"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_Redirects.php", 
-	"FetchTweets_SimplePie"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_SimplePie.php", 
 	"FetchTweets_UserAds"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_UserAds.php", 
 	"FetchTweets_UserAds_"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_UserAds_.php", 
 	"FetchTweets_AdminPage"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/FetchTweets_AdminPage.php", 
@@ -40,7 +39,4 @@ $_aAdminClassFiles = array(
 	"FetchTweets_MetaBox_Timeline"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/meta_box/FetchTweets_MetaBox_Timeline.php", 
 	"FetchTweets_MetaBox_Timeline_"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/meta_box/FetchTweets_MetaBox_Timeline_.php", 
 	"FetchTweets_MetaBox_TweetID"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/meta_box/FetchTweets_MetaBox_TweetID.php", 
-	"FetchTweets_SimplePie__"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_SimplePie.php", 
-	"FetchTweets_Cache"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_SimplePie.php", 
-	"FetchTweets_Feed_Cache_Transient"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_SimplePie.php", 
 );
