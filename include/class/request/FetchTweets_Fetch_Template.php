@@ -36,12 +36,14 @@ abstract class FetchTweets_Fetch_Template extends FetchTweets_Fetch_Format {
 		protected function _getTemplateSlug( $aPostIDs, $sTemplateSlug='' ) {
 
 			// Return the one defined in the caller argument.
-			if ( $sTemplateSlug && isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) )
+			if ( $sTemplateSlug && isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) ) {
 				return $this->_checkNecessaryFileExists( $sTemplateSlug );
+            }
 			
 			// Return the one defined in the custom post rule.
-			if ( isset( $aPostIDs[ 0 ] ) )
+			if ( isset( $aPostIDs[ 0 ] ) ) {
 				$sTemplateSlug = get_post_meta( $aPostIDs[ 0 ], 'fetch_tweets_template', true );
+            }
 
 			$sTemplateSlug = $this->_checkNecessaryFileExists( $sTemplateSlug );
 			
@@ -49,8 +51,10 @@ abstract class FetchTweets_Fetch_Template extends FetchTweets_Fetch_Format {
 			if ( 
 				empty( $sTemplateSlug ) 
 				|| ! isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) 
-			)
-				return $GLOBALS['oFetchTweets_Templates']->getDefaultTemplateSlug();
+			) {
+                $_oTemplate = FetchTweets_Templates::getInstance();
+				return $_oTemplate->getDefaultTemplateSlug();
+            }
 			
 			// Something wrong happened.
 			return $sTemplateSlug;
@@ -68,8 +72,10 @@ abstract class FetchTweets_Fetch_Template extends FetchTweets_Fetch_Format {
 						|| ! @is_file( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ]['strDirPath'] . '/template.php' )
 						|| ! @is_file( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ]['strDirPath'] . '/style.css' )
 					)
-				)
-					return $GLOBALS['oFetchTweets_Templates']->getDefaultTemplateSlug();		
+				) {
+                    $_oTemplate = FetchTweets_Templates::getInstance();
+					return $_oTemplate->getDefaultTemplateSlug();
+                }
 				
 				return $sTemplateSlug;
 				
@@ -86,7 +92,8 @@ abstract class FetchTweets_Fetch_Template extends FetchTweets_Fetch_Format {
 			}
 			
 			if ( empty( $sTemplateSlug ) || ! isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) ) {
-				return $GLOBALS['oFetchTweets_Templates']->getDefaultTemplatePath();
+                $_oTemplate = FetchTweets_Templates::getInstance();
+				return $_oTemplate->getDefaultTemplatePath();
 			}
 				
 			$_sTemplatePath = $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ]['strTemplatePath'];

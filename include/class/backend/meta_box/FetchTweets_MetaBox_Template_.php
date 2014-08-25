@@ -3,7 +3,7 @@ abstract class FetchTweets_MetaBox_Template_ extends FetchTweets_AdminPageFramew
 
 	public function setUp() {
 		
-		$_oTemplates = new FetchTweets_Templates;
+		$_oTemplates = FetchTweets_Templates::getInstance();
 		$this->addSettingFields(			
 			array(
 				'field_id'		=> 'fetch_tweets_template',

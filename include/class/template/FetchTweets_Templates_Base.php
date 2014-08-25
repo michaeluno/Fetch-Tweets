@@ -11,6 +11,13 @@
 
 abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility {
 	
+    /**
+     * Stores the self-instance.
+     * 
+     * @since       2.3.6
+     */
+    static public $oInstance;	    
+    
 	/**
 	 * Represents the template array structure stored in the option array.
 	 * 
@@ -44,7 +51,38 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 		'intIndex'				=> null,
 		
 	);
-		
+    
+    /**
+     * Returns the instance of the class.
+     * 
+     * This is to ensure only one instance exists.
+     * 
+     * @since       2.3.6
+     */
+    static public function getInstance() {
+        
+        self::$oInstance = self::$oInstance 
+            ? self::$oInstance 
+            : ( isset( $GLOBALS['oFetchTweets_Templates'] ) && ( $GLOBALS['oFetchTweets_Templates'] instanceof FetchTweets_Templates )
+                ? $GLOBALS['oFetchTweets_Templates']
+                : new FetchTweets_Templates()
+            );
+        $GLOBALS['oFetchTweets_Templates'] = self::$oInstance;
+        return self::$oInstance;
+        
+    }     
+    
+    /**
+     * Sets up hooks and properties.
+     */
+    public function __construct() {
+
+		$this->loadFunctionsOfActiveTemplates();
+        $this->loadStylesOfActiveTemplates();		
+        $this->loadSettingsOfActiveTemplates();
+
+    }    
+        
 	/**
 	 * Returns an array that holds arrays of activated template information.
 	 * 
@@ -53,14 +91,16 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 	 */
 	public function getActiveTemplates() {
 		
+        $_oOption = FetchTweets_Option::getInstance();
+        
 		// The default template (saved or dynamically generated)
-		$_aDefaultTemplate = empty( $GLOBALS['oFetchTweets_Option']->aOptions['arrDefaultTemplate'] ) || ! @is_file( $GLOBALS['oFetchTweets_Option']->aOptions['arrDefaultTemplate']['strCSSPath'] )
+		$_aDefaultTemplate = empty( $_oOption->aOptions['arrDefaultTemplate'] ) || ! @is_file( $_oOption->aOptions['arrDefaultTemplate']['strCSSPath'] )
 			? $this->findDefaultTemplateDetails()
-			: $GLOBALS['oFetchTweets_Option']->aOptions['arrDefaultTemplate'] + self::$aStructure_Template;
+			: $_oOption->aOptions['arrDefaultTemplate'] + self::$aStructure_Template;
 		
 		// The saved active templates.
-		$_aActiveTemplates = isset( $GLOBALS['oFetchTweets_Option']->aOptions['arrTemplates'] )
-			? $GLOBALS['oFetchTweets_Option']->aOptions['arrTemplates']
+		$_aActiveTemplates = isset( $_oOption->aOptions['arrTemplates'] )
+			? $_oOption->aOptions['arrTemplates']
 			: array();
 				
 		// Add the default template to the activated template.
@@ -166,7 +206,7 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 	 * @return			array				The default template array
 	 */
 	public function findDefaultTemplateDetails( $sDirPath=null ) {	
-		
+		        
 		$sDirPath = isset( $sDirPath ) && $sDirPath
 			? $sDirPath
 			: FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'plain';
@@ -253,8 +293,10 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 	 */ 
 	public function loadSettingsOfActiveTemplates() {
 		
-		if ( ! is_admin() ) return;
-		
+		if ( ! is_admin() ) { return; }
+		        
+        if ( ! FetchTweets_PluginUtility::isInPluginAdminPage() ) { return; }
+        
 		foreach( $this->getActiveTemplates() as $__aTemplate ) {
 			
 			$_sSettingsPath = FetchTweets_WPUtilities::getReadableFilePath( $__aTemplate['strSettingsPath'], $__aTemplate['strDirRelativePath'] . DIRECTORY_SEPARATOR . 'settings.php' );
@@ -313,4 +355,13 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 		
 	}	
 
+    /**
+     * 
+     * @since       2.3.6
+     */
+    public function loadStylesOfActiveTemplates() {
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueueActiveTemplateStyles' ) );
+    }
+   
+    
 }

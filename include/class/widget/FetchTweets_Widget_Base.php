@@ -67,12 +67,13 @@ abstract class FetchTweets_Widget_Base extends WP_Widget {
 	public function form( $aInstance ) {	
 		
 		// Avoid undefined index warnings.
-		$aInstance = $aInstance + $this->_aStructure_FormElements;
-		$aInstance['template'] = isset( $aInstance['template'] ) 
+        $_oTemplate             = FetchTweets_Templates::getInstance();
+		$aInstance              = $aInstance + $this->_aStructure_FormElements;
+		$aInstance['template']  = isset( $aInstance['template'] ) 
 			? $aInstance['template']
-			: $GLOBALS['oFetchTweets_Templates']->getDefaultTemplateSlug();
-		$_aIDs = $this->_getFieldValues( 'id' );
-		$_aNames = $this->_getFieldValues( 'name' );
+			: $_oTemplate->getDefaultTemplateSlug();
+		$_aIDs                  = $this->_getFieldValues( 'id' );
+		$_aNames                = $this->_getFieldValues( 'name' );
 		
 		$this->echoFormElements( $aInstance, $_aIDs, $_aNames );
 		
@@ -85,11 +86,11 @@ abstract class FetchTweets_Widget_Base extends WP_Widget {
 		private function _getFieldValues( $sField='id' ) {
 			
 			$_aFields = array();
-			foreach( $this->_aStructure_FormElements as $__sFieldKey => $__v )  
+			foreach( $this->_aStructure_FormElements as $__sFieldKey => $__v ) {
 				$_aFields[ $__sFieldKey ] = 'id' == $sField
 					? $this->get_field_id( $__sFieldKey )
 					: $this->get_field_name( $__sFieldKey );
-		
+            }
 			return $_aFields;
 			
 		}

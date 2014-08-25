@@ -171,16 +171,11 @@ final class FetchTweets_Bootstrap {
 		
 		// All the necessary classes have been already loaded.
 				
-		// 2. Option Object
-		$GLOBALS['oFetchTweets_Option'] = new FetchTweets_Option( FetchTweets_Commons::$sAdminKey );
+		// 2. Option Object - the instantiation will handle the initial set-up
+        FetchTweets_Option::getInstance();
 
-		// 3. Templates
-		$GLOBALS['oFetchTweets_Templates'] = new FetchTweets_Templates;		
-		$GLOBALS['oFetchTweets_Templates']->loadFunctionsOfActiveTemplates();
-		add_action( 'wp_enqueue_scripts', array( $GLOBALS['oFetchTweets_Templates'], 'enqueueActiveTemplateStyles' ) );
-		if ( $this->_isInPluginAdminPage() || isset( $GLOBALS['pagenow'] ) && 'plugins.php' === $GLOBALS['pagenow'] ) {
-			$GLOBALS['oFetchTweets_Templates']->loadSettingsOfActiveTemplates();
-		}
+		// 3. Templates - the instantiation will handle the initial set-up
+		FetchTweets_Templates::getInstance();
 		
 		// 4. Admin pages
 		if ( $this->_bIsAdmin ) {
@@ -206,7 +201,7 @@ final class FetchTweets_Bootstrap {
 		new FetchTweets_Event;	
 		
 		// 10. MISC
-		if ( $this->_isInPluginAdminPage() ) {
+		if ( FetchTweets_PluginUtility::isInPluginAdminPage() ) {
 			$GLOBALS['oFetchTweetsUserAds'] = isset( $GLOBALS['oFetchTweetsUserAds'] ) ? $GLOBALS['oFetchTweetsUserAds'] : new FetchTweets_UserAds;
 		}
 		
@@ -214,35 +209,7 @@ final class FetchTweets_Bootstrap {
 		$this->_defineConstantesForBackwardCompatibility();
 		
 	}
-        /**
-         * Checks whether the page is loaded in one of the plugin admin pages.
-         * 
-         * @since       2.3.5
-         */
-        private function _isInPluginAdminPage() {
-            
-            static $_bIsPluginAdminPage;
-            
-            if ( isset( $_bIsPluginAdminPage ) ) {
-                return $_bIsPluginAdminPage;
-            }
-            
-            if ( ! $this->_bIsAdmin ) {
-                return false;
-            }
-            if ( ! isset( $GLOBALS['pagenow'] ) ) {
-                return false;
-            }
-            if ( 'edit.php' !== $GLOBALS['pagenow'] ) {
-                return false;                
-            }
-            if ( ! isset( $_GET['post_type'] ) ) {
-                return false;
-            }
-            $_bIsPluginAdminPage = ( FetchTweets_Commons::PostTypeSlug === $_GET['post_type'] );
-            return $_bIsPluginAdminPage;
-                
-        }
+
 	/**
 	 * Registers plugin specific meta boxes.
 	 * 

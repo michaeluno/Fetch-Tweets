@@ -122,9 +122,7 @@ abstract class FetchTweets_WidgetByTag_ extends FetchTweets_Widget_Base {
 				<?php _e( 'Show external media.', 'fetch-tweets' ); ?>
 			</label>
 		</p>		
-				
-		
-		
+
 		<p>
 			<label for="<?php echo $aIDs['template']; ?>">
 				<?php _e( 'Select a Template', 'fetch-tweets' ); ?>:
@@ -132,7 +130,8 @@ abstract class FetchTweets_WidgetByTag_ extends FetchTweets_Widget_Base {
 			<br />
 			<select name="<?php echo $aNames['template']; ?>" id="<?php echo $aIDs['template']; ?>" >
 				<?php 
-				foreach( $GLOBALS['oFetchTweets_Templates']->getTemplateArrayForSelectLabel() as $sTemplateSlug => $sTemplateName ) 
+                $_oTemplate = FetchTweets_Templates::getInstance();
+				foreach( $_oTemplate->getTemplateArrayForSelectLabel() as $sTemplateSlug => $sTemplateName ) 
 					echo "<option value='{$sTemplateSlug}' "				
 						. ( $aInstance['template'] == $sTemplateSlug ? 'selected="Selected"' : '' )
 						. ">"

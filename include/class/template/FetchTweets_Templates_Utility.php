@@ -43,11 +43,11 @@ abstract class FetchTweets_Templates_Utility {
 		 */
 		private function _getTemplateContainerDirs() {
 			
-			$_aTemplateContainerDirs = array();
-			$_aTemplateContainerDirs[] = FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template';
-			$_aTemplateContainerDirs[] = get_template_directory() . DIRECTORY_SEPARATOR . 'fetch-tweets';
-			$_aTemplateContainerDirs = apply_filters( 'fetch_tweets_filter_template_container_directories', $_aTemplateContainerDirs );
-			$_aTemplateContainerDirs = array_filter( $_aTemplateContainerDirs );	// drops elements of empty values.
+			$_aTemplateContainerDirs    = array();
+			$_aTemplateContainerDirs[]  = FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template';
+			$_aTemplateContainerDirs[]  = get_template_directory() . DIRECTORY_SEPARATOR . 'fetch-tweets';
+			$_aTemplateContainerDirs    = apply_filters( 'fetch_tweets_filter_template_container_directories', $_aTemplateContainerDirs );
+			$_aTemplateContainerDirs    = array_filter( $_aTemplateContainerDirs );	// drops elements of empty values.
 			return array_unique( $_aTemplateContainerDirs );
 			
 		}		
@@ -58,9 +58,11 @@ abstract class FetchTweets_Templates_Utility {
 	 */
 	protected function _getScreenshotPath( $sDirPath ) {
 		
-		foreach( array( 'jpg', 'jpeg', 'png', 'gif' ) as $__sExt ) 
-			if ( @is_file( $sDirPath . DIRECTORY_SEPARATOR . 'screenshot.' . $__sExt ) )
+		foreach( array( 'jpg', 'jpeg', 'png', 'gif' ) as $__sExt ) {
+			if ( @is_file( $sDirPath . DIRECTORY_SEPARATOR . 'screenshot.' . $__sExt ) ) {
 				return $sDirPath . DIRECTORY_SEPARATOR . 'screenshot.' . $__sExt;
+            }
+        }
 			
 	}
 	

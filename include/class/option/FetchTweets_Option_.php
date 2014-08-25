@@ -101,6 +101,26 @@ abstract class FetchTweets_Option_ {
 		 
 	protected $sOptionKey = '';	// stores the option key for this plugin. 
 		 
+    /**
+     * Returns the instance of the class.
+     * 
+     * This is to ensure only one instance exists.
+     * 
+     * @since       2.3.5
+     */
+    static public function getInstance() {
+        
+        self::$oInstance = self::$oInstance 
+            ? self::$oInstance 
+            : ( isset( $GLOBALS['oFetchTweets_Option'] ) && ( $GLOBALS['oFetchTweets_Option'] instanceof FetchTweets_Option )
+                ? $GLOBALS['oFetchTweets_Option']
+                : new FetchTweets_Option( FetchTweets_Commons::$sAdminKey )
+            );
+        $GLOBALS['oFetchTweets_Option'] = self::$oInstance;
+        return self::$oInstance;
+        
+    }         
+         
 	public function __construct( $sOptionKey ) {
 		
 		$this->sOptionKey   = $sOptionKey;
@@ -134,7 +154,7 @@ abstract class FetchTweets_Option_ {
 		// If the template option array is empty, retrieve the active template arrays.
 		if ( empty( $aOptions['arrTemplates'] ) ) {
 			
-			$oTemplate = new FetchTweets_Templates;
+			$oTemplate = FetchTweets_Templates::getInstance();
 			$arrDefaultTemplate = $oTemplate->findDefaultTemplateDetails();
 			$aOptions['arrTemplates'][ $arrDefaultTemplate['strSlug'] ] = $arrDefaultTemplate;
 			$aOptions['arrDefaultTemplate'] = $arrDefaultTemplate;
@@ -400,22 +420,6 @@ abstract class FetchTweets_Option_ {
             array_values( FetchTweets_AdminPageFramework_WPUtility::getAsArray( $asKey ) ), 
             $vDefault 
         );
-        
-    }
-    /**
-     * Returns the instance of the class.
-     * 
-     * This is to ensure only one instance exists.
-     */
-    static public function getInstance() {
-        
-        self::$oInstance = self::$oInstance 
-            ? self::$oInstance 
-            : ( isset( $GLOBALS['oFetchTweets_Option'] ) && ( $GLOBALS['oFetchTweets_Option'] instanceof FetchTweets_Option )
-                ? $GLOBALS['oFetchTweets_Option']
-                : new FetchTweets_Option( FetchTweets_Commons::$sAdminKey )
-            );
-        return self::$oInstance;
         
     }
     

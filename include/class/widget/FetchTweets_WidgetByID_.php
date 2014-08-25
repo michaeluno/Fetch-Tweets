@@ -114,7 +114,8 @@ abstract class FetchTweets_WidgetByID_ extends FetchTweets_Widget_Base {
 			<br />
 			<select name="<?php echo $aNames['template']; ?>" id="<?php echo $aIDs['template']; ?>" >
 				<?php 
-				foreach( $GLOBALS['oFetchTweets_Templates']->getTemplateArrayForSelectLabel() as $sTemplateSlug => $sTemplateName ) 
+                $_oTemplate = FetchTweets_Templates::getInstance();
+				foreach( $_oTemplate->getTemplateArrayForSelectLabel() as $sTemplateSlug => $sTemplateName ) 
 					echo "<option value='{$sTemplateSlug}' "				
 						. ( $aInstance['template'] == $sTemplateSlug ? 'selected="Selected"' : '' )
 						. ">"

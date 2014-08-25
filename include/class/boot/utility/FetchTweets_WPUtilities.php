@@ -10,7 +10,7 @@
  * 
  */
 
-final class FetchTweets_WPUtilities {
+class FetchTweets_WPUtilities extends FetchTweets_Utilities {
 
 	/**
 	 * Calculates the URL from the given path.
