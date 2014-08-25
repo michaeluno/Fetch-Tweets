@@ -4,7 +4,7 @@ Donate link: http://en.michaeluno.jp/donate
 Tags: twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least: 3.3
 Tested up to: 3.9.2
-Stable tag: 2.3.4
+Stable tag: 2.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Fetches and displays tweets from twitter.com with the Twitter API.
@@ -213,6 +213,9 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 5. ***Authentication***
 
 == Changelog ==
+
+= 2.3.6 =
+- Fixed a bug that `Settings` link of plugin templates became not to appear as of v2.3.5.
 
 = 2.3.5 - 08/25/2014 =
 - Optimized the performance.

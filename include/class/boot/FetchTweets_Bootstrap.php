@@ -178,7 +178,7 @@ final class FetchTweets_Bootstrap {
 		$GLOBALS['oFetchTweets_Templates'] = new FetchTweets_Templates;		
 		$GLOBALS['oFetchTweets_Templates']->loadFunctionsOfActiveTemplates();
 		add_action( 'wp_enqueue_scripts', array( $GLOBALS['oFetchTweets_Templates'], 'enqueueActiveTemplateStyles' ) );
-		if ( $this->_isInPluginAdminPage() ) {
+		if ( $this->_isInPluginAdminPage() || isset( $GLOBALS['pagenow'] ) && 'plugins.php' === $GLOBALS['pagenow'] ) {
 			$GLOBALS['oFetchTweets_Templates']->loadSettingsOfActiveTemplates();
 		}
 		
