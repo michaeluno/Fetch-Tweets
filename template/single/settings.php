@@ -3,27 +3,43 @@
  * Adds a setting tab in the Fetch Tweets admin pages. 
  * 
  * If you are modifying the template to create your own, modify this extended class.
- * The setting arrays follows the specifications of Admin Page Framework v2. 
+ * The setting arrays follow the specifications of Admin Page Framework v2. 
  * 
  * @package		Fetch Tweets
  * @subpackage	Single Template
  * @see			http://wordpress.org/plugins/admin-page-framework/
  */
 class FetchTweets_Template_Settings_Single extends FetchTweets_Template_Settings {
-
-	/*
-	 * Modify these properties.
-	 * */
-	protected $sParentPageSlug = 'fetch_tweets_templates';	// in the url, the ... part of ?page=... 
-	protected $sParentTabSlug = 'single';	// in the url, the ... part of &tab=...
-	protected $sTemplateName = 'Single';	// the template name
-	protected $sSectionID = 'fetch_tweets_template_single';
+    
+    /**
+     * Sets the page slug.
+     * 
+     * It is the ... part of ?page=... in the url.
+     */
+	protected $sParentPageSlug  = 'fetch_tweets_templates';	
+    
+    /**
+     * Defines the tab slug.
+     * 
+     * It is the ... part of &tab=... in the url.
+     */
+	protected $sParentTabSlug   = 'single';	
+    
+    /**
+     * The template name.
+     */
+	protected $sTemplateName    = 'Single';
+    
+    /**
+     * The section ID of the settings.
+     */
+	protected $sSectionID       = 'fetch_tweets_template_single';
 	
-	/*
-	 * Modify these methods. 
-	 * This defines form sections. Set the section ID and the description here.
-	 * The array structure follows the rule of Admin Page Framework. ( https://github.com/michaeluno/admin-page-framework )
-	 * */
+    /**
+     * Defines form sections. Set the section ID and the description here.
+     * 
+	 * @remark  The array structure follows the rule of Admin Page Framework. ( https://github.com/michaeluno/admin-page-framework )
+     */
 	public function addSettingSections( $aSections ) {
 			
 		$aSections[ $this->sSectionID ] = array(
@@ -37,13 +53,15 @@ class FetchTweets_Template_Settings_Single extends FetchTweets_Template_Settings
 		return $aSections;
 	
 	}
-	/*
-	 * This defines form fields. Return the field arrays. 
-	 * The array structure follows the rule of Admin Page Framework. ( https://github.com/michaeluno/admin-page-framework )
-	 * */
+	/**
+	 * Defines form fields. Return the field arrays. 
+     * 
+	 * @remark  The array structure follows the rule of Admin Page Framework. ( https://github.com/michaeluno/admin-page-framework )
+	 */
 	public function addSettingFields( $aFields ) {
 		
-		if ( ! class_exists( 'FetchTweets_Commons' ) ) return $aFields;	// if the main class does not exist, do nothing.
+        // if the main class does not exist, do nothing.
+		if ( ! class_exists( 'FetchTweets_Commons' ) ) { return $aFields; }	
 				
 		$aFields[ $this->sSectionID ] = array();
 		$aFields[ $this->sSectionID ]['fetch_tweets_template_single_avatar_size'] = array(	// avatar size
@@ -192,6 +210,7 @@ class FetchTweets_Template_Settings_Single extends FetchTweets_Template_Settings
 				'user_description'	=> __( 'User Description', 'fetch-tweets' ),
 				'time'				=> __( 'Time', 'fetch-tweets' ),
 				'intent_buttons'	=> __( 'Intent Buttons', 'fetch-tweets' ),
+                'separator'         => __( 'Separator', 'fetch-tweets' ),
 			),
 			'default' => array(
 				'avatar'			=> true,
@@ -200,6 +219,7 @@ class FetchTweets_Template_Settings_Single extends FetchTweets_Template_Settings
 				'user_description'	=> true,
 				'time'				=> true,
 				'intent_buttons'	=> true,
+                'separator'         => true,
 			),
 		);		
 		$aFields[ $this->sSectionID ]['fetch_tweets_template_single_submit'] = array( // single button

@@ -380,20 +380,20 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 				'media_url_https' => null,				
 			);
 			
-			if ( $arrMedium['type'] != 'photo' || ! $arrMedium['media_url'] ) continue;
+			if ( 'photo' !== $arrMedium['type'] || ! $arrMedium['media_url'] ) { continue; }
 			
 			$arrOutput[] = "<div class='fetch-tweets-media-photo'>"
 					. "<a href='{$arrMedium['expanded_url']}'>"
-						. "<img src='" . ( $this->fIsSSL ? $arrMedium['media_url_https'] : $arrMedium['media_url'] ) . "'>"
+						. "<img src='" . esc_url( $this->fIsSSL ? $arrMedium['media_url_https'] : $arrMedium['media_url'], $this->fIsSSL ? 'https' : 'http' ) . "' alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "'>"
 					. "</a>"
-				. "</div>";
-		
+				. "</div><!-- fetch-tweets-media-photo -->";
+
 		}
 		return ( empty( $arrOutput ) 
 				? ''
 				: "<div class='fetch-tweets-media'>" 
 					. implode( PHP_EOL, $arrOutput ) 
-				. "</div>" 
+				. "</div><!-- fetch-tweets-media -->" 
 			);
 		
 	}
@@ -409,8 +409,10 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 
 		foreach( $arrTweets as $intIndex => &$arrTweet ) {
 							
-			if ( isset( $arrTweet['retweeted_status']['text'] ) ) 	// Check if it is a re-tweet.
+            // Check if it is a re-tweet.
+			if ( isset( $arrTweet['retweeted_status']['text'] ) ) {
 				$arrTweet['retweeted_status'] = $this->_addEmbeddableMediaElement( $arrTweet['retweeted_status'] );
+            }
 			
 			$arrTweet = $this->_addEmbeddableMediaElement( $arrTweet );
 						
@@ -428,11 +430,13 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 		 */
 		protected function _addEmbeddableMediaElement( $arrTweet ) {
 			
-			if ( isset( $arrTweet['entities']['urls'] ) ) 
+			if ( isset( $arrTweet['entities']['urls'] ) ) {
 				$arrTweet['entities']['embed_external_media'] = $this->getExternalMedia( $arrTweet['entities']['urls'] );
+            }
 							
-			if ( isset( $arrTweet['entities']['media'] ) ) 
+			if ( isset( $arrTweet['entities']['media'] ) ) {
 				$arrTweet['entities']['embed_twitter_media'] = $this->getTwitterMedia( $arrTweet['entities']['media'] );
+            }
 			
 			return $arrTweet;
 			

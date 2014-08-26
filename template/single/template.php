@@ -47,6 +47,7 @@ $aDefaultTemplateValues = array(
         'user_description'  => true,
         'time'              => true,    
         'intent_buttons'    => true,
+        'separator'         => true,
     ),
     'fetch_tweets_template_single_margins' => array(
         0 => array( 'size' => '', 'unit' => 'px' ),
@@ -114,7 +115,8 @@ $sMargins           = ( $sMarginTop ? "margin-top: {$sMarginTop}; " : "" ) . ( $
 $sPaddings          = ( $sPaddingTop ? "padding-top: {$sPaddingTop}; " : "" ) . ( $sPaddingRight ? "padding-right: {$sPaddingRight}; " : "" ) . ( $sPaddingBottom ? "padding-bottom: {$sPaddingBottom}; " : "" ) . ( $sPaddingLeft ? "padding-left: {$sPaddingLeft}; " : "" );
 $sMarginForImage    = $aArgs['visibilities']['avatar'] ? ( ( $aArgs['avatar_position'] == 'left' ? "margin-left: " : "margin-right: " ) . ( ( int ) $aArgs['avatar_size'] + 10 ) . "px" ) : "";
 $sGMTOffset         = ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
-$sURLUserAvatar     = getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['avatar_size'] );
+$sURLUserAvatar     = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['avatar_size'] ), $bIsSSL ? 'https' : 'http' );
+$sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, 100 ), $bIsSSL ? 'https' : 'http' );
 
 /*
  * For debugging - uncomment the below line to see the contents of the array.
@@ -134,7 +136,7 @@ $sURLUserAvatar     = getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['
         <?php if ( $aArgs['avatar_size'] > 0  && $aArgs['visibilities']['avatar'] ) : ?>
         <div class='fetch-tweets-single-profile-image' style="max-width:<?php echo $aArgs['avatar_size'];?>px; float:<?php echo $aArgs['avatar_position']; ?>; clear:<?php echo $aArgs['avatar_position']; ?>;">
             <a href='<?php echo esc_url( "https://twitter.com/" . $sUserScreenName, 'https' ); ?>' target='_blank'>
-                <img src='<?php echo $sURLUserAvatar; ?>' style="max-width:<?php echo $aArgs['avatar_size'];?>px; border-radius: 5px;" alt='<?php echo esc_attr( sprintf( __( 'The profile image of %1$s', 'fetch-tweets' ), $sUserScreenName ) ); ?>' />
+                <img src='<?php echo $sURLUserAvatar; ?>' style="max-width:<?php echo $aArgs['avatar_size'];?>px; border-radius: 5px;" alt='<?php echo esc_attr( sprintf( __( 'The profile image of %1$s', 'fetch-tweets' ), $sUserScreenName ) ); ?>' onError='this.onerror=null;this.src="<?php echo $sURLUserAvatarAlt; ?>";' />
             </a>        
         </div><!-- fetch-tweets-single-profile-image -->
         <?php endif; ?>
@@ -183,11 +185,11 @@ $sURLUserAvatar     = getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['
         if ( $_bIsRetweet && ! $aArgs['include_rts'] ) { continue; }
         $aTweet                 = $_bIsRetweet ? $_aDetail['retweeted_status'] : $_aDetail;
         $sRetweetClassProperty  = $_bIsRetweet ? 'fetch-tweets-single-retweet' : '';
-        
+        $_sBorder = $aArgs['visibilities']['separator'] ? '' : 'border-width: 0px !important;';
     ?>
-    <div class='fetch-tweets-single-item <?php echo $sRetweetClassProperty; ?>' >
+    <div class='fetch-tweets-single-item <?php echo $sRetweetClassProperty; ?>' style='<?php echo $_sBorder; ?>'>
         <div class='fetch-tweets-single-body'>
-            <p class='fetch-tweets-single-text'>
+            <div class='fetch-tweets-single-text'>
                 <?php echo $aTweet['text']; ?>
                 <span class='fetch-tweets-single-credit'>
                     <?php if ( $_bIsRetweet ) : ?>
@@ -208,7 +210,7 @@ $sURLUserAvatar     = getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['
                     <?php endif; ?>
                     
                 </span>
-            </p><!-- fetch-tweets-single-text -->
+            </div><!-- fetch-tweets-single-text -->
 
             <?php if ( $aArgs['intent_buttons'] ) : ?>
                 <?php

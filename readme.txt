@@ -214,7 +214,10 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 == Changelog ==
 
-= 2.3.6 =
+= 2.3.6 - 08/27/2014 =
+- Added an option to enable/disable separator lines for the `Single` template.
+- Added the ability to display an alternative profile image if the first set one fails to load in the built-in templates.
+- Changed it not to enclose tweets in `p` tags as media elements are enclosed in `div` tags in built-in templates.
 - Fixed an issue that strings applied to the `href` attributes did not get escaped.
 - Fixed the widget title formatting.
 - Fixed a bug that `Settings` link of plugin templates became not to appear as of v2.3.5.

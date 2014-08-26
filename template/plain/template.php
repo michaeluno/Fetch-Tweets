@@ -115,18 +115,20 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
         $sRetweetClassSelector  = $_bIsRetweet ? 'fetch-tweets-retweet' : '';
         
     ?>
-    <div class='fetch-tweets-item <?php echo $sRetweetClassSelector; ?>' >
+    <div class="fetch-tweets-item <?php echo $sRetweetClassSelector; ?>">
         <?php if ( $aArgs['avatar_size'] > 0  && $aArgs['visibilities']['avatar'] ) : 
             $sAvatarURL = getTwitterProfileImageURLBySize( $bIsSSL ? $aTweet['user']['profile_image_url_https'] : $aTweet['user']['profile_image_url'], $aArgs['avatar_size'] );
             $sAvatarURL = esc_url( $sAvatarURL, $bIsSSL ? 'https' : 'http' );
+            $sAvatarURLSubstitute = getTwitterProfileImageURLBySize( $bIsSSL ? $aTweet['user']['profile_image_url_https'] : $aTweet['user']['profile_image_url'], 100 );
+            $sAvatarURLSubstitute = esc_url( $sAvatarURLSubstitute, $bIsSSL ? 'https' : 'http' );
         ?>
         <div class='fetch-tweets-profile-image' style="max-width:<?php echo $aArgs['avatar_size'];?>px; float:<?php echo $aArgs['avatar_position']; ?>; clear:<?php echo $aArgs['avatar_position']; ?>;">
             <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'], 'https' ); ?>' target='_blank'>
-                <img src='<?php echo $sAvatarURL; ?>' style="max-width:<?php echo $aArgs['avatar_size'];?>px; border-radius: 5px;" alt='<?php echo esc_attr( sprintf( __( 'The profile image of %1$s', 'fetch-tweets' ), $aTweet['user']['screen_name'] ) ); ?>' />
+                <img src='<?php echo $sAvatarURL; ?>' style='max-width:<?php echo $aArgs['avatar_size'];?>px; border-radius: 5px;' alt='<?php echo esc_attr( sprintf( __( 'The profile image of %1$s', 'fetch-tweets' ), $aTweet['user']['screen_name'] ) ); ?>' onError='this.onerror=null;this.src="<?php echo $sAvatarURLSubstitute; ?>";' />
             </a>
-        </div>
+        </div><!-- fetch-tweets-profile-image -->
         <?php endif; ?>
-        <div class='fetch-tweets-main' style='<?php echo $sMarginForImage;?>;'>
+        <div class='fetch-tweets-main' style='<?php echo $sMarginForImage; ?>;'>
             <div class='fetch-tweets-heading'>
                 <?php if ( $aArgs['visibilities']['user_name'] ) : ?>
                 <span class='fetch-tweets-user-name'>
@@ -148,7 +150,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                 
             </div><!-- fetch-tweets-heading -->
             <div class='fetch-tweets-body'>
-                <p class='fetch-tweets-text'>
+                <div class='fetch-tweets-text'>
                     <?php echo $aTweet['text']; ?>
                     <?php if ( isset( $_aDetail['retweeted_status']['text'] ) ) : ?>
                     <span class='fetch-tweets-retweet-credit'>
@@ -158,7 +160,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                         </a>
                     </span>
                     <?php endif; ?>
-                </p>
+                </div><!-- fetch-tweets-text -->
                 <?php if ( $aArgs['intent_buttons'] ) : ?>
                     <?php if ( $aArgs['intent_button_script'] ) : ?>
                     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>

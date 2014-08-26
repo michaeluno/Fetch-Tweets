@@ -1,5 +1,10 @@
 == Change log ==
 
+= 2.3.6 =
+- Changed it not to enclose tweets in `p` tags as media elements are enclosed in `div` tags.
+- Added an option to enable/disable separator lines.
+- Added the ability to display alternative profile image if the first set one fails to load.
+
 = 2.3.5 =
 Escaped attributes and urls.
 
