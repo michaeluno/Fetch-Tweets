@@ -34,6 +34,9 @@ class FetchTweets_PluginUtility extends FetchTweets_WPUtilities {
         if ( ! in_array( $GLOBALS['pagenow'], array( 'edit.php', 'plugins.php' ) ) ) {
             return false;                
         }
+        if ( 'plugins.php' === $GLOBALS['pagenow'] ) {
+            return true;
+        }
         if ( ! isset( $_GET['post_type'] ) ) {
             return false;
         }
