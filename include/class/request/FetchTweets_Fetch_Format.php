@@ -150,11 +150,11 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 			// Make the urls in the text hyper-links.
 			if ( isset( $aTweet['text'], $aTweet['entities'] ) ) {	
 				$aTweet['entities'] = $aTweet['entities'] + array(
-					'hashtags' => null,
-					'symbols' => null,
-					'urls' => null,
+					'hashtags'      => null,
+					'symbols'       => null,
+					'urls'          => null,
 					'user_mentions' => null,
-					'media'	=> null,
+					'media'         => null,
 				);
 				$aTweet['text'] = $this->makeClickableLinks( $aTweet['text'], $aTweet['entities']['urls'] );
 				$aTweet['text'] = $this->makeClickableMedia( $aTweet['text'], $aTweet['entities']['media'] );	
@@ -165,11 +165,11 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 			// Adjust the profile image size.
 			if ( isset( $aTweet['user'] ) ) {
 				$aTweet['user'] = $aTweet['user'] + array(
-					'profile_image_url' => null, 		
-					'profile_image_url_https' => null,
+					'profile_image_url'         => null, 		
+					'profile_image_url_https'   => null,
 				);				
-				$aTweet['user']['profile_image_url'] = $this->adjustProfileImageSize( $aTweet['user']['profile_image_url'], $iProfileImageSize );
-				$aTweet['user']['profile_image_url_https'] = $this->adjustProfileImageSize( $aTweet['user']['profile_image_url_https'], $iProfileImageSize );
+				$aTweet['user']['profile_image_url']        = $this->adjustProfileImageSize( $aTweet['user']['profile_image_url'], $iProfileImageSize );
+				$aTweet['user']['profile_image_url_https']  = $this->adjustProfileImageSize( $aTweet['user']['profile_image_url_https'], $iProfileImageSize );
 			}
 
 			// Convert the 'created_at' value to be numeric time.
@@ -180,81 +180,91 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 			return $aTweet;
 			
 		}
-		
-	protected function makeClickableLinks( $strText, $arrURLs ) {
+	
+    /**
+     * Converts plain urls to a hyper-link.
+     * 
+     * There are urls in the tweet text. So they need to be converted into hyper links.
+     */
+	protected function makeClickableLinks( $sText, $aURLs ) {
 				
-		// There are urls in the tweet text. So they need to be converted into hyper links.
-		foreach( ( array ) $arrURLs as $arrURLDetails ) {
+		foreach( ( array ) $aURLs as $_aURLDetails ) {
 			
-			$arrURLDetails = $arrURLDetails + array(	// avoid undefined index warnings.
+			$_aURLDetails = $_aURLDetails + array(	// avoid undefined index warnings.
 				'url' => null,
 				'expanded_url' => null,
 				'display_url' => null,
 			);
 
-			$strText = str_replace( 
-				$arrURLDetails['url'],	// needle 
-				"<a href='{$arrURLDetails['expanded_url']}' target='_blank' rel='nofollow'>{$arrURLDetails['display_url']}</a>", 	// replace
-				$strText 	// haystack
+			$sText = str_replace( 
+				$_aURLDetails['url'],	// needle 
+				"<a href='" . esc_url( $_aURLDetails['expanded_url'] ) . "' target='_blank' rel='nofollow'>{$_aURLDetails['display_url']}</a>", 	// replace
+				$sText 	// haystack
 			);	
 			
 		}
-		return $strText;
+		return $sText;
 		
 	}
-	protected function makeClickableMedia( $strText, $arrMedia ) {
+    /**
+     * Converts media links in the tweet text.
+     */
+	protected function makeClickableMedia( $sText, $aMedia ) {
 		
-		// This method converts media links in the tweet text.
-		foreach( ( array ) $arrMedia as $arrDetails ) {
+		foreach( ( array ) $aMedia as $aDetails ) {
 			
-			$arrDetails = $arrDetails + array(	// avoid undefined index warnings.
-				'media_url' => null,
-				'media_url_https' => null,
-				'url' => null,
-				'display_url' => null,
-				'expanded_url' => null,
-				'type' => null,
-				'sizes' => null,	// array()
-				'id' => null,
-				'id_str' => null,
-				'indices' => null,	// array()
+			$aDetails = $aDetails + array(	// avoid undefined index warnings.
+				'media_url'         => null,
+				'media_url_https'   => null,
+				'url'               => null,
+				'display_url'       => null,
+				'expanded_url'      => null,
+				'type'              => null,
+				'sizes'             => null,	// array()
+				'id'                => null,
+				'id_str'            => null,
+				'indices'           => null,	// array()
 			);
 			
-			$strText = str_replace( 
-				$arrDetails['url'],	// needle 
-				"<a href='{$arrDetails['expanded_url']}' target='_blank' rel='nofollow'>{$arrDetails['display_url']}</a>", 	// replace
-				$strText 	// haystack
+			$sText = str_replace( 
+				$aDetails['url'],	// needle 
+				"<a href='" . esc_url( $aDetails['expanded_url'] ) . "' target='_blank' rel='nofollow'>{$aDetails['display_url']}</a>", 	// replace
+				$sText 	// haystack
 			);	
 		}
-		return $strText;
+		return $sText;
 		
 	}
-	protected function makeClickableHashTags( $strText, $arrHashTags ) {
+    /**
+     * Converts hashtags into hyper links.
+     * 
+     * There are urls in the tweet text. So we need to convert them into hyper links.
+     */
+	protected function makeClickableHashTags( $sText, $aHashTags ) {
 		
-		// There are urls in the tweet text. So we need to convert them into hyper links.
-		foreach( ( array ) $arrHashTags as $arrDetails ) {
+		foreach( ( array ) $aHashTags as $aDetails ) {
 			
-			$arrDetails = $arrDetails + array(	// avoid undefined index warnings.
+			$aDetails = $aDetails + array(	// avoid undefined index warnings.
 				'text' => null,
 				'indices' => null,
 			);
 			
-			$strText = preg_replace( 
-				'/#(\Q' . $arrDetails['text'] . '\E)(\W|$)/', 	// needle
-				'<a href="https://twitter.com/search?q=%23$1&src=hash" target="_blank" rel="nofollow">#$1</a>$2',	// replacement
-				$strText 	// haystack
+			$sText = preg_replace( 
+				'/#(\Q' . $aDetails['text'] . '\E)(\W|$)/', 	// needle
+				'<a href="' . esc_url( 'https://twitter.com/search?q=%23$1&src=hash', 'https' ) . '" target="_blank" rel="nofollow">#$1</a>$2',	// replacement
+				$sText 	// haystack
 			);
 			
 		}
-		return $strText;
+		return $sText;
 		
 	}
-	protected function makeClickableUsers( $strText, $arrMentions ) {
+	protected function makeClickableUsers( $sText, $aMentions ) {
 		
 		// There are urls in the tweet text. So they need to be converted into hyper links.
-		foreach( ( array ) $arrMentions as $arrDetails ) {
+		foreach( ( array ) $aMentions as $aDetails ) {
 			
-			$arrDetails = $arrDetails + array(	// avoid undefined index warnings.
+			$aDetails = $aDetails + array(	// avoid undefined index warnings.
 				'screen_name' => null,
 				'name' => null,
 				'id' => null, 
@@ -262,14 +272,14 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 				'indices' => null,
 			);
 			
-			$strText = preg_replace( 
-				'/@(\Q' . $arrDetails['screen_name'] . '\E)(\W|$)/i', 	// needle, case insensitive
-				'<a href="https://twitter.com/$1" target="_blank" rel="nofollow">@$1</a>$2',	// replacement
-				$strText 	// haystack
+			$sText = preg_replace( 
+				'/@(\Q' . $aDetails['screen_name'] . '\E)(\W|$)/i', 	// needle, case insensitive
+				'<a href="' . esc_url( 'https://twitter.com/$1', 'https' ) . '" target="_blank" rel="nofollow">@$1</a>$2',	// replacement
+				$sText 	// haystack
 			);
 			
 		}
-		return $strText;
+		return $sText;
 		
 	}
 	
