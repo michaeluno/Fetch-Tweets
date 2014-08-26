@@ -215,6 +215,8 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 == Changelog ==
 
 = 2.3.6 =
+- Fixed an issue that strings applied to the `href` attributes did not get escaped.
+- Fixed the widget title formatting.
 - Fixed a bug that `Settings` link of plugin templates became not to appear as of v2.3.5.
 
 = 2.3.5 - 08/25/2014 =
