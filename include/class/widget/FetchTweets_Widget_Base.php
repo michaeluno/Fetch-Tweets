@@ -35,12 +35,14 @@ abstract class FetchTweets_Widget_Base extends WP_Widget {
 	 */
 	public function widget( $aWidgetInfo, $aInstance ) {	// must be public, the protected scope will cause fatal error.
 		
+        $aInstance = $aInstance + $this->_aStructure_FormElements;
+        
 		echo $aWidgetInfo['before_widget']; 
-		
-		// Avoid undefined index warnings.
-		$aInstance = $aInstance + $this->_aStructure_FormElements;
-		if ( $aInstance['title'] )
-			echo "<h3 class='fetch-tweets-widget widget-title'>{$aInstance['title']}</h3>";
+				
+        $_sTitle = apply_filters( 'widget_title', $aInstance[ 'title' ], $aInstance, $aWidgetInfo['id'] );
+		if ( $_sTitle ) {
+			echo $aWidgetInfo['before_title'] . $_sTitle . $aWidgetInfo['after_title'];		            
+        }
 		
 		$this->echoTweets( $aInstance );
 		
