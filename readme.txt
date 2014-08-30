@@ -215,6 +215,8 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 == Changelog ==
 
 = 2.3.7 =
+- Fixed an issue with sites that enables object caching.
+- Updated the [Admin Page Framework](http://wordpress.org/plugins/admin-page-framework/) library.
 
 = 2.3.6 - 08/27/2014 =
 - Added an option to enable/disable separator lines for the `Single` template.
