@@ -10,10 +10,9 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
 
 		$this->setPostTypeArgs(
 			array(			// argument - for the array structure, refer to http://codex.wordpress.org/Function_Reference/register_post_type#Arguments
-				// 'labels'            => $this->oProp->bIsAdmin 
-                    // ? $this->_getPostTypeLabelArguments() 
-                    // : array(),
-				'labels'            => $this->_getPostTypeLabelArguments(),
+				'labels'            => $this->oProp->bIsAdmin 
+                    ? $this->_getPostTypeLabelArguments() 
+                    : array(),
 				'public'            => true,
 				'menu_position'     => 110,
 				'supports'          => array( 'title' ),
@@ -36,11 +35,9 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
 		$this->addTaxonomy( 
 			FetchTweets_Commons::PrimaryTaxonomySlug, 
 			array(
-				// 'labels'                => $this->oProp->bIsAdmin 
-                    // ? $this->_getTaxonomyTagLabelArgumnents()
-                    // : array(),
-				'labels'                =>  $this->_getTaxonomyTagLabelArgumnents(),                    
-
+				'labels'                => $this->oProp->bIsAdmin 
+                    ? $this->_getTaxonomyTagLabelArgumnents()
+                    : array(),
 				'show_ui'               => true,
 				'show_tagcloud'         => false,
 				'hierarchical'          => false,
