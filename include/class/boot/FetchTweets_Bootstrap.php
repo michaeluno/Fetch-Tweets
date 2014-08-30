@@ -134,13 +134,10 @@ final class FetchTweets_Bootstrap {
 	}
 		
 	public function _replyToDoWhenPluginActivates() {
-			
+
 		// Schedule transient set-ups
 		wp_schedule_single_event( time(), 'fetch_tweets_action_setup_transients' );		
-		
-        // For the post type preview page.
-        flush_rewrite_rules( false );
-        
+  
 	}
 	
 	public function _replyToDoWhenPluginDeactivates() {
