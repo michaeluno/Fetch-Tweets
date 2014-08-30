@@ -1,6 +1,7 @@
 <?php 
 $_aClassFiles = array( 
 	"FetchTweets_Bootstrap"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/FetchTweets_Bootstrap.php", 
+	"FetchTweets_Transient"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/FetchTweets_Transient.php", 
 	"FetchTweets_TwitterOAuth"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/FetchTweets_TwitterOAuth.php", 
 	"FetchTweets_DateCustomFieldType"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/admin/FetchTweets_DateCustomFieldType.php", 
 	"FetchTweets_GeometryCustomFieldType"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/admin/FetchTweets_GeometryCustomFieldType.php", 
@@ -43,6 +44,8 @@ $_aClassFiles = array(
 	"FetchTweets_ImageHandler"	=>	FetchTweets_Commons::$sDirPath . "/include/class/utility/FetchTweets_ImageHandler.php", 
 	"FetchTweets_PluginUtilitiy"	=>	FetchTweets_Commons::$sDirPath . "/include/class/utility/FetchTweets_PluginUtilitiy.php", 
 	"FetchTweets_SimplePie"	=>	FetchTweets_Commons::$sDirPath . "/include/class/utility/FetchTweets_SimplePie.php", 
+	"FetchTweets_UserAds"	=>	FetchTweets_Commons::$sDirPath . "/include/class/utility/FetchTweets_UserAds.php", 
+	"FetchTweets_UserAds_"	=>	FetchTweets_Commons::$sDirPath . "/include/class/utility/FetchTweets_UserAds_.php", 
 	"FetchTweets_oEmbed"	=>	FetchTweets_Commons::$sDirPath . "/include/class/utility/FetchTweets_oEmbed.php", 
 	"FetchTweets_WidgetByID"	=>	FetchTweets_Commons::$sDirPath . "/include/class/widget/FetchTweets_WidgetByID.php", 
 	"FetchTweets_WidgetByID_"	=>	FetchTweets_Commons::$sDirPath . "/include/class/widget/FetchTweets_WidgetByID_.php", 
@@ -82,7 +85,6 @@ $_aClassFiles = array(
 	"FetchTweets_AdminPageFramework_MetaBox_Page_View"	=>	FetchTweets_Commons::$sDirPath . "/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php", 
 	"FetchTweets_AdminPageFramework_MetaBox_Page_Controller"	=>	FetchTweets_Commons::$sDirPath . "/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php", 
 	"FetchTweets_AdminPageFramework_MetaBox_Page"	=>	FetchTweets_Commons::$sDirPath . "/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php", 
-	"FetchTweets_AdminPageFramework_Setting_Form"	=>	FetchTweets_Commons::$sDirPath . "/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php", 
 	"FetchTweets_AdminPageFramework_Setting_Port"	=>	FetchTweets_Commons::$sDirPath . "/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php", 
 	"FetchTweets_AdminPageFramework_Setting_Validation"	=>	FetchTweets_Commons::$sDirPath . "/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php", 
 	"FetchTweets_AdminPageFramework_Setting"	=>	FetchTweets_Commons::$sDirPath . "/include/library/admin-page-framework/fetch-tweets-admin-page-framework.min.php", 
