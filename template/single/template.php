@@ -115,8 +115,8 @@ $sMargins           = ( $sMarginTop ? "margin-top: {$sMarginTop}; " : "" ) . ( $
 $sPaddings          = ( $sPaddingTop ? "padding-top: {$sPaddingTop}; " : "" ) . ( $sPaddingRight ? "padding-right: {$sPaddingRight}; " : "" ) . ( $sPaddingBottom ? "padding-bottom: {$sPaddingBottom}; " : "" ) . ( $sPaddingLeft ? "padding-left: {$sPaddingLeft}; " : "" );
 $sMarginForImage    = $aArgs['visibilities']['avatar'] ? ( ( $aArgs['avatar_position'] == 'left' ? "margin-left: " : "margin-right: " ) . ( ( int ) $aArgs['avatar_size'] + 10 ) . "px" ) : "";
 $sGMTOffset         = ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
-$sURLUserAvatar     = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['avatar_size'] ), $bIsSSL ? 'https' : 'http' );
-$sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, 100 ), $bIsSSL ? 'https' : 'http' );
+$sURLUserAvatar     = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['avatar_size'] ) );
+$sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, 100 ) );
 
 /*
  * For debugging - uncomment the below line to see the contents of the array.
@@ -135,7 +135,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
     <div class='fetch-tweets-single-heading'>
         <?php if ( $aArgs['avatar_size'] > 0  && $aArgs['visibilities']['avatar'] ) : ?>
         <div class='fetch-tweets-single-profile-image' style="max-width:<?php echo $aArgs['avatar_size'];?>px; float:<?php echo $aArgs['avatar_position']; ?>; clear:<?php echo $aArgs['avatar_position']; ?>;">
-            <a href='<?php echo esc_url( "https://twitter.com/" . $sUserScreenName, 'https' ); ?>' target='_blank'>
+            <a href='<?php echo esc_url( "https://twitter.com/" . $sUserScreenName ); ?>' target='_blank'>
                 <img src='<?php echo $sURLUserAvatar; ?>' style="max-width:<?php echo $aArgs['avatar_size'];?>px; border-radius: 5px;" alt='<?php echo esc_attr( sprintf( __( 'The profile image of %1$s', 'fetch-tweets' ), $sUserScreenName ) ); ?>' onError='this.onerror=null;this.src="<?php echo $sURLUserAvatarAlt; ?>";' />
             </a>        
         </div><!-- fetch-tweets-single-profile-image -->
@@ -147,7 +147,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
             <?php if ( $aArgs['visibilities']['user_name'] ) : ?>
             <span class='fetch-tweets-single-user-name'>
                 <strong>
-                    <a href='<?php echo esc_url( "https://twitter.com/" . $sUserScreenName, 'https' ); ?>' target='_blank'>
+                    <a href='<?php echo esc_url( "https://twitter.com/" . $sUserScreenName ); ?>' target='_blank'>
                         <?php echo $sUserName; ?>
                     </a>
                 </strong>
@@ -156,7 +156,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
             
             <?php if ( $aArgs['visibilities']['follow_button'] ) : ?>
             <div class='fetch-tweets-single-follow-button'>
-                <a href="<?php echo esc_url( 'https://twitter.com/' . $sUserScreenName, 'https' ); ?>" class="twitter-follow-button" target="_blank" data-lang="<?php echo esc_attr( $sUserLang ); ?>" data-show-count="<?php echo esc_attr( $aArgs['follow_button_count'] ); ?>" data-show-screen-name="<?php echo esc_attr( $aArgs['follow_button_screen_name'] ); ?>">
+                <a href="<?php echo esc_url( 'https://twitter.com/' . $sUserScreenName ); ?>" class="twitter-follow-button" target="_blank" data-lang="<?php echo esc_attr( $sUserLang ); ?>" data-show-count="<?php echo esc_attr( $aArgs['follow_button_count'] ); ?>" data-show-screen-name="<?php echo esc_attr( $aArgs['follow_button_screen_name'] ); ?>">
                     <?php echo __( 'Follow', 'fetch-tweets' ) . '@' . $sUserScreenName; ?>
                 </a>
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -195,7 +195,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
                     <?php if ( $_bIsRetweet ) : ?>
                     <span class='fetch-tweets-single-retweet-credit'>
                         <?php _e( 'Retweeted by', 'fetch-tweets' ) . ' '; ?>
-                        <a href='<?php echo esc_url( 'https://twitter.com/' . $_aDetail['user']['screen_name'], 'https' ); ?>' target='_blank'>
+                        <a href='<?php echo esc_url( 'https://twitter.com/' . $_aDetail['user']['screen_name'] ); ?>' target='_blank'>
                             <?php echo $_aDetail['user']['name']; ?>
                         </a>
                     </span>
@@ -203,7 +203,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
                     
                     <?php if ( $aArgs['visibilities']['time'] ) : ?>
                     <span class='fetch-tweets-single-tweet-created-at'>
-                        <a href='<?php echo esc_url( 'https://twitter.com/' . $aTweet['user']['screen_name'] . '/status/' . $aTweet['id_str'], 'https' ); ?>' target='_blank'>
+                        <a href='<?php echo esc_url( 'https://twitter.com/' . $aTweet['user']['screen_name'] . '/status/' . $aTweet['id_str'] ); ?>' target='_blank'>
                             <?php echo human_time_diff( $aTweet['created_at'] , current_time('timestamp') - $sGMTOffset ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
                         </a>            
                     </span>
@@ -214,9 +214,9 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
 
             <?php if ( $aArgs['intent_buttons'] ) : ?>
                 <?php
-                $sURLReplyButton    = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ), $bIsSSL ? 'https' : 'http' );
-                $sURLRetweetButton  = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/retweet_48x16.png' ), $bIsSSL ? 'https' : 'http' );
-                $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/favorite_48x16.png' ), $bIsSSL ? 'https' : 'http' );
+                $sURLReplyButton    = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ) );
+                $sURLRetweetButton  = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/retweet_48x16.png' ) );
+                $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/favorite_48x16.png' ) );
                 ?>
                 <?php if ( $aArgs['intent_button_script'] ) : ?>
                 <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
@@ -233,7 +233,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
                         </a>
                     </li>
                     <li class='fetch-tweets-single-intent-retweet'>
-                        <a href='<?php echo esc_url( 'https://twitter.com/intent/retweet?tweet_id=' .$_aDetail['id_str'] , 'https' ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Retweet', 'fetch-tweets' ) ); ?>'>
+                        <a href='<?php echo esc_url( 'https://twitter.com/intent/retweet?tweet_id=' .$_aDetail['id_str'] ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Retweet', 'fetch-tweets' ) ); ?>'>
                             <?php if ( 1 == $aArgs['intent_buttons'] || 2 == $aArgs['intent_buttons'] ) : ?>
                             <span class='fetch-tweets-single-intent-icon' style='background-image: url("<?php echo $sURLRetweetButton; ?>");' ></span>
                             <?php endif; ?>

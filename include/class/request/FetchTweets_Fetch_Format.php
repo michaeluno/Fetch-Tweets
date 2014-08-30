@@ -251,7 +251,7 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 			
 			$sText = preg_replace( 
 				'/#(\Q' . $aDetails['text'] . '\E)(\W|$)/', 	// needle
-				'<a href="' . esc_url( 'https://twitter.com/search?q=%23$1&src=hash', 'https' ) . '" target="_blank" rel="nofollow">#$1</a>$2',	// replacement
+				'<a href="' . esc_url( 'https://twitter.com/search?q=%23$1&src=hash' ) . '" target="_blank" rel="nofollow">#$1</a>$2',	// replacement
 				$sText 	// haystack
 			);
 			
@@ -274,7 +274,7 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 			
 			$sText = preg_replace( 
 				'/@(\Q' . $aDetails['screen_name'] . '\E)(\W|$)/i', 	// needle, case insensitive
-				'<a href="' . esc_url( 'https://twitter.com/$1', 'https' ) . '" target="_blank" rel="nofollow">@$1</a>$2',	// replacement
+				'<a href="' . esc_url( 'https://twitter.com/$1' ) . '" target="_blank" rel="nofollow">@$1</a>$2',	// replacement
 				$sText 	// haystack
 			);
 			
@@ -374,17 +374,17 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 			
 			// avoid undefined index warnings.
 			$arrMedium = $arrMedium + array(
-				'type' => null,
-				'expanded_url' => null,
-				'media_url' => null,		
-				'media_url_https' => null,				
+				'type'              => null,
+				'expanded_url'      => null,
+				'media_url'         => null,		
+				'media_url_https'   => null,				
 			);
 			
 			if ( 'photo' !== $arrMedium['type'] || ! $arrMedium['media_url'] ) { continue; }
 			
 			$arrOutput[] = "<div class='fetch-tweets-media-photo'>"
 					. "<a href='{$arrMedium['expanded_url']}'>"
-						. "<img src='" . esc_url( $this->fIsSSL ? $arrMedium['media_url_https'] : $arrMedium['media_url'], $this->fIsSSL ? 'https' : 'http' ) . "' alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "'>"
+						. "<img src='" . esc_url( $this->fIsSSL ? $arrMedium['media_url_https'] : $arrMedium['media_url'] ) . "' alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "'>"
 					. "</a>"
 				. "</div><!-- fetch-tweets-media-photo -->";
 

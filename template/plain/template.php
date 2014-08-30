@@ -88,9 +88,9 @@ $sPaddings          = ( $sPaddingTop ? "padding-top: {$sPaddingTop}; " : "" ) . 
 $sMarginForImage    = $aArgs['visibilities']['avatar'] ? ( ( $aArgs['avatar_position'] == 'left' ? "margin-left: " : "margin-right: " ) . ( ( int ) $aArgs['avatar_size'] ) . "px" ) : "";
 $sGMTOffset         = ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 $bIsSSL             = is_ssl();
-$sURLReplyuButton   = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ), $bIsSSL ? 'https' : 'http' );
-$sURLRetweetButton  = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/retweet_48x16.png' ), $bIsSSL ? 'https' : 'http' );
-$sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/favorite_48x16.png' ), $bIsSSL ? 'https' : 'http' );
+$sURLReplyuButton   = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ) );
+$sURLRetweetButton  = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/retweet_48x16.png' ) );
+$sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/favorite_48x16.png' ) );
 /*
  * For debugging - uncomment the following lines to see the contents of the arrays.
  */ 
@@ -118,12 +118,12 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
     <div class="fetch-tweets-item <?php echo $sRetweetClassSelector; ?>">
         <?php if ( $aArgs['avatar_size'] > 0  && $aArgs['visibilities']['avatar'] ) : 
             $sAvatarURL = getTwitterProfileImageURLBySize( $bIsSSL ? $aTweet['user']['profile_image_url_https'] : $aTweet['user']['profile_image_url'], $aArgs['avatar_size'] );
-            $sAvatarURL = esc_url( $sAvatarURL, $bIsSSL ? 'https' : 'http' );
+            $sAvatarURL = esc_url( $sAvatarURL );
             $sAvatarURLSubstitute = getTwitterProfileImageURLBySize( $bIsSSL ? $aTweet['user']['profile_image_url_https'] : $aTweet['user']['profile_image_url'], 100 );
-            $sAvatarURLSubstitute = esc_url( $sAvatarURLSubstitute, $bIsSSL ? 'https' : 'http' );
+            $sAvatarURLSubstitute = esc_url( $sAvatarURLSubstitute );
         ?>
         <div class='fetch-tweets-profile-image' style="max-width:<?php echo $aArgs['avatar_size'];?>px; float:<?php echo $aArgs['avatar_position']; ?>; clear:<?php echo $aArgs['avatar_position']; ?>;">
-            <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'], 'https' ); ?>' target='_blank'>
+            <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'] ); ?>' target='_blank'>
                 <img src='<?php echo $sAvatarURL; ?>' style='max-width:<?php echo $aArgs['avatar_size'];?>px; border-radius: 5px;' alt='<?php echo esc_attr( sprintf( __( 'The profile image of %1$s', 'fetch-tweets' ), $aTweet['user']['screen_name'] ) ); ?>' onError='this.onerror=null;this.src="<?php echo $sAvatarURLSubstitute; ?>";' />
             </a>
         </div><!-- fetch-tweets-profile-image -->
@@ -133,7 +133,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                 <?php if ( $aArgs['visibilities']['user_name'] ) : ?>
                 <span class='fetch-tweets-user-name'>
                     <strong>
-                        <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'], 'https' ); ?>' target='_blank'>
+                        <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'] ); ?>' target='_blank'>
                             <?php echo $aTweet['user']['name']; ?>
                         </a>
                     </strong>
@@ -142,7 +142,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                 
                 <?php if ( $aArgs['visibilities']['time'] ) : ?>
                 <span class='fetch-tweets-tweet-created-at'>
-                    <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'] . "/status/" . $aTweet['id_str'], 'https' ); ?>' target='_blank'>
+                    <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'] . "/status/" . $aTweet['id_str'] ); ?>' target='_blank'>
                         <?php echo human_time_diff( $aTweet['created_at'], current_time('timestamp') - $sGMTOffset ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
                     </a>            
                 </span>
@@ -155,7 +155,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                     <?php if ( isset( $_aDetail['retweeted_status']['text'] ) ) : ?>
                     <span class='fetch-tweets-retweet-credit'>
                         <?php _e( 'Retweeted by', 'fetch-tweets' ) . ' '; ?>
-                        <a href='<?php echo esc_url( "https://twitter.com/" . $_aDetail['user']['screen_name'], 'https' ); ?>' target='_blank'>
+                        <a href='<?php echo esc_url( "https://twitter.com/" . $_aDetail['user']['screen_name'] ); ?>' target='_blank'>
                             <?php echo $_aDetail['user']['name']; ?>
                         </a>
                     </span>
@@ -167,7 +167,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                     <?php endif; ?>
                     <ul class='fetch-tweets-intent-buttons'>
                         <li class='fetch-tweets-intent-reply'>
-                            <a href='<?php echo esc_url( "https://twitter.com/intent/tweet?in_reply_to=" . $_aDetail['id_str'], 'https' ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Reply', 'fetch-tweets' ) ); ?>'>
+                            <a href='<?php echo esc_url( "https://twitter.com/intent/tweet?in_reply_to=" . $_aDetail['id_str'] ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Reply', 'fetch-tweets' ) ); ?>'>
                                 <?php if ( 1 == $aArgs['intent_buttons'] || 2 == $aArgs['intent_buttons'] ) : ?>
                                 <span class='fetch-tweets-intent-icon' style='background-image: url("<?php echo $sURLReplyuButton; ?>");' ></span>
                                 <?php endif; ?>
@@ -179,7 +179,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                             </a>
                         </li>
                         <li class='fetch-tweets-intent-retweet'>
-                            <a href='<?php echo esc_url( "https://twitter.com/intent/retweet?tweet_id=" . $_aDetail['id_str'], 'https' ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Retweet', 'fetch-tweets' ) ); ?>'>
+                            <a href='<?php echo esc_url( "https://twitter.com/intent/retweet?tweet_id=" . $_aDetail['id_str'] ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Retweet', 'fetch-tweets' ) ); ?>'>
                                 <?php if ( 1 == $aArgs['intent_buttons'] || 2 == $aArgs['intent_buttons'] ) : ?>
                                 <span class='fetch-tweets-intent-icon' style='background-image: url("<?php echo $sURLRetweetButton; ?>");' ></span>
                                 <?php endif; ?>
@@ -191,7 +191,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                             </a>
                         </li>
                         <li class='fetch-tweets-intent-favorite'>
-                            <a href='<?php echo esc_url( "https://twitter.com/intent/favorite?tweet_id=" . $_aDetail['id_str'] , 'https' ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Favorite', 'fetch-tweets' ) ); ?>'>
+                            <a href='<?php echo esc_url( "https://twitter.com/intent/favorite?tweet_id=" . $_aDetail['id_str'] ); ?>' rel='nofollow' target='_blank' title='<?php echo esc_attr( __( 'Favorite', 'fetch-tweets' ) ); ?>'>
                                 <?php if ( 1 == $aArgs['intent_buttons'] || 2 == $aArgs['intent_buttons'] ) : ?>
                                 <span class='fetch-tweets-intent-icon' style='background-image: url("<?php echo $sURLFavoriteButton; ?>");' ></span>
                                 <?php endif; ?>
