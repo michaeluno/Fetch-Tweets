@@ -11,7 +11,7 @@ abstract class FetchTweets_Option_ {
      * 
      * @since       2.3.5
      */
-    static public $oInstance;	
+    static public $oInstance = null;	
     
 	protected static $aStructure_Options = array(		
 		'authentication_keys' => array(
@@ -110,14 +110,12 @@ abstract class FetchTweets_Option_ {
      */
     static public function getInstance() {
         
-        self::$oInstance = self::$oInstance 
-            ? self::$oInstance 
-            : ( isset( $GLOBALS['oFetchTweets_Option'] ) && ( $GLOBALS['oFetchTweets_Option'] instanceof FetchTweets_Option )
-                ? $GLOBALS['oFetchTweets_Option']
-                : new FetchTweets_Option( FetchTweets_Commons::$sAdminKey )
-            );
-        $GLOBALS['oFetchTweets_Option'] = self::$oInstance;
-        return self::$oInstance;
+        if ( isset( $GLOBALS['oFetchTweets_Option'] ) && is_object( $GLOBALS['oFetchTweets_Option'] ) ) {
+            return $GLOBALS['oFetchTweets_Option'];
+        }
+        
+        $GLOBALS['oFetchTweets_Option'] = new FetchTweets_Option( FetchTweets_Commons::$sAdminKey );
+        return $GLOBALS['oFetchTweets_Option'];
         
     }         
          

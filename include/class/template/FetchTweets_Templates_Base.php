@@ -16,7 +16,7 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
      * 
      * @since       2.3.6
      */
-    static public $oInstance;	    
+    static public $oInstance = null;	    
     
 	/**
 	 * Represents the template array structure stored in the option array.
@@ -60,15 +60,13 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
      * @since       2.3.6
      */
     static public function getInstance() {
+            
+        if ( isset( $GLOBALS['oFetchTweets_Templates'] ) && is_object( $GLOBALS['oFetchTweets_Templates'] ) ) {
+            return $GLOBALS['oFetchTweets_Templates'];
+        }
         
-        self::$oInstance = self::$oInstance 
-            ? self::$oInstance 
-            : ( isset( $GLOBALS['oFetchTweets_Templates'] ) && ( $GLOBALS['oFetchTweets_Templates'] instanceof FetchTweets_Templates )
-                ? $GLOBALS['oFetchTweets_Templates']
-                : new FetchTweets_Templates()
-            );
-        $GLOBALS['oFetchTweets_Templates'] = self::$oInstance;
-        return self::$oInstance;
+        $GLOBALS['oFetchTweets_Templates'] = new FetchTweets_Templates( FetchTweets_Commons::$sAdminKey );
+        return $GLOBALS['oFetchTweets_Templates'];
         
     }     
     
@@ -91,7 +89,7 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 	 */
 	public function getActiveTemplates() {
 		
-        $_oOption = FetchTweets_Option::getInstance();
+        $_oOption = $GLOBALS['oFetchTweets_Option'];    // FetchTweets_Option::getInstance(); causes infinite function calls.
         
 		// The default template (saved or dynamically generated)
 		$_aDefaultTemplate = empty( $_oOption->aOptions['arrDefaultTemplate'] ) || ! @is_file( $_oOption->aOptions['arrDefaultTemplate']['strCSSPath'] )
