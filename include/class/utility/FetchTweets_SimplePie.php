@@ -91,7 +91,7 @@ class FetchTweets_SimplePie extends FetchTweets_SimplePie__ {
 		$GLOBALS['arrSimplePieCacheModTimestamps'] = isset( $GLOBALS['arrSimplePieCacheModTimestamps'] ) && is_array( $GLOBALS['arrSimplePieCacheModTimestamps'] ) ? $GLOBALS['arrSimplePieCacheModTimestamps'] : array();
 		$GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ] = isset( $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ] ) && is_array( $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ] ) 
 			? $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ]
-			: ( array ) get_transient( $this->strPluginKey ) ;
+			: FetchTweets_WPUtilities::getTransient( $this->strPluginKey, array() );
 			
 		// - this stores expired cache items.
 		$GLOBALS['arrSimplePieCacheExpiredItems'] = isset( $GLOBALS['arrSimplePieCacheExpiredItems'] ) && is_array( $GLOBALS['arrSimplePieCacheExpiredItems'] ) ? $GLOBALS['arrSimplePieCacheExpiredItems'] : array();
@@ -109,7 +109,7 @@ class FetchTweets_SimplePie extends FetchTweets_SimplePie__ {
 		// This is used to avoid multiple calls of set_transient() by the cache class.
 		if ( ! ( isset( $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ]['bIsCacheTransientSet'] ) && $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ]['bIsCacheTransientSet'] ) ) {
 			unset( $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ]['bIsCacheTransientSet'] ); // remove the unnecessary data.
-			set_transient( $this->strPluginKey, $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ], $this->cache_duration * $this->numCacheLifetimeExpand );
+			FetchTweets_WPUtilities::setTransient( $this->strPluginKey, $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ], $this->cache_duration * $this->numCacheLifetimeExpand );
 			$GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ]['bIsCacheTransientSet'] = true;
 		}
 		
@@ -277,7 +277,7 @@ class FetchTweets_Feed_Cache_Transient {
 		$GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ][ $this->strFileID ] = time();	
 
 		// make it 100 times longer so that it barely gets expires by itself
-		set_transient( $this->strTransientName, $data, $this->iLifetime * $this->numExpand );
+		FetchTweets_WPUtilities::setTransient( $this->strTransientName, $data, $this->iLifetime * $this->numExpand );
 		return true;
 	}
 	public function load() {		
@@ -285,7 +285,7 @@ class FetchTweets_Feed_Cache_Transient {
 		// If this returns an empty value, SimplePie will fetch the feed.
 		if ( $this->iLifetime == 0 ) return null;  
 		
-		return get_transient( $this->strTransientName );	// the stored cache data
+		return FetchTweets_WPUtilities::getTransient( $this->strTransientName );	// the stored cache data
 		
 	}
 	public function mtime() {		
@@ -302,7 +302,7 @@ class FetchTweets_Feed_Cache_Transient {
 	}
 	public function unlink() {
 		unset( $GLOBALS['arrSimplePieCacheModTimestamps'][ $this->strPluginKey ][ $this->strFileID ] );
-		delete_transient( $this->strTransientName );
+		FetchTweets_WPUtilities::deleteTransient( $this->strTransientName );
 		return true;
 	}
 }

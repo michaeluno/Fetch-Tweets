@@ -94,7 +94,7 @@ abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_
 		$_aTemporaryTokens = array();
 		$_aTemporaryTokens['oauth_token'] = $_aRequestToken['oauth_token'];
 		$_aTemporaryTokens['oauth_token_secret'] = $_aRequestToken['oauth_token_secret'];
-		set_transient( FetchTweets_Commons::TransientPrefix . '_oauth', $_aTemporaryTokens, 60*10 );	// 10 minutes
+		FetchTweets_WPUtilities::setTransient( FetchTweets_Commons::TransientPrefix . '_oauth', $_aTemporaryTokens, 60*10 );	// 10 minutes
 		
 		/* If last connection failed don't display authorization link. */
 		switch ( $_oConnect->http_code ) {
@@ -116,7 +116,7 @@ abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_
 	public function load_fetch_tweets_settings_twitter_callback() { // load + page slug + tab slug
 				
 		/* If the oauth_token is old redirect to the authentication page. */
-		$_aTemporaryTokens = get_transient( FetchTweets_Commons::TransientPrefix . '_oauth' );
+		$_aTemporaryTokens = FetchTweets_WPUtilities::getTransient( FetchTweets_Commons::TransientPrefix . '_oauth' );
 		if ( false === $_aTemporaryTokens || ! isset( $_aTemporaryTokens['oauth_token'], $_aTemporaryTokens['oauth_token_secret'] )) {
 			die( 
 				wp_redirect( 

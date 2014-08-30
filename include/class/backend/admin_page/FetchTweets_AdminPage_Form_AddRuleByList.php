@@ -148,7 +148,7 @@ abstract class FetchTweets_AdminPage_Form_AddRuleByList extends FetchTweets_Admi
 
 		// Set the transient of the fetched IDs. This will be used right next page load.
 		$_sListCacheID = uniqid();
-		set_transient( $_sListCacheID, $_aLists, 60 );		
+		FetchTweets_WPUtilities::setTransient( $_sListCacheID, $_aLists, 60 );		
 		die( 
 			wp_redirect( 
 				add_query_arg( 	// go to the Manage Accounts page. 

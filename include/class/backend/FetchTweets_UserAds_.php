@@ -88,7 +88,7 @@ abstract class FetchTweets_UserAds_ {
 		
 		// Prepare the feed items
 		if ( ! isset( $this->arrFeedItems[ $strURLID ] ) ) {
-			$this->arrFeedItems[ $strURLID ] = ( array ) get_transient( $this->strTransientPrefix . $strURLID );
+			$this->arrFeedItems[ $strURLID ] = FetchTweets_WPUtilities::getTransient( $this->strTransientPrefix . $strURLID, array() );
 			$this->arrFeedItems[ $strURLID ] = array_filter( $this->arrFeedItems[ $strURLID ] );	// casting array causes the 0 key
 		}	
 		

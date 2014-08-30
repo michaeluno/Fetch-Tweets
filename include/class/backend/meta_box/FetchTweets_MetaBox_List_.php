@@ -108,8 +108,8 @@ class FetchTweets_MetaBox_List_ extends FetchTweets_AdminPageFramework_MetaBox {
 			// If the cache is set from the previous page, use that.
 			$sListTransient = isset( $_GET['list_cache'] ) ? $_GET['list_cache'] : '';
 			if ( ! empty( $sListTransient ) ) {
-				$aLists = ( array ) get_transient( $sListTransient );
-				delete_transient( $sListTransient );
+				$aLists = FetchTweets_WPUtilities::getTransient( $sListTransient, array() );
+				FetchTweets_WPUtilities::deleteTransient( $sListTransient );
 				return $aLists;
 			}
 			

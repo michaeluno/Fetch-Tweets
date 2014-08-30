@@ -145,7 +145,7 @@ final class FetchTweets_Bootstrap {
 	
 	public function _replyToDoWhenPluginDeactivates() {
 		
-		FetchTweets_Transient::clearTransients();
+		FetchTweets_WPUtilities::clearTransients();
 		
 	}	
 	

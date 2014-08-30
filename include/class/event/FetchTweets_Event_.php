@@ -119,12 +119,12 @@ abstract class FetchTweets_Event_ {
 
 		// Check if the transient is locked
 		$strLockTransient = FetchTweets_Commons::TransientPrefix . '_' . md5( "LockOEm_" . trim( $strTransientKey ) );	// up to 40 characters, the prefix can be up to 8 characters
-		if ( false !== get_transient( $strLockTransient ) ) {
+		if ( false !== FetchTweets_WPUtilities::getTransient( $strLockTransient ) ) {
 			return;	// it means the cache is being modified.
 		}	
 		
 		// Set a lock flag transient that indicates the transient is being renewed.
-		set_transient(
+		FetchTweets_WPUtilities::setTransient(
 			$strLockTransient, 
 			true, // the value can be anything that yields true
 			FetchTweets_Utilities::getAllowedMaxExecutionTime()	
@@ -138,7 +138,7 @@ abstract class FetchTweets_Event_ {
 	
 		// If the mandatory keys are not set, it's broken.
 		if ( ! isset( $arrTransient['mod'], $arrTransient['data'] ) ) {
-			delete_transient( $strTransientKey );
+			FetchTweets_WPUtilities::deleteTransient( $strTransientKey );
 			return;
 		}
 		
@@ -150,7 +150,7 @@ abstract class FetchTweets_Event_ {
 		$oFetch->setTransient( $sRequestURI, $arrTweets, $arrTransient['mod'], true );	// the method handles the encoding.
 	
 		// Delete the lock transient
-		delete_transient( $strLockTransient );
+		FetchTweets_WPUtilities::deleteTransient( $strLockTransient );
 
 	}
 				

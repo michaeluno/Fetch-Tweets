@@ -227,13 +227,13 @@ abstract class FetchTweets_Fetch_Cache {
 		}
 		
 		// Check if the transient is locked.
-		if ( ! $bIgnoreLock && false !== get_transient( $_sLockTransient ) ) {
+		if ( ! $bIgnoreLock && false !== FetchTweets_WPUtilities::getTransient( $_sLockTransient ) ) {
 			return;	// it means the cache is being modified.
 		}
 		
 		// Set a lock flag transient that indicates the transient is being renewed.
 		if ( ! $bIgnoreLock ) {			
-			set_transient(
+			FetchTweets_WPUtilities::setTransient(
 				$_sLockTransient, 
 				'locked', // the value can be anything that yields true
 				10
@@ -241,7 +241,7 @@ abstract class FetchTweets_Fetch_Cache {
 		}
 
 		// Store the cache
-		$_bIsSet = set_transient(
+		$_bIsSet = FetchTweets_WPUtilities::setTransient(
 			$_sTransientKey, 
 			array( 
                 'mod' => $iTime ? $iTime : time(),
@@ -269,7 +269,7 @@ abstract class FetchTweets_Fetch_Cache {
 		}
 		
 		// Delete the lock transient
-		// delete_transient( $_sLockTransient );
+		// FetchTweets_WPUtilities::deleteTransient( $_sLockTransient );
 
 	}
 	
@@ -284,7 +284,7 @@ abstract class FetchTweets_Fetch_Cache {
 	 */ 
 	public function getTransient( $sTransientKey, $fForceArray=true ) {
 		
-		$_vData = get_transient( $sTransientKey );
+		$_vData = FetchTweets_WPUtilities::getTransient( $sTransientKey );
 		
 		// if it's false, no transient is stored. Otherwise, some values are in there.
 		if ( false === $_vData ) { return false; }

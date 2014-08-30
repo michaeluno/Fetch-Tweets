@@ -263,12 +263,14 @@ class FetchTweets_ImageHandler extends IXR_Message {
 		// Giving a random delay prevents multiple tasks from running at the same time and causing the page load slow down.
 		// WP Cron runs in the background; however, if the registered tasks takes the server resources too much such as CPU usage, the loading page takes some time to complete.
 		// + rand( 5, 20 )
-		if ( wp_next_scheduled( $this->strCacheRenewEventActionName, array( $this->strImageURL ) ) ) 
+		if ( wp_next_scheduled( $this->strCacheRenewEventActionName, array( $this->strImageURL ) ) ) {
 			return;
+        }
 		
 		// Delete the transient so that the event method can check whether it really needs to be renewed or not.
-		// foreach( ( array ) $this->vSetURL as $strURL ) 
-			// delete_transient( $this->strRealCacheModTimePrefix . md5( $strURL ) );
+		// foreach( ( array ) $this->vSetURL as $strURL ) {
+			// FetchTweets_WPUtilities::deleteTransient( $this->strRealCacheModTimePrefix . md5( $strURL ) );
+        // }
 		
 		wp_schedule_single_event( time() + $this->numRenewTime, $this->strCacheRenewEventActionName, array( $this->strImageURL ) );
 

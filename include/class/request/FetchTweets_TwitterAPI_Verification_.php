@@ -28,9 +28,9 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
 	public function getStatus() {
 		
 		// Return the cached response if available.
-		$_sCacheID = FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret ) ) );
-		$_vData = get_transient( $_sCacheID );
-		if ( false !== $_vData ) return $_vData;
+		$_sCacheID  = FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret ) ) );
+		$_vData     = FetchTweets_WPUtilities::getTransient( $_sCacheID );
+		if ( false !== $_vData ) { return $_vData; }
 		
 		// Perform the requests.
 		$_oConnect =  new FetchTweets_TwitterOAuth( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret );
@@ -40,12 +40,12 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
 		if ( ! isset( $_aUser['id'] ) || ! $_aUser['id'] ) return array();
 			
 		// Otherwise, it is okay. Retrieve the current status.
-		$_aStatusKeys = apply_filters( 'fetch_tweets_filter_request_rate_limit_status_keys', array( 'statuses', 'search', 'lists' ) );	// keys can be added such as 'help', 'users' etc
-		$_aStatus = $_oConnect->get( 'https://api.twitter.com/1.1/application/rate_limit_status.json?resources=' . implode( ',', $_aStatusKeys ) );
+		$_aStatusKeys   = apply_filters( 'fetch_tweets_filter_request_rate_limit_status_keys', array( 'statuses', 'search', 'lists' ) );	// keys can be added such as 'help', 'users' etc
+		$_aStatus       = $_oConnect->get( 'https://api.twitter.com/1.1/application/rate_limit_status.json?resources=' . implode( ',', $_aStatusKeys ) );
 		
 		// Set the cache.
-		$_aData = is_array( $_aStatus ) ? $_aUser + $_aStatus : $_aUser;
-		set_transient( $_sCacheID, $_aData, 60 );	// stores the cache only for 60 seconds. 
+		$_aData         = is_array( $_aStatus ) ? $_aUser + $_aStatus : $_aUser;
+		FetchTweets_WPUtilities::setTransient( $_sCacheID, $_aData, 60 );	// stores the cache only for 60 seconds. 
 		
 		return $_aData;	
 		

@@ -313,8 +313,8 @@ abstract class FetchTweets_AdminPage_Form_Setting extends FetchTweets_AdminPage_
 			$aInput = is_array( $aInput ) ? $aInput : array();	// in WP v3.4.2, when the Disconnect button is pressed an $aInput was passed as an empty string. Something went wrong.
 			
 			// the transient needs to be removed 
-			delete_transient( FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->oOption->getConsumerKey(), $this->oOption->getConsumerSecret(), $this->oOption->getAccessToken(), $this->oOption->getAccessTokenSecret() ) ) ) );
-			delete_transient( FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( FetchTweets_Commons::ConsumerKey, FetchTweets_Commons::ConsumerSecret, $this->oOption->getAccessTokenAuto(), $this->oOption->getAccessTokenSecretAuto() ) ) ) );
+			FetchTweets_WPUtilities::deleteTransient( FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->oOption->getConsumerKey(), $this->oOption->getConsumerSecret(), $this->oOption->getAccessToken(), $this->oOption->getAccessTokenSecret() ) ) ) );
+			FetchTweets_WPUtilities::deleteTransient( FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( FetchTweets_Commons::ConsumerKey, FetchTweets_Commons::ConsumerSecret, $this->oOption->getAccessTokenAuto(), $this->oOption->getAccessTokenSecretAuto() ) ) ) );
 			
 			$aInput['authentication_keys'] = array();
 			$aInput['twitter_connect'] = array();
@@ -395,7 +395,7 @@ abstract class FetchTweets_AdminPage_Form_Setting extends FetchTweets_AdminPage_
 		}
 
 		if ( isset( $arrSubmit['clear_caches'] ) && $arrSubmit['clear_caches'] ) {
-			FetchTweets_Transient::clearTransients();
+			FetchTweets_WPUtilities::clearTransients();
 			$fChanged = true;
 			$this->setSettingNotice( __( 'The caches have been cleared.', 'fetch-tweets' ) );
 		}

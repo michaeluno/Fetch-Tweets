@@ -1,7 +1,6 @@
 <?php 
 $_aClassFiles = array( 
 	"FetchTweets_Bootstrap"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/FetchTweets_Bootstrap.php", 
-	"FetchTweets_Transient"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/FetchTweets_Transient.php", 
 	"FetchTweets_TwitterOAuth"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/FetchTweets_TwitterOAuth.php", 
 	"FetchTweets_DateCustomFieldType"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/admin/FetchTweets_DateCustomFieldType.php", 
 	"FetchTweets_GeometryCustomFieldType"	=>	FetchTweets_Commons::$sDirPath . "/include/class/boot/admin/FetchTweets_GeometryCustomFieldType.php", 
