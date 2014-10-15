@@ -98,7 +98,12 @@ class FetchTweets_WPUtilities extends FetchTweets_Utilities {
 
         self::$_bIsNetworkAdmin = isset( self::$_bIsNetworkAdmin ) ? self::$_bIsNetworkAdmin : is_network_admin();
         
-        $_vTransient = ( self::$_bIsNetworkAdmin ) ? set_site_transient( $sTransientKey, $vValue, $iExpiration ) : set_transient( $sTransientKey, $vValue, $iExpiration );
+        // Do not allow 0 because the table row will be autoloaded and it consumes the server memory.
+        $iExpiration = 0 == $iExpiration ? 99999 : $iExpiration;
+        
+        $_vTransient = ( self::$_bIsNetworkAdmin ) 
+            ? set_site_transient( $sTransientKey, $vValue, $iExpiration ) 
+            : set_transient( $sTransientKey, $vValue, $iExpiration );
 
         // reset prior value of $_wp_using_ext_object_cache
         $_wp_using_ext_object_cache = $_bWpUsingExtObjectCacheTemp; 
