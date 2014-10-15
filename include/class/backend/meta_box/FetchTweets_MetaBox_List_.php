@@ -147,15 +147,18 @@ class FetchTweets_MetaBox_List_ extends FetchTweets_AdminPageFramework_MetaBox {
 			
 		}
 		
-	/*
+	/**
 	 * Validation Methods
+     * 
+     * @since   unknown
+     * @since   2.3.8       Allowed 0 for the `item_count` argument.
 	 */
 	public function validation_FetchTweets_MetaBox_List( $aInput ) {	// validation_ + extended class name
 			
 		$aInput['item_count'] = $this->oUtil->fixNumber( 
 			$aInput['item_count'], 	// number to sanitize
 			20, 	// default
-			1, 		// minimum
+			0, 		// minimum
 			200
 		);
 		

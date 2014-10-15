@@ -85,12 +85,17 @@ class FetchTweets_MetaBox_ScreenName_ extends FetchTweets_AdminPageFramework_Met
 	
 	}
 	
+    /**
+     * 
+     * @since   unknown 
+     * @since   2.3.8       Allowed 0 for the `item_count` argument.
+     */
 	public function validation_FetchTweets_MetaBox_ScreenName( $arrInput ) {	// validation_ + extended class name
 			
 		$arrInput['item_count'] = $this->oUtil->fixNumber( 
 			$arrInput['item_count'], 	// number to sanitize
 			20, 	// default
-			1, 		// minimum
+			0, 		// minimum
 			200
 		);
 				

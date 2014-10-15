@@ -14,7 +14,7 @@ class FetchTweets_MetaBox_Search_ extends FetchTweets_AdminPageFramework_MetaBox
 	 * 
 	 * @since			1.0.0
 	 */ 
-	public function setup() {
+	public function setUp() {
 		
 		$this->addSettingFields(		
 			array(
@@ -169,12 +169,17 @@ class FetchTweets_MetaBox_Search_ extends FetchTweets_AdminPageFramework_MetaBox
 		
 	}	
 
+    /**
+     * 
+     * @since   unknown
+     * @since   2.3.8       Allowed 0 for the `item_count` argument.
+     */
 	public function validation_FetchTweets_MetaBox_Search( $arrInput ) {	// validation_ + extended class name
 			
 		$arrInput['item_count'] = $this->oUtil->fixNumber( 
 			$arrInput['item_count'], 	// number to sanitize
 			20, 	// default
-			1, 		// minimum
+			0, 		// minimum
 			100
 		);
 				

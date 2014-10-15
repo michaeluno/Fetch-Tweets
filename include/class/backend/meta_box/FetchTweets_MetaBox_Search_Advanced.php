@@ -5,7 +5,7 @@ class FetchTweets_MetaBox_Search_Advanced extends FetchTweets_AdminPageFramework
 	 * Adds form fields for the options to fetch tweets by keyword search to the meta box.
 	 * 
 	 */ 
-	public function setup() {
+	public function setUp() {
 		
 		$this->addSettingFields(
 			array(

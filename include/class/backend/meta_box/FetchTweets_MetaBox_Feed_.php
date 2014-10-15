@@ -7,7 +7,7 @@ class FetchTweets_MetaBox_Feed_ extends FetchTweets_AdminPageFramework_MetaBox {
 	 * 
 	 * @since			2.1
 	 */ 
-	public function setup() {
+	public function setUp() {
 		
 		$this->addSettingFields(		
 			array(

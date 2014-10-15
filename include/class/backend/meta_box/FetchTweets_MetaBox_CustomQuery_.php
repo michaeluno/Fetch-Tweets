@@ -7,7 +7,7 @@ class FetchTweets_MetaBox_CustomQuery_ extends FetchTweets_AdminPageFramework_Me
 	 * 
 	 * @since			2.2.0
 	 */ 
-	public function setup() {
+	public function setUp() {
 		
 		$this->addSettingFields(		
 			array(

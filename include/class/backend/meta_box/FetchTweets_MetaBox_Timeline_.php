@@ -82,13 +82,16 @@ class FetchTweets_MetaBox_Timeline_ extends FetchTweets_AdminPageFramework_MetaB
 	
 	/*
 	 * Validation methods
+     * 
+     * @since   unknown
+     * @since   2.3.8       Allowed 0 for the `item_count` argument.
 	 */
 	public function validation_FetchTweets_MetaBox_Timeline( $arrInput ) {	// validation_ + extended class name
 			
 		$arrInput['item_count'] = $this->oUtil->fixNumber( 
 			$arrInput['item_count'], 	// number to sanitize
 			20, 	// default
-			1, 		// minimum
+			0, 		// minimum
 			200
 		);
 				

@@ -9,7 +9,7 @@ class FetchTweets_MetaBox_TweetID extends FetchTweets_AdminPageFramework_MetaBox
 	 * 
 	 * @since			2.3.0
 	 */ 
-	public function setup() {
+	public function setUp() {
 		
 		$this->addSettingFields(		
 			array(
