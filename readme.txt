@@ -216,6 +216,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 = 2.3.8 =
 - Allowed 0 to be set for the `count` option.
+- Optimized the caching mechanism to save the server memory usage.
 - Optimized the process of loading template files.
 - Fixed a PHP undefined constant warning in the admin area.
 
