@@ -71,11 +71,23 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
     }     
     
     /**
+     * Stores the flag indicating whether it has been loaded or not to prevent multiple instances.
+     * 
+     * @since   2.3.8
+     */
+    static public $_bLoaded = false;
+    
+    /**
      * Sets up hooks and properties.
      */
     public function __construct() {
 
-		$this->loadFunctionsOfActiveTemplates();
+        if ( self::$_bLoaded ) {
+            return;
+        }
+        self::$_bLoaded = true;
+        
+        $this->loadFunctionsOfActiveTemplates();
         $this->loadStylesOfActiveTemplates();		
         $this->loadSettingsOfActiveTemplates();
 
@@ -271,12 +283,17 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 	 */ 	
 	public function loadFunctionsOfActiveTemplates() {
 		
+        $_aLoaded = array();
 		foreach( $this->getActiveTemplates() as $__aTemplate ) {
 						
 			$_sFunctionsPath = FetchTweets_WPUtilities::getReadableFilePath( $__aTemplate['strFunctionPath'], $__aTemplate['strDirRelativePath'] . DIRECTORY_SEPARATOR . 'functions.php' );				
 			if ( ! $_sFunctionsPath ) {
 				continue;
 			}
+            if ( in_array( $_sFunctionsPath, $_aLoaded ) ) {
+                continue;
+            }
+            $_aLoaded[] = $_sFunctionsPath;
 			include( $_sFunctionsPath );
 						
 		}
@@ -292,15 +309,24 @@ abstract class FetchTweets_Templates_Base extends FetchTweets_Templates_Utility 
 	public function loadSettingsOfActiveTemplates() {
 		
 		if ( ! is_admin() ) { return; }
-		        
+		                        
+        if ( isset( $GLOBALS['pagenow'] ) && 'plugins.php' === $GLOBALS['pagenow'] ) {
+            return;
+        }                                
+                                
         if ( ! FetchTweets_PluginUtility::isInPluginAdminPage() ) { return; }
         
+        $_aLoaded = array();
 		foreach( $this->getActiveTemplates() as $__aTemplate ) {
 			
 			$_sSettingsPath = FetchTweets_WPUtilities::getReadableFilePath( $__aTemplate['strSettingsPath'], $__aTemplate['strDirRelativePath'] . DIRECTORY_SEPARATOR . 'settings.php' );
 			if ( ! $_sSettingsPath ) {
 				continue;
 			}
+            if ( in_array( $_sSettingsPath, $_aLoaded ) ) {
+                continue;
+            }
+            $_aLoaded[] = $_sSettingsPath;
 			include( $_sSettingsPath );
 						
 		}
