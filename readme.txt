@@ -214,7 +214,8 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 == Changelog ==
 
-= 2.3.8 =
+= 2.3.8 -
+- Added the Follow button visibility option for the `Plain` template.
 - Allowed 0 to be set for the `count` option.
 - Optimized the caching mechanism to save the server memory usage.
 - Optimized the process of loading template files.

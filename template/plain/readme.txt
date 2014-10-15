@@ -1,4 +1,7 @@
 == Change log ==
+ 
+= 2.3.8 =
+- Added the Follow button visibility option.
 
 = 2.3.6 =
 - Changed it not to enclose tweets in `p` tags as media elements are enclosed in `div` tags.

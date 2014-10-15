@@ -170,14 +170,14 @@ class FetchTweets_Template_Settings_Plain extends FetchTweets_Template_Settings 
 			'default' => 1,
 		);
 		$aFields[ $this->sSectionID ]['fetch_tweets_template_plain_visibilities'] = array(
-			'field_id' => 'fetch_tweets_template_plain_visibilities',
-			'section_id' => $this->sSectionID,
-			'title' => __( 'Visibility', 'fetch-tweets' ),
-			'type' => 'checkbox',
-			'label' => array(
+			'field_id'          => 'fetch_tweets_template_plain_visibilities',
+			'section_id'        => $this->sSectionID,
+			'title'             => __( 'Visibility', 'fetch-tweets' ),
+			'type'              => 'checkbox',
+			'label'             => array(
 				'avatar'			=> __( 'Profile Image', 'fetch-tweets' ),
 				'user_name'			=> __( 'User Name', 'fetch-tweets' ),
-				// 'follow_button' => __( 'Follow Button', 'fetch-tweets' ),
+				'follow_button'     => __( 'Follow Button', 'fetch-tweets' ),   // 2.3.8+
 				// 'user_description' => __( 'User Description', 'fetch-tweets' ),
 				'time'				=> __( 'Time', 'fetch-tweets' ),
 				'intent_buttons'	=> __( 'Intent Buttons', 'fetch-tweets' ),
@@ -185,7 +185,7 @@ class FetchTweets_Template_Settings_Plain extends FetchTweets_Template_Settings 
 			'default' => array(
 				'avatar'			=> true,
 				'user_name'			=> true,
-				// 'follow_button' => true,
+				'follow_button'     => false,
 				// 'user_description' => true,
 				'time'				=> true,
 				'intent_buttons'	=> true,

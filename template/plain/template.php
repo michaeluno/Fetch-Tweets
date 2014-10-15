@@ -8,20 +8,20 @@
  
 // Set the default template option values.
 $aDefaultTemplateValues = array(
-    'fetch_tweets_template_plain_avatar_size' => 48,
-    'fetch_tweets_template_plain_avatar_position' => 'left',
-    'fetch_tweets_template_plain_width' => array( 'size' => 100, 'unit' => '%' ),
-    'fetch_tweets_template_plain_height' => array( 'size' => 400, 'unit' => 'px' ),
-    'fetch_tweets_template_plain_background_color' => 'transparent',
-    'fetch_tweets_template_plain_intent_buttons' => 2,
-    'fetch_tweets_template_plain_intent_script' => 1,
-    'fetch_tweets_template_plain_visibilities' => array(
-        'avatar' => true,
-        'user_name' => true,
-        // 'follow_button' => true,
+    'fetch_tweets_template_plain_avatar_size'       => 48,
+    'fetch_tweets_template_plain_avatar_position'   => 'left',
+    'fetch_tweets_template_plain_width'             => array( 'size' => 100, 'unit' => '%' ),
+    'fetch_tweets_template_plain_height'            => array( 'size' => 400, 'unit' => 'px' ),
+    'fetch_tweets_template_plain_background_color'  => 'transparent',
+    'fetch_tweets_template_plain_intent_buttons'    => 2,
+    'fetch_tweets_template_plain_intent_script'     => 1,
+    'fetch_tweets_template_plain_visibilities'      => array(
+        'avatar'            => true,
+        'user_name'         => true,
+        'follow_button'     => false,   // 2.3.8+
         // 'user_description' => true,
-        'time' => true,            
-        'intent_buttons' => true,
+        'time'              => true,            
+        'intent_buttons'    => true,
     ),
     'fetch_tweets_template_plain_margins' => array(
         0 => array( 'size' => '', 'unit' => 'px' ),    // top
@@ -34,6 +34,10 @@ $aDefaultTemplateValues = array(
         1 => array( 'size' => '', 'unit' => 'px' ),    // right
         2 => array( 'size' => '', 'unit' => 'px' ),    // bottom
         3 => array( 'size' => '', 'unit' => 'px' ),    // left
+    ),    
+    'fetch_tweets_template_plain_follow_button_elements'   => array(
+        'screen_name'       => 0,
+        'follower_count'    => 0,    
     ),    
 );
 
@@ -73,6 +77,12 @@ $aArgs['padding_left']              = isset( $aArgs['padding_left'] ) ? $aArgs['
 $aArgs['padding_left_unit']         = isset( $aArgs['padding_left_unit'] ) ? $aArgs['padding_left_unit'] : $aTemplateOptions['fetch_tweets_template_plain_paddings'][3]['unit'];
 $aArgs['intent_buttons']            = isset( $aArgs['intent_buttons'] ) ? $aArgs['intent_buttons'] : ( ! $aArgs['visibilities']['intent_buttons'] ? 0 : $aTemplateOptions['fetch_tweets_template_plain_intent_buttons'] );    // 0: do not show, 1: icons and text, 2: only icons, 3: only text.
 $aArgs['intent_button_script']      = isset( $aArgs['intent_button_script'] ) ? $aArgs['intent_button_script'] : $aTemplateOptions['fetch_tweets_template_plain_intent_script'];
+
+$aArgs['follow_button_elements']    = isset( $aArgs['follow_button_elements'] ) ? $aArgs['follow_button_elements'] : $aTemplateOptions['fetch_tweets_template_plain_follow_button_elements'];
+$aArgs['follow_button_screen_name'] = isset( $aArgs['follow_button_screen_name'] ) ? $aArgs['follow_button_screen_name'] : ( $aArgs['follow_button_elements']['screen_name'] ? $aArgs['follow_button_elements']['screen_name'] : "false" );
+$aArgs['follow_button_count']       = isset( $aArgs['follow_button_count'] ) ? $aArgs['follow_button_count'] : ( $aArgs['follow_button_elements']['follower_count'] ? $aArgs['follow_button_elements']['follower_count'] : "false" );
+
+
 $sWidth             = $aArgs['width'] ? "max-width: " . $aArgs['width'] . $aArgs['width_unit'] . "; " : '';
 $sHeight            =  $aArgs['height'] ? "max-height: " . $aArgs['height'] . $aArgs['height_unit'] . "; " : '';
 $sMarginTop         = empty( $aArgs['margin_top'] ) ? 0 : $aArgs['margin_top'] . $aArgs['margin_top_unit'];
@@ -130,6 +140,16 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
         <?php endif; ?>
         <div class='fetch-tweets-main' style='<?php echo $sMarginForImage; ?>;'>
             <div class='fetch-tweets-heading'>
+            
+               <?php if ( $aArgs['visibilities']['follow_button'] ) : ?>
+                <div class='fetch-tweets-follow-button'>
+                    <a href="<?php echo esc_url( 'https://twitter.com/' . $aTweet['user']['screen_name'] ); ?>" class="twitter-follow-button" target="_blank" data-lang="<?php echo esc_attr( $aTweet['user']['lang'] ); ?>" data-show-count="<?php echo esc_attr( $aArgs['follow_button_count'] ); ?>" data-show-screen-name="<?php echo esc_attr( $aArgs['follow_button_screen_name'] ); ?>">
+                        <?php echo __( 'Follow', 'fetch-tweets' ) . '@' . $aTweet['user']['screen_name']; ?>
+                    </a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                </div>        
+                <?php endif; ?>            
+            
                 <?php if ( $aArgs['visibilities']['user_name'] ) : ?>
                 <span class='fetch-tweets-user-name'>
                     <strong>
