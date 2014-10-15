@@ -219,6 +219,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 - Allowed 0 to be set for the `count` option.
 - Optimized the caching mechanism to save the server memory usage.
 - Optimized the process of loading template files.
+- Fixed a bug that caches were not saved for the rules created by Home timeline (via Add Rule by Timeline).
 - Fixed a PHP undefined constant warning in the admin area.
 
 = 2.3.7 - 08/31/2014 =

@@ -137,7 +137,6 @@ abstract class FetchTweets_Fetch_Cache {
                 isset( $_aAccessKeys['access_secret'] ) ? $_aAccessKeys['access_secret'] : $this->_aApplicationKeys['access_secret']
             );
             $_iRemaining    = $_oRateLimit->getRemaining( $aRateLimitKeys );            
-// FetchTweets_Debug::log( 'remaining: ' . $_iRemaining );
             if ( ! $_iRemaining ) {
                 return array( 'error' => __( 'The number of API requests exceeded the rate limit. Please try it later.', 'fetch-tweets' ) );
             }
@@ -145,7 +144,7 @@ abstract class FetchTweets_Fetch_Cache {
 		        
 		// Perform the API request.
 		$_aTweets =  $this->oTwitterOAuth->get( $_sRequestURI );		
-			
+					
 		// Restore the original Twitter oAuth object.
 		$this->oTwitterOAuth = $_oOriginalTwitterOAuth;
 		
@@ -218,7 +217,7 @@ abstract class FetchTweets_Fetch_Cache {
 	 */
 	public function setTransient( $sRequestURI, $vData, $iTime=null, $bIgnoreLock=false ) {
 
-		$_sTransientKey     = FetchTweets_Commons::TransientPrefix . "_" . md5( $sRequestURI );
+		$_sTransientKey     = FetchTweets_Commons::TransientPrefix . "_" . md5( trim( $sRequestURI ) );
 		$_sLockTransient    = FetchTweets_Commons::TransientPrefix . '_' . md5( "Lock_" . $_sTransientKey );
 		
 		// Give some time to the server to store transients in case of simultaneous accesses.
@@ -244,13 +243,13 @@ abstract class FetchTweets_Fetch_Cache {
 		$_bIsSet = FetchTweets_WPUtilities::setTransient(
 			$_sTransientKey, 
 			array( 
-                'mod' => $iTime ? $iTime : time(),
-                'data' => $this->oBase64->encode( $vData ),
+                'mod'   => $iTime ? $iTime : time(),
+                'data'  => $this->oBase64->encode( $vData ),
             )
 		);
-        if ( ! $_bIsSet ) {
+        if ( ! $_bIsSet ) {                    
             return;
-        }
+        }       
         
 		// Schedule the action to run in the background with WP Cron. If already scheduled, skip.
 		// This adds the embedding elements which takes some time to process.
@@ -265,6 +264,7 @@ abstract class FetchTweets_Fetch_Cache {
 		if ( 'intense' == $this->oOption->aOptions['cache_settings']['caching_mode'] ) {
 			FetchTweets_Cron::see( array(), true );
 		} else {
+            // $this->arrExpiredTransientsRequestURIs
 			wp_remote_get( site_url( "/wp-cron.php" ), array( 'timeout' => 0.01, 'sslverify'   => false, ) );
 		}
 		
@@ -283,7 +283,7 @@ abstract class FetchTweets_Fetch_Cache {
 	 * @since			1.3.0				Made it public as the event method uses it.
 	 */ 
 	public function getTransient( $sTransientKey, $fForceArray=true ) {
-		
+
 		$_vData = FetchTweets_WPUtilities::getTransient( $sTransientKey );
 		
 		// if it's false, no transient is stored. Otherwise, some values are in there.

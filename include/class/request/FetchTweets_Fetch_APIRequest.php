@@ -27,7 +27,7 @@ abstract class FetchTweets_Fetch_APIRequest extends FetchTweets_Fetch_Cache {
 	public function doAPIRequest_Get( $strRequestURI, $strArrayKey=null, $intCacheDuration=600, $aRateLimitKey=array() ) {
 
 		// Create an ID from the URI.
-		$strRequestID = FetchTweets_Commons::TransientPrefix . "_" . md5( trim( $strRequestURI ) );
+		$strRequestID = FetchTweets_Commons::TransientPrefix . "_" . md5( $this->_sanitizeRequstURI( $strRequestURI ) );
 
 		// Retrieve the cache, and if there is, use it.
 		$arrTransient = $this->getTransient( $strRequestID );
@@ -52,7 +52,7 @@ abstract class FetchTweets_Fetch_APIRequest extends FetchTweets_Fetch_Cache {
 			return ( array ) $this->oBase64->decode( $arrTransient['data'] );
 			
 		} 
-		
+        
 		return $this->_isTwitterAPIRequest( $strRequestURI )
 			? $this->setAPIGETRequestCache( $strRequestURI, $strArrayKey, $aRateLimitKey )	// Twitter API request
 			: $this->setGETRequestCache( $strRequestURI );	// not an API request
