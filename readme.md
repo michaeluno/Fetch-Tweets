@@ -9,9 +9,8 @@ Coming soon..
 
 ## Installation ##
 
-The latest development version can be downloaded [here](https://github.com/michaeluno/fetch-tweets/archive/master.zip).
-
-It includes t## Install ##
+- The latest development version can be found [here](https://github.com/michaeluno/Fetch-Tweets/branches). 
+- The latest stable version can be downloaded [here](http://downloads.wordpress.org/plugin/fetch-tweets.latest-stable.zip).
 
 1. Upload **`fetch-tweets.php`** and other files compressed in the zip folder to the **`/wp-content/plugins/`** directory.,
 2. Activate the plugin through the `Plugins` menu in WordPress.
