@@ -14,7 +14,21 @@
 
 final class FetchTweets_Bootstrap {
 	
+    /**
+     * Stores the flag indicating whether it has been loaded or not to prevent multiple instances.
+     */
+    static public $_bLoaded = false;
+    
+    /**
+     * Loads the plugin.
+     */
 	function __construct( $sPluginFilePath ) {
+        
+        if ( self::$_bLoaded ) {
+            return;
+        }
+        self::$_bLoaded = true;
+        
         
         // 0. Properties
 		$this->_sFilePath   = $sPluginFilePath;	
