@@ -342,9 +342,9 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 		foreach( ( array ) $aURLs as $__aURLDetails ) {
 			
 			$__aURLDetails = $__aURLDetails + array(	// avoid undefined index warnings.
-				'url' => null,
-				'expanded_url' => null,
-				'display_url' => null,
+				'url'           => null,
+				'expanded_url'  => null,
+				'display_url'   => null,
 			);
 
 			if ( empty( $__aURLDetails['expanded_url'] ) ) continue;
@@ -383,7 +383,7 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
 			if ( 'photo' !== $arrMedium['type'] || ! $arrMedium['media_url'] ) { continue; }
 			
 			$arrOutput[] = "<div class='fetch-tweets-media-photo'>"
-					. "<a href='{$arrMedium['expanded_url']}'>"
+					. "<a href='" . esc_url( $arrMedium['expanded_url'] ) . "'>"
 						. "<img src='" . esc_url( $this->fIsSSL ? $arrMedium['media_url_https'] : $arrMedium['media_url'] ) . "' alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "'>"
 					. "</a>"
 				. "</div><!-- fetch-tweets-media-photo -->";
