@@ -107,7 +107,11 @@ abstract class FetchTweets_Widget_Base extends WP_Widget {
 	
 	public function update( $aNewInstance, $aOldInstance ) {
 		
-		$aNewInstance['count'] = $this->fixNumber( $aNewInstance['count'], 20, 1 );
+		$aNewInstance['count'] = $this->fixNumber( 
+            $aNewInstance['count'], 
+            20,     // default
+            0       // mininum   
+        );
 		$aNewInstance['avatar_size'] = $this->fixNumber( $aNewInstance['avatar_size'], 48, 0 );
 
         return $aNewInstance;

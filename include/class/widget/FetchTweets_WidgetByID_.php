@@ -179,7 +179,7 @@ abstract class FetchTweets_WidgetByID_ extends FetchTweets_Widget_Base {
 	
 	public function update( $aNewInstance, $aOldInstance ) {
 		
-		$aNewInstance['count'] = $this->fixNumber( $aNewInstance['count'], 20, 1 );
+		$aNewInstance['count'] = $this->fixNumber( $aNewInstance['count'], 20, 0 );
 		$aNewInstance['avatar_size'] = $this->fixNumber( $aNewInstance['avatar_size'], 48, 0 );
 
         return $aNewInstance;
