@@ -14,9 +14,9 @@ abstract class FetchTweets_AdminPage_Start extends FetchTweets_AdminPageFramewor
         // Add custom links to the description cell of the plugin listing table.
         if ( 'plugins.php' === $this->oProp->sPageNow ) {            
             $this->addLinkToPluginDescription(  
-                '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J4UJHETVAZX34">' . __( 'Donate', 'fetch-tweets' ) . '</a>',
-                '<a href="http://en.michaeluno.jp/contact/custom-order/?lang=' . ( WPLANG ? WPLANG : 'en' ) . '">' . __( 'Order custom plugin', 'fetch-tweets' ) . '</a>'
-            );						
+                '<a href="http://en.michaeluno.jp/donate">' . __( 'Donate', 'fetch-tweets' ) . '</a>',
+                '<a href="http://en.michaeluno.jp/contact/custom-order/?lang=' . ( defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en' ) . '">' . __( 'Order custom plugin', 'fetch-tweets' ) . '</a>'
+            );
         }        
         
 		// Disable object caching in the plugin pages to help some caching plugins not to prevent the settings from being saved.
