@@ -147,5 +147,23 @@ class FetchTweets_oEmbed extends WP_oEmbed {
 			return $arrMatches[ 1 ] . $arrMatches[ 3 ] . ( $arrMatches[ 4 ] + 1 ) . $arrMatches[ 5 ] . $arrMatches[ 6 ] ;	
 			
 		}
-	
+
+	/**
+	 * Strip any new lines from the HTML.
+	 *
+	 * @access private
+	 * @param string $html Existing HTML.
+	 * @param object $data Data object from WP_oEmbed::data2html()
+	 * @param string $url The original URL passed to oEmbed.
+	 * @return string Possibly modified $html
+     * 
+     * @since       2.3.9       Added  because PHP threw an error saying: PHP Warning:  call_user_func_array() [<a href='function.call-user-func-array'>function.call-user-func-array</a>]: First argument is expected to be a valid callback, 'FetchTweets_oEmbed::_strip_newlines' was given in Y:\wamp\www\wp40x\wp-includes\plugin.php on line 214
+	 */
+	public function _strip_newlines( $html, $data, $url ) {
+		if ( false !== strpos( $html, "\n" ) )
+			$html = str_replace( array( "\r\n", "\n" ), '', $html );
+
+		return $html;
+	}
+        
 }
