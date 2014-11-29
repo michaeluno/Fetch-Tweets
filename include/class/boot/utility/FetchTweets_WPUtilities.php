@@ -134,6 +134,17 @@ class FetchTweets_WPUtilities extends FetchTweets_Utilities {
     }
     
     /**
+     * Calculates the absolute path from the given relative path to the WordPress installed directory.
+     * 
+     * @since       2.3.9
+     */
+    static public function getAbsolutePathFromRelative( $sRelativePath ) {
+        $sRelativePath  = preg_replace( "/^\.[\/\\\]/", '', $sRelativePath, 1 );    // removes the heading ./ or .\ 
+        $sRelativePath  = ltrim( $sRelativePath,'/\\'); // removes the leading slash and backslashes.
+        return ABSPATH . $sRelativePath;    // APSPATH has a trailing slash.
+    }
+    
+    /**
      * Returns the file path by checking if the given path is a file.
      * 
      * If fails, it attempts to check with the relative path to ABSPATH.
@@ -145,7 +156,7 @@ class FetchTweets_WPUtilities extends FetchTweets_Utilities {
      */
     public static function getReadableFilePath( $sFilePath, $sRelativePathToABSPATH='' ) {
         
-        if ( @is_file( $sFilePath ) ) {
+        if ( @file_exists( $sFilePath ) ) {
             return $sFilePath;
         }
         
@@ -159,7 +170,7 @@ class FetchTweets_WPUtilities extends FetchTweets_Utilities {
             return false;
         }
         
-        if ( @is_file( $_sAbsolutePath ) ) {
+        if ( @file_exists( $_sAbsolutePath ) ) {
             return $_sAbsolutePath;
         }
         

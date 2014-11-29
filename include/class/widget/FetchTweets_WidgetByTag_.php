@@ -116,51 +116,50 @@ abstract class FetchTweets_WidgetByTag_ extends FetchTweets_Widget_Base {
         </p>
         
         <p>
-            <label for="<?php echo $aIDs['external_media']; ?>">
-                <input type="hidden" name="<?php echo $aNames['external_media']; ?>" value=0 />
-                <input type="checkbox" id="<?php echo $aIDs['external_media']; ?>" name="<?php echo $aNames['external_media']; ?>" value="1" <?php echo $aInstance['external_media'] ? 'checked="Checked"': ''; ?> />
+            <label for="<?php echo esc_attr( $aIDs['external_media'] ); ?>">
+                <input type="hidden" name="<?php echo esc_attr( $aNames['external_media'] ); ?>" value=0 />
+                <input type="checkbox" id="<?php echo esc_attr( $aIDs['external_media'] ); ?>" name="<?php echo esc_attr( $aNames['external_media'] ); ?>" value="1" <?php echo esc_attr( $aInstance['external_media'] ) ? 'checked="checked"': ''; ?> />
                 <?php _e( 'Show external media.', 'fetch-tweets' ); ?>
             </label>
         </p>        
 
         <p>
-            <label for="<?php echo $aIDs['template']; ?>">
+            <label for="<?php echo esc_attr( $aIDs['template'] ); ?>">
                 <?php _e( 'Select a Template', 'fetch-tweets' ); ?>:
             </label>
             <br />
-            <select name="<?php echo $aNames['template']; ?>" id="<?php echo $aIDs['template']; ?>" >
+            <select name="<?php echo esc_attr( $aNames['template'] ); ?>" id="<?php echo esc_attr( $aIDs['template'] ); ?>" >
                 <?php 
-                $_oTemplate = FetchTweets_Templates::getInstance();
-                foreach( $_oTemplate->getTemplateArrayForSelectLabel() as $sTemplateSlug => $sTemplateName ) 
-                    echo "<option value='{$sTemplateSlug}' "                
-                        . ( $aInstance['template'] == $sTemplateSlug ? 'selected="Selected"' : '' )
+                foreach( FetchTweets_PluginUtility::getTemplateArrayForSelectLabel() as $_sTemplateSlug => $_sTemplateName ) 
+                    echo "<option value='" . esc_attr( $_sTemplateSlug ) . "' "
+                        . ( $aInstance['template'] == $_sTemplateSlug ? 'selected="selected"' : '' )
                         . ">"
-                        . $sTemplateName
+                            . $_sTemplateName
                         . "</option>";
                 ?>
             </select>
         </p>
         
-        <label for="<?php echo $aIDs['avatar_size']; ?>">
+        <label for="<?php echo esc_attr( $aIDs['avatar_size'] ); ?>">
             <?php _e( 'The profile image size in pixel.', 'fetch-tweets' ); ?>:
         </label>
         <p>
-            <input type="number" id="<?php echo $aIDs['avatar_size']; ?>" name="<?php echo $aNames['avatar_size']; ?>" min="0" value="<?php echo $aInstance['avatar_size']?>" />
+            <input type="number" id="<?php echo esc_attr( $aIDs['avatar_size'] ); ?>" name="<?php echo esc_attr( $aNames['avatar_size'] ); ?>" min="0" value="<?php echo esc_attr( $aInstance['avatar_size'] ); ?>" />
         </p>
         <p class="description" style="margin-top: 10px;">    
             <?php _e( 'Set 0 for no avatar.', 'fetch-tweets' ); ?> <?php _e( 'Default', 'fetch-tweets' ); ?>: 48
         </p>
         
-        <label for="<?php echo $aIDs['width']; ?>">
+        <label for="<?php echo esc_attr( $aIDs['width'] ); ?>">
             <?php _e( 'The width of the output.', 'fetch-tweets' ); ?>:
         </label>
         <p>
-            <input type="number" id="<?php echo $aIDs['width']; ?>" name="<?php echo $aNames['width']; ?>" min="0" value="<?php echo $aInstance['width']?>"/>
-            <select name="<?php echo $aNames['width_unit']; ?>" id="<?php echo $aIDs['width_unit']; ?>" >
+            <input type="number" id="<?php echo esc_attr( $aIDs['width'] ); ?>" name="<?php echo esc_attr( $aNames['width'] ); ?>" min="0" value="<?php echo esc_attr( $aInstance['width'] ); ?>"/>
+            <select name="<?php echo esc_attr( $aNames['width_unit'] ); ?>" id="<?php echo esc_attr( $aIDs['width_unit'] ); ?>" >
                 <?php 
                 foreach( array( 'px' => 'px', '%' => '%', 'em' => 'em' ) as $sUnitKey => $sUnitName ) 
-                    echo "<option value='{$sUnitKey}' "                
-                        . ( $aInstance['width_unit'] == $sUnitKey ? 'selected="Selected"' : '' )
+                    echo "<option value='" . esc_attr( $sUnitKey ) . "' "                
+                        . ( $aInstance['width_unit'] == $sUnitKey ? 'selected="selected"' : '' )
                         . ">"
                         . $sUnitName
                         . "</option>";
@@ -171,16 +170,16 @@ abstract class FetchTweets_WidgetByTag_ extends FetchTweets_Widget_Base {
             <?php _e( 'Set 0 for no limit.', 'fetch-tweets' ); ?> <?php _e( 'Default', 'fetch-tweets' ); ?>: <code>100 %</code>.
         </p>        
             
-        <label for="<?php echo $aIDs['height']; ?>">
+        <label for="<?php echo esc_attr( $aIDs['height'] ); ?>">
             <?php _e( 'The height of the output.', 'fetch-tweets' ); ?>:
         </label>
         <p>
-            <input type="number" id="<?php echo $aIDs['height']; ?>" name="<?php echo $aNames['height']; ?>" min="0" value="<?php echo $aInstance['height']?>"/>
-            <select name="<?php echo $aNames['height_unit']; ?>" id="<?php echo $aIDs['height_unit']; ?>" >
+            <input type="number" id="<?php echo esc_attr( $aIDs['height'] ); ?>" name="<?php echo esc_attr( $aNames['height'] ); ?>" min="0" value="<?php echo esc_attr( $aInstance['height'] ); ?>"/>
+            <select name="<?php echo esc_attr( $aNames['height_unit'] ); ?>" id="<?php echo esc_attr( $aIDs['height_unit'] ); ?>" >
                 <?php 
                 foreach( array( 'px' => 'px', '%' => '%', 'em' => 'em' ) as $sUnitKey => $sUnitName ) 
-                    echo "<option value='{$sUnitKey}' "                
-                        . ( $aInstance['height_unit'] == $sUnitKey ? 'selected="Selected"' : '' )
+                    echo "<option value='" . esc_attr( $sUnitKey ) . "' "                
+                        . ( $aInstance['height_unit'] == $sUnitKey ? 'selected="selected"' : '' )
                         . ">"
                         . $sUnitName
                         . "</option>";
@@ -208,15 +207,16 @@ abstract class FetchTweets_WidgetByTag_ extends FetchTweets_Widget_Base {
      * Private methods
      * */
     protected function getTagSlugArrays() {
-        $_aTagSlugs = array();
+        $_aTagSlugs   = array();
         $_aTagObjects = get_terms( 
             FetchTweets_Commons::TagSlug,            // taxonomy slug
             array(
                 'hide_empty' => true,
             ) 
         );
-        foreach( $_aTagObjects as $__oTerm ) 
-            $_aTagSlugs[ $__oTerm->slug ] = $__oTerm->name;        
+        foreach( $_aTagObjects as $_oTerm ) {
+            $_aTagSlugs[ $_oTerm->slug ] = $_oTerm->name;        
+        }
         return $_aTagSlugs;
     }
     

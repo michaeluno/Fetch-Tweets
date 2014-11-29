@@ -12,7 +12,9 @@
  
 */
 
-if ( ! class_exists( 'WP_List_Table' ) ) require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+if ( ! class_exists( 'WP_List_Table' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
 
 
 class FetchTweets_ListTable_ extends WP_List_Table {
@@ -21,98 +23,122 @@ class FetchTweets_ListTable_ extends WP_List_Table {
      * Sets up properties and hooks.
      */
     public function __construct( $aData ){
-              
-        $this->arrData = $aData;
-        
-        //Set parent defaults
-        $this->arrArgs = array(
+// var_dump( '$aData' );              
+// var_dump( $aData );                
+        // Data
+        $this->aData = $this->_formatItems( $aData );
+// var_dump( '$this->aData' );
+// var_dump( $this->aData ); 
+
+        // Set parent defaults
+        $this->aArgs = array(
             'singular'  => 'template',        // singular name of the listed items
             'plural'    => 'templates',        // plural name of the listed items
             'ajax'      => false,            // does this table support ajax?
-            'screen'     => null,            // not sure what this is for... 
+            'screen'    => null,            // not sure what this is for... 
         );
-        if ( ! headers_sent() )
+        if ( ! headers_sent() ) {
             add_action( 'admin_notices', array( $this, 'delayConstructor' ) );
-        else 
-            parent::__construct( $this->arrArgs );
+        } else {
+            parent::__construct( $this->aArgs );
+        }
         
     }
     public function delayConstructor() {
-        
-        parent::__construct( $this->arrArgs );
-        
+        parent::__construct( $this->aArgs );
     }    
+        /**
+         * Formats the items.
+         * 
+         * Converts the template array into an object as object handles backward compatibility formatting processes.
+         * 
+         * @since       2.3.9
+         */
+        private function _formatItems( array $aItems ) {
 
-    public function column_default( $arrItem, $strColumnName ) {    // 'column_' + 'default'
+            $_aItems = array();
+            foreach( $aItems as $_sSlug => $_aItem ) {
+                if ( ! isset( $_aItem[ 'sSlug' ] ) ) { continue; }
+                $_aItems[ $_aItem[ 'sSlug' ] ] = new FetchTweets_Template( $_aItem );
+            }
+            return $_aItems;
+            
+        }
     
-        switch( $strColumnName ){
+    
+    public function column_default( $oItem, $sColumnName ) {    // 'column_' + 'default'
+    
+        switch( $sColumnName ){
 
             case 'description':
                             
                 //Build row actions
-                $arrActions = array(
-                    'version'    => sprintf( __( 'Version', 'fetch-tweets' ) . '&nbsp;' . $arrItem['strVersion'] ),
-                    'author'    => sprintf( '<a href="%s">' . $arrItem['strAuthor'] . '</a>', $arrItem['strAuthorURI'] ),
-                    // 'css'        => sprintf( '<a href="%s">' . __( 'CSS', 'fetch-tweets' ) . '</a>', site_url() . "?fetch_tweets_style={$arrItem['strSlug']}" ),    // deprecated as of v1.3.3.2
-                    'css'        => sprintf( '<a href="%s">' . __( 'CSS', 'fetch-tweets' ) . '</a>', FetchTweets_WPUtilities::getSRCFromPath( $arrItem['strCSSPath'] ) ),
+                $_aActions = array(
+                    'version'    => sprintf( __( 'Version', 'fetch-tweets' ) . '&nbsp;' . $oItem->get( 'sVersion' ) ),
+                    'author'     => sprintf( '<a href="%s">' . $oItem->get( 'sAuthor' ) . '</a>', $oItem->get( 'sAuthorURI' ) ),
+                    'css'        => sprintf( 
+                        '<a href="%s">' . __( 'CSS', 'fetch-tweets' ) . '</a>', 
+                        $oItem->getURLByFIleName( 'style.css' ) 
+                    ),
                 );
                 
                 //Return the title contents
                 return sprintf('%1$s <div class="active second">%2$s</div>',
-                    /*$1%s*/ $arrItem['strDescription'],
-                    /*$2%s*/ $this->row_actions( $arrActions )
+                    /*$1%s*/ $oItem->get( 'sDescription' ),
+                    /*$2%s*/ $this->row_actions( $_aActions )
                 );
             case 'thumbnail':
-                if ( ! file_exists( $arrItem['strThumbnailPath'] ) ) return;
-                // $strImageURL = site_url() . "?fetch_tweets_image=" . base64_encode( $arrItem['strThumbnailPath'] );    // deprecated as of v1.3.3.2
-                $strImageURL = FetchTweets_WPUtilities::getSRCFromPath( $arrItem['strThumbnailPath'] );
+                $_sThumbnailURL = $oItem->getThumbnailURL();
+                if ( ! $_sThumbnailURL ) { return; }
+                
                 return "<a class='template-thumbnail' href='#thumb'>"
-                    . "<img src='{$strImageURL}' style='max-width:80px; max-height:80px;' />"
-                    . "<span>"
-                    . "<div>"
-                    . "<img src='{$strImageURL}' /><br />"
-                    . $arrItem['strName']
-                    . "</div>"
-                    . "</span>"
+                        . "<img src='{$_sThumbnailURL}' style='max-width:80px; max-height:80px;' />"
+                        . "<span>"
+                            . "<div>"
+                                . "<img src='{$_sThumbnailURL}' alt='" . esc_attr( $oItem->get( 'sName' ) ) . "' /><br />"
+                                . $oItem->get( 'sName' )
+                            . "</div>"
+                        . "</span>"
                     . "</a>";                
             default:
-                return print_r( $arrItem, true ); //Show the whole array for troubleshooting purposes
+                return print_r( $oItem, true ); //Show the whole array for troubleshooting purposes
         }
         
     }
     
         
-    public function column_name( $arrItem ){    // column_{$column_title}
+    public function column_name( $oItem ){    // column_{$column_title}
         
         //Build row actions
-        $arrActions = array();
-        if ( $arrItem['fIsActive']  ) {
+        $_aActions = array();
+        if ( $oItem->get( 'bIsActive' ) ) {
                         
-            $arrActions[ 'deactivate' ] = $arrItem['fIsDefault'] 
+            $_aActions[ 'deactivate' ] = $oItem->get( 'bIsDefault' )
                 ? '<span class="disabled">' . __( 'Deactivate', 'fetch-tweets' ) . '</span>'
-                : sprintf( '<a href="?post_type=%s&page=%s&action=%s&template=%s">' . __( 'Deactivate', 'fetch-tweets' ) . '</a>', FetchTweets_Commons::PostTypeSlug, $_REQUEST['page'], 'deactivate', $arrItem['strSlug'] );                
-            $arrActions[ 'set_default' ] = $arrItem['fIsDefault'] 
+                : sprintf( '<a href="?post_type=%s&page=%s&action=%s&template=%s">' . __( 'Deactivate', 'fetch-tweets' ) . '</a>', FetchTweets_Commons::PostTypeSlug, $_REQUEST['page'], 'deactivate', $oItem->getSlug() );
+            $_aActions[ 'set_default' ] = $oItem->get( 'bIsDefault' )
                 ? '<span class="disabled">' . __( 'Set Default', 'fetch-tweets' ) . '</span>'
-                : sprintf( '<a href="?post_type=%s&page=%s&action=%s&template=%s">' . __( 'Set Default', 'fetch-tweets' ) . '</a>', FetchTweets_Commons::PostTypeSlug, $_REQUEST['page'], 'set_default', $arrItem['strSlug'] );    
+                : sprintf( '<a href="?post_type=%s&page=%s&action=%s&template=%s">' . __( 'Set Default', 'fetch-tweets' ) . '</a>', FetchTweets_Commons::PostTypeSlug, $_REQUEST['page'], 'set_default', $oItem->getSlug() );    
                 
-        } else  
-            $arrActions[ 'activate' ] = sprintf( '<a href="?post_type=%s&page=%s&action=%s&template=%s">' . __( 'Activate', 'fetch-tweets' ) . '</a>', FetchTweets_Commons::PostTypeSlug, $_REQUEST['page'], 'activate', $arrItem['strSlug'] );
-        $arrActions = apply_filters( 'fetch_tweets_filter_template_listing_table_action_links', $arrActions, $arrItem['strSlug'] );    
+        } else {
+            $_aActions[ 'activate' ] = sprintf( '<a href="?post_type=%s&page=%s&action=%s&template=%s">' . __( 'Activate', 'fetch-tweets' ) . '</a>', FetchTweets_Commons::PostTypeSlug, $_REQUEST['page'], 'activate', $oItem->getSlug() );
+        }
+        $_aActions = apply_filters( 'fetch_tweets_filter_template_listing_table_action_links', $_aActions, $oItem->getSlug() );    
 
         //Return the title contents
         return sprintf('%1$s %2$s %3$s',    // <span style="color:silver">(id:%2$s)</span>
-            /*$1%s*/ $arrItem['fIsActive'] ? "<strong>{$arrItem['strName']}</strong>" : $arrItem['strName'],
-            /*$2%s*/ $arrItem['fIsDefault'] ? "<strong>(" . __( 'Default', 'fetch-tweets' ) . ")</strong>" : '',
-            /*$3%s*/ $this->row_actions( $arrActions )
+            /*$1%s*/ $oItem->get( 'bIsActive' ) ? "<strong>" . $oItem->get( 'sName' ) . "</strong>" : $oItem->get( 'sName' ),
+            /*$2%s*/ $oItem->get( 'bIsDefault' ) ? "<strong>(" . __( 'Default', 'fetch-tweets' ) . ")</strong>" : '',
+            /*$3%s*/ $this->row_actions( $_aActions )
         );
         
     }
     
-    public function column_cb( $arrItem ){    // column_ + cb
+    public function column_cb( $oItem ){    // column_ + cb
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
             /*$1%s*/ $this->_args['singular'],  
-            /*$2%s*/ $arrItem['strSlug']                //The value of the checkbox should be the record's id
+            /*$2%s*/ $oItem->getSlug()  //The value of the checkbox should be the record's id
         );
     }
     
@@ -120,9 +146,9 @@ class FetchTweets_ListTable_ extends WP_List_Table {
     public function get_columns() {
         
         return array(
-            'cb'            => '<input type="checkbox" />', //Render a checkbox instead of text
-            'name'            => __( 'Template Name', 'fetch-tweets' ),
-            'thumbnail'        => __( 'Thumbnail', 'fetch-tweets' ),
+            'cb'             => '<input type="checkbox" />', //Render a checkbox instead of text
+            'name'           => __( 'Template Name', 'fetch-tweets' ),
+            'thumbnail'      => __( 'Thumbnail', 'fetch-tweets' ),
             'description'    => __( 'Description', 'fetch-tweets' ),
         );
         
@@ -131,76 +157,81 @@ class FetchTweets_ListTable_ extends WP_List_Table {
     public function get_sortable_columns() {
         
         return array(
-            'name'                => array( 'name', false ),     //true means it's already sorted
-            // 'thumbnail'        => array( 'thumbnail', false ),
-            'description'        => array( 'description', false ),
+            'name'          => array( 'name', false ),     //true means it's already sorted
+            // 'thumbnail'  => array( 'thumbnail', false ),
+            'description'   => array( 'description', false ),
         );
         
     }
     
     public function get_bulk_actions() {
-       
         return array(
             // 'delete'    => 'Delete',
-            'activate'        => __( 'Activate', 'fetch-tweets' ),
+            'activate'      => __( 'Activate', 'fetch-tweets' ),
             'deactivate'    => __( 'Deactivate', 'fetch-tweets' ),
         );
-        
     }
     
     /**
      * Deals with the bulk actions.
      * 
      * Called from outside.
+     * @todo        Adapt the new template format.
      */
     public function process_bulk_action() {
         
-        if ( ! isset( $_REQUEST['template'] ) ) return;
+        if ( ! isset( $_REQUEST['template'] ) ) { return; }
         
+        $_oOption = FetchTweets_Option::getInstance();
         switch( strtolower( $this->current_action() ) ){
 
             case 'activate':
-                foreach( ( array ) $_REQUEST['template'] as $strDirSlug ) {
-                    $this->arrData[ $strDirSlug ]['fIsActive'] = true;
-                    $GLOBALS['oFetchTweets_Option']->aOptions['arrTemplates'][ $strDirSlug ] = $this->arrData[ $strDirSlug ];
+                foreach( ( array ) $_REQUEST['template'] as $_sTemplateSlug ) {
+                    $_oTemplate = $this->aData[ $_sTemplateSlug ];
+                    $_oTemplate->aData['bIsActive'] = true;
+                    $_oOption->aOptions['arrTemplates'][ $_sTemplateSlug ] = $_oTemplate->aData;
                 }
-                $GLOBALS['oFetchTweets_Option']->saveOptions();
-                wp_redirect( admin_url( 'edit.php?post_type=fetch_tweets&page=fetch_tweets_templates' ) );
                 break;
             case 'deactivate':
-                foreach( ( array ) $_REQUEST['template'] as $strDirSlug ) {
-                    $this->arrData[ $strDirSlug ]['fIsActive'] = false;
-                    unset( $GLOBALS['oFetchTweets_Option']->aOptions['arrTemplates'][ $strDirSlug ] );    // the option array only stores active templates.
+                foreach( ( array ) $_REQUEST['template'] as $_sTemplateSlug ) {
+                    // $this->aData[ $_sTemplateSlug ]['bIsActive'] = false;
+                    // the option array only stores active templates.
+                    unset( $_oOption->aOptions['arrTemplates'][ $_sTemplateSlug ] );    
                 }
-                $GLOBALS['oFetchTweets_Option']->saveOptions();
-                wp_redirect( admin_url( 'edit.php?post_type=fetch_tweets&page=fetch_tweets_templates' ) );
                 break;            
             case 'set_default':
 
-                if ( ! is_string( $_REQUEST['template'] ) ) break;
+                if ( ! is_string( $_REQUEST['template'] ) ) { 
+                    return; 
+                }
             
                 // Set the other templates not to be default.
-                foreach( $this->arrData as &$arrTemplate ) // the passed template data array
-                    $arrTemplate['fIsDefault'] = false;
-                unset( $arrTemplate ); // release the reference in foreach(), to be safe.
-                foreach( $GLOBALS['oFetchTweets_Option']->aOptions['arrTemplates'] as &$arrTemplate )    // the saved template option array
-                    $arrTemplate['fIsDefault'] = false;
-                unset( $arrTemplate ); // release the reference in foreach(), to be safe.
+/*                 foreach( $this->aData as &$_oTemplate ) {
+                    // $_aTemplate['bIsDefault'] = false;
+                    $_oTemplate->aData['bIsDefault'] = false;
+                }
+                unset( $_oTemplate ); // release the reference in foreach(), to be safe. */
+                foreach( $_oOption->aOptions['arrTemplates'] as &$_aTemplate )  {   // the saved template option array
+                    $_aTemplate['bIsDefault'] = false;
+                }
+                unset( $_oTemplate ); // release the reference in foreach(), to be safe.
                 
                 // Enable the selected default template.
-                $this->arrData[ $_REQUEST['template'] ]['fIsDefault'] = true;                
-                $GLOBALS['oFetchTweets_Option']->aOptions['arrTemplates'][ $_REQUEST['template'] ] = $this->arrData[ $_REQUEST['template'] ];
-                $GLOBALS['oFetchTweets_Option']->aOptions['arrDefaultTemplate'] = $this->arrData[ $_REQUEST['template'] ];
-                
+                // $this->aData[ $_REQUEST['template'] ]['bIsDefault'] = true;                
+                $_aDefaultTemplate = $this->aData[ $_REQUEST['template'] ]->aData;
+                $_aDefaultTemplate['bIsDefault'] = true;
+                $_oOption->aOptions['arrTemplates'][ $_REQUEST['template'] ] = $_aDefaultTemplate;
+                $_oOption->aOptions['arrDefaultTemplate'] = $_aDefaultTemplate;
+                    
                 break;    
             default:
                 return;    // do nothing.
                 
         }   
-
-        // Save the options.
-        $GLOBALS['oFetchTweets_Option']->saveOptions();
-
+        
+        $_oOption->saveOptions();
+        wp_redirect( admin_url( 'edit.php?post_type=' . FetchTweets_Commons::PostTypeSlug . '&page=' . FetchTweets_Commons::PageSlug_Templates ) );
+        
     }
 
     function prepare_items() {
@@ -208,7 +239,7 @@ class FetchTweets_ListTable_ extends WP_List_Table {
         /**
          * Set how many records per page to show
          */
-        $intItemsPerPage = 20;
+        $_iItemsPerPage = 20;
         
     
         /**
@@ -229,47 +260,66 @@ class FetchTweets_ListTable_ extends WP_List_Table {
         /**
          * Variables
          */
-        $arrData = $this->arrData;
+        $_aData = $this->aData;
                 
         
         /**
          * Sort the array.
          */
-        usort( $arrData, array( $this, 'usort_reorder' ) );
-           
-                
+        usort( $_aData, array( $this, 'usort_reorder' ) );
+
         /**
          * For pagination.
          */
-        $intCurrentPageNumber = $this->get_pagenum();
-        $intTotalItems = count( $arrData );
+        $_iCurrentPageNumber    = $this->get_pagenum();
+        $_iTotalItems           = count( $_aData );
         $this->set_pagination_args( 
             array(
-                'total_items' => $intTotalItems,                      // calculate the total number of items
-                'per_page'    => $intItemsPerPage,                     // determine how many items to show on a page
-                'total_pages' => ceil( $intTotalItems / $intItemsPerPage )   // calculate the total number of pages
+                'total_items' => $_iTotalItems,                      // calculate the total number of items
+                'per_page'    => $_iItemsPerPage,                     // determine how many items to show on a page
+                'total_pages' => ceil( $_iTotalItems / $_iItemsPerPage )   // calculate the total number of pages
             )
         );
-        $arrData = array_slice( $arrData, ( ( $intCurrentPageNumber -1 ) * $intItemsPerPage ), $intItemsPerPage );
+        $_aData = array_slice( 
+            $_aData, 
+            ( $_iCurrentPageNumber -1 ) * $_iItemsPerPage,
+            $_iItemsPerPage 
+        );
         
         /*
          * Set data
          * */
-        $this->items = $arrData;
+        $this->items = $_aData;
         
     }
+        /**
+         * Compares two values.
+         */
         public function usort_reorder( $a, $b ) {
             
-            $strOrderBy = ( !empty( $_REQUEST['orderby'] ) ) ? $_REQUEST['orderby'] : 'intIndex'; //If no sort, default to title
-            if ( $strOrderBy == 'description' )
-                $strOrderBy = 'description';
-            else if ( $strOrderBy == 'name' )
-                $strOrderBy = 'strName';
+            $_sOrderBy = $this->_getKeyOfOrderBy();
                         
-            $strOrder = ( !empty( $_REQUEST['order'] ) ) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
-            $result = strcmp( $a[ $strOrderBy ], $b[ $strOrderBy ] ); //Determine sort order
-            return ( $strOrder === 'asc' ) ? $result : -$result; //Send final sort direction to usort
+            $_sOrder = ! empty( $_REQUEST['order'] )
+                ? strtolower( $_REQUEST['order'] )
+                : 'asc'; //If no order, default to asc
+            $_iResult = strcmp( $a->get( $_sOrderBy ), $b->get( $_sOrderBy ) ); //Determine sort order
+            return 'asc' === $_sOrder 
+                ? $_iResult 
+                : -$_iResult; //Send final sort direction to usort
             
         }
+            private function _getKeyOfOrderBy() {
+                
+                if ( empty( $_REQUEST['orderby'] ) ) {
+                    return 'iIndex';
+                }
+                if ( 'description' === $_REQUEST['orderby'] ) {
+                    return 'sDescription';
+                }
+                if ( 'name' === $_REQUEST['orderby'] ) {
+                    return 'sName';
+                }
+                
+            }
     
 }

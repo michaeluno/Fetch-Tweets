@@ -62,6 +62,7 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	const TagSlug                       = 'fetch_tweets_tag';
 	const AdminOptionKey                = 'fetch_tweets_admin';
 	const PageSettingsSlug              = 'fetch_tweets_settings';
+    const PageSlug_Templates            = 'fetch_tweets_templates';
 	const TransientPrefix               = 'FTWS';
 	const ConsumerKey                   = '97LqHiMs06VhV2rf5tUQw';
 	const ConsumerSecret                = 'FIH9cr0eXtd7q9caYVqBjd5mvfUS6hZqREYsUhh9wA';

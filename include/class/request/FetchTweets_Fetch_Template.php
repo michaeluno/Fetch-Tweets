@@ -14,6 +14,7 @@ abstract class FetchTweets_Fetch_Template extends FetchTweets_Fetch_Format {
      * Includes the template.
      * 
      * @since       2
+     * @remark      the local variables defined here will be accessed from the template file.
      * @param       array       $aTweets        the fetched tweet arrays.
      * @param       array       $aArgs          the passed arguments such as item count etc.
      * @param       array       $aOptions       the plugin options saved in the database.
@@ -26,83 +27,93 @@ abstract class FetchTweets_Fetch_Template extends FetchTweets_Fetch_Format {
         $arrOptions = & $aOptions;
         
         // Retrieve the template slug we are going to use.
-        $aArgs['template'] = $this->_getTemplateSlug( ( array ) $aArgs['id'], $aArgs['template'] );
-        
+        $_aPostIDs          = array_values( ( array ) $aArgs['id'] );
+        $_iPostID           = array_shift( $_aPostIDs );
+        $aArgs['template']  = $this->_getTemplateSlug( $_iPostID, $aArgs['template'] );
+
         // Call the template. ( template.php )
-        include( apply_filters( "fetch_tweets_template_path", $this->_getTemplatePath( $aArgs['id'], $aArgs['template'] ), $aArgs ) );        
+        $_sTemplatePath = apply_filters( "fetch_tweets_template_path", $this->_getTemplatePathBySlug( $aArgs['template'] ), $aArgs );
+        if ( ! $_sTemplatePath ) {
+            echo "<p class='error'>Fetch Tweets: " . __( 'The template path could not be found. Please select the template in the rule definition page.', 'fetch-tweets' ) . "</p>";
+            return;            
+        }
+        include( $_sTemplatePath );        
         
     }
-    
-        protected function _getTemplateSlug( $aPostIDs, $sTemplateSlug='' ) {
+        
+        /**
+         * Retrieves the template slug by the given post ID(s) or the preceding template slug.
+         * 
+         * @param       integer     $iPostID            The post ID of the rule.
+         * @param       string      $sTemplateSlug      The template slug. If this is set, this slug will be used. This is for the shortcode or PHP code that directly displays the output.
+         */
+        protected function _getTemplateSlug( $iPostID, $sTemplateSlug='' ) {
 
-            // Return the one defined in the caller argument.
+            // If the template slug is explicitly set, use that.
             if ( $sTemplateSlug && isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) ) {
-                return $this->_checkNecessaryFileExists( $sTemplateSlug );
+                return $this->_validateTemplateSlug( $sTemplateSlug );
             }
             
-            // Return the one defined in the custom post rule.
-            if ( isset( $aPostIDs[ 0 ] ) ) {
-                $sTemplateSlug = get_post_meta( $aPostIDs[ 0 ], 'fetch_tweets_template', true );
+            // At this point, the user does not set the template slug.
+            // We are going to return the one defined in the custom post rule.
+            if ( $iPostID ) {
+                $sTemplateSlug = get_post_meta( $iPostID, 'fetch_tweets_template', true );
             }
 
-            $sTemplateSlug = $this->_checkNecessaryFileExists( $sTemplateSlug );
-            
-            // Find the default template slug.
-            if ( 
-                empty( $sTemplateSlug ) 
-                || ! isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) 
-            ) {
-                $_oTemplate = FetchTweets_Templates::getInstance();
-                return $_oTemplate->getDefaultTemplateSlug();
-            }
-            
-            // Something wrong happened.
-            return $sTemplateSlug;
+            return $this->_validateTemplateSlug( $sTemplateSlug, $iPostID );
             
         }
             /**
-             * Check if the necessary files are present. Otherwise, return the default template slug.
+             * Checks if the necessary files are present. Otherwise, return the default template slug.
+             * 
+             * @since       unknown
+             * @since       2.3.9       Changed the name from `_checkNecessaryFileExists()`.
              */
-            protected function _checkNecessaryFileExists( $sTemplateSlug ) {
+            protected function _validateTemplateSlug( $sTemplateSlug, $iPostID=0 ) {
                 
-                if ( 
-                    ( ! empty( $sTemplateSlug ) || $sTemplateSlug != '' ) 
-                    && ( 
-                        ! isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] )    // this happens when the options have been reset.
-                        || ! @is_file( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ]['strDirPath'] . '/template.php' )
-                        || ! @is_file( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ]['strDirPath'] . '/style.css' )
-                    )
-                ) {
-                    $_oTemplate = FetchTweets_Templates::getInstance();
-                    return $_oTemplate->getDefaultTemplateSlug();
+                if ( empty( $sTemplateSlug ) ) {
+                    return $this->_getDefaultTemplateSlug();
+                }
+                
+                // this happens when the options have been reset
+                if ( ! isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) ) {
+                    foreach( $this->oOption->aOptions['arrTemplates'] as $_aTemplate ) {
+                        if ( ! isset( $_aTemplate[ 'sOldSlug' ] ) ) {
+                            continue;
+                        }
+                        if ( $_aTemplate[ 'sOldSlug' ] !== $sTemplateSlug ) {
+                            continue;
+                        }
+                        // It means the passed slug matches the old type slug of md5 hash of the absolute directory path which has been deprecated as of v2.3.9.
+                        // Update the meta value and store the correct slug.
+                        update_post_meta( $iPostID, 'fetch_tweets_template', $_aTemplate['sSlug'] );
+                        return $_aTemplate['sSlug'];
+                    }
+                    return $this->_getDefaultTemplateSlug();
                 }
                 
                 return $sTemplateSlug;
                 
             }
-        
+            /**
+             * Returns the default template slug.
+             * @since       2.3.9
+             */
+            private function _getDefaultTemplateSlug() {
+                $_oTemplate = new FetchTweets_Template();
+                return $_oTemplate->getSlug();
+            }
+            
         /**
          * Returns the path of the specified template.
          * 
+         * @since       Unknown
+         * @since       2.3.9       Changed it to use the relative path to WordPress installed directory.
+         * @return      The template path; false if not exist.
          */
-        protected function _getTemplatePath( $aPostIDs, $sTemplateSlug ) {
-            
-            if ( empty( $sTemplateSlug ) && isset( $aPostIDs[ 0 ] ) ) {
-                $sTemplateSlug = get_post_meta( $aPostIDs[ 0 ], 'fetch_tweets_template', true );
-            }
-            
-            if ( empty( $sTemplateSlug ) || ! isset( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ] ) ) {
-                $_oTemplate = FetchTweets_Templates::getInstance();
-                return $_oTemplate->getDefaultTemplatePath();
-            }
-                
-            $_sTemplatePath = $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ]['strTemplatePath'];
-            $_sTemplatePath = ( ! $_sTemplatePath || ! @is_file( $_sTemplatePath ) )
-                ? dirname( $this->oOption->aOptions['arrTemplates'][ $sTemplateSlug ]['strCSSPath'] ) . '/template.php'
-                : $_sTemplatePath;
-                
-            return $_sTemplatePath;            
-            
+        protected function _getTemplatePathBySlug( $sTemplateSlug ) {
+            $_oTemplate     = new FetchTweets_Template( $sTemplateSlug );    // passing none to the constructor creates default template object.
+            return $_oTemplate->getPathByFileName( 'template.php' );
         }    
-    
+
 }

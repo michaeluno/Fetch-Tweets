@@ -67,7 +67,6 @@ final class FetchTweets_Bootstrap {
     private function _setGlobalVariables() {
         
         $GLOBALS['oFetchTweets_Option']         = null;    // stores the option object
-        $GLOBALS['oFetchTweets_Templates']      = null;    // stores the template object
         
         // Stores custom registering class paths
         $GLOBALS['arrFetchTweets_FinalClasses'] = isset( $GLOBALS['arrFetchTweets_FinalClasses'] ) && is_array( $GLOBALS['arrFetchTweets_FinalClasses'] ) 
@@ -185,8 +184,8 @@ final class FetchTweets_Bootstrap {
         // 2. Option Object - the instantiation will handle the initial set-up
         FetchTweets_Option::getInstance();
 
-        // 3. Templates - the instantiation will handle the initial set-up
-        FetchTweets_Templates::getInstance();
+        // 3. Load active templates - this must be done after loading the option class as it stores active templates.
+        new FetchTweets_TemplatesLoader;
         
         // 4. Admin pages
         if ( $this->_bIsAdmin ) {

@@ -200,11 +200,9 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
     
     public function cell_fetch_tweets_template( $sCell, $iPostID ) {    // cell_{post type slug}_{column key}
         
-        $_oTemplate     = FetchTweets_Templates::getInstance();
         $_sTemplateSlug = get_post_meta( $iPostID, 'fetch_tweets_template', true );
-        return isset( $this->oOption->aOptions['arrTemplates'][ $_sTemplateSlug ]['strName'] )
-            ? $this->oOption->aOptions['arrTemplates'][ $_sTemplateSlug ]['strName']
-            : $_oTemplate->getDefaultTemplateName();
+        $_oTemplate     = new FetchTweets_Template( $_sTemplateSlug );
+        return $_oTemplate->get( 'sName' );
         
     }
     

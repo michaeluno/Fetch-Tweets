@@ -45,4 +45,34 @@ class FetchTweets_PluginUtility extends FetchTweets_WPUtilities {
             
     }
 
+    /*
+     * MISC methods.
+     */
+    /**
+     * Returns an array holding the labels(names) of activated templates.
+     * 
+     * This is used for the widget form or the template meta box to let the user select a template.
+     * 
+     * @since       unknown
+     * @since       2.3.9           Moved form the templates class.
+     */
+    static public function getTemplateArrayForSelectLabel( $aTemplates=null ) {
+        
+        $_oOption = FetchTweets_Option::getInstance();
+        if ( ! $aTemplates ) {
+            $aTemplates = $_oOption->getActiveTemplates();
+        }
+
+        $_aLabels = array();
+        foreach ( $aTemplates as $_sSlug => $_aTemplate ) {
+            $_oTemplate = new FetchTweets_Template( $_aTemplate['sSlug'] );
+            $_sName     = $_oTemplate->get( 'sName' );            
+            if ( ! $_sName ) { continue; }   // it may be broken.
+            $_aLabels[ $_aTemplate['sSlug'] ] = $_sName;
+        }
+        return $_aLabels;
+        
+    }    
+        
+    
 }

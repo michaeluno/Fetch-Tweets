@@ -216,6 +216,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 == Changelog ==
 
 = 2.3.9 =
+- Fixed an issue that templates could not be automatically detected when the user moves the site or changes the plugin directory name.
 - Fixed a PHP warning occurred in the background: call_user_func_array() function.call-user-func-array: First argument is expected to be a valid callback, 'FetchTweets_oEmbed::_strip_newlines' was given in ...plugin.php on line 214.
 
 = 2.3.8 - 10/16/2014 =

@@ -116,9 +116,9 @@ class FetchTweets_Utilities {
      * 
      * This function is used to generate a template path.
      * 
-     * @since            1.3.3.2
+     * @since             1.3.3.2
      * @author            Gordon
-     * @see                http://stackoverflow.com/questions/2637945/getting-relative-path-from-absolute-path-in-php/2638272#2638272
+     * @see               http://stackoverflow.com/questions/2637945/getting-relative-path-from-absolute-path-in-php/2638272#2638272
      */
     static public function getRelativePath( $from, $to ) {
         
