@@ -3,7 +3,7 @@ Contributors:       Michael Uno, miunosoft
 Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.3
-Tested up to:       4.0
+Tested up to:       4.0.1
 Stable tag:         2.3.8
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
@@ -215,7 +215,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 == Changelog ==
 
-= 2.3.9 =
+= 2.3.9 - 11/30/2014 =
 - Fixed an issue that templates could not be automatically detected when the user moves the site or changes the plugin directory name.
 - Fixed a PHP warning occurred in the background: call_user_func_array() function.call-user-func-array: First argument is expected to be a valid callback, 'FetchTweets_oEmbed::_strip_newlines' was given in ...plugin.php on line 214.
 
