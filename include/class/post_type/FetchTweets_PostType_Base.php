@@ -118,11 +118,11 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
         }
 
         $_iPostID = $post->ID;
-        $_iCount = get_post_meta( $_iPostID, 'item_count', true );
+        $_iCount  = get_post_meta( $_iPostID, 'item_count', true );
         return $sContent 
             . fetchTweets( 
                 array( 
-                    'id' => $_iPostID,
+                    'id'    => $_iPostID,
                     'count' => $_iCount,
                 ),
                 false // do not echo
