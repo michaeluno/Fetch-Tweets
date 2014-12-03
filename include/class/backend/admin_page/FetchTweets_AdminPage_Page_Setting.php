@@ -41,7 +41,7 @@ abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_
                 ? $this->_getAuthenticationStatus( $this->oOption->getConsumerKey(), $this->oOption->getConsumerSecret(), $this->oOption->getAccessToken(), $this->oOption->getAccessTokenSecret() )
                 : array();
                 
-            if ( ! empty( $_aStatus ) ) return $_aStatus;
+            if ( ! empty( $_aStatus ) ) { return $_aStatus; }
                 
             // If the access token and secret keys have been automatically set,
             if ( $this->oOption->isAuthKeysAutomaticallySet() ) {
@@ -60,9 +60,8 @@ abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_
              */
             private function _getAuthenticationStatus( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret ) {
                 
-                $oTwitterOAuth_Verification = new FetchTweets_TwitterAPI_Verification( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret );
-                $_aStatuses = $oTwitterOAuth_Verification->getStatus();
-// FetchTweets_Debug::log( $_aStatuses );
+                $_oTwitterOAuth_Verification = new FetchTweets_TwitterAPI_Verification( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret );
+                $_aStatuses = $_oTwitterOAuth_Verification->getStatus();
                 return $_aStatuses;
                 
             }        
@@ -132,7 +131,7 @@ abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_
             );
         }        
         
-        $oOption = & $GLOBALS['oFetchTweets_Option'];
+        $_oOption = & $GLOBALS['oFetchTweets_Option'];
 
         /* Create TwitterOAuth object with app key/secret and token key/secret from default phase */
         $_oConnect = new FetchTweets_TwitterOAuth( 
@@ -151,7 +150,7 @@ abstract class FetchTweets_AdminPage_Page_Setting extends FetchTweets_AdminPage_
           'screen_name' => string 'my_screen_name' (length=9) */
   
         /* Save the access tokens. Normally these would be saved in a database for future use. */
-        $oOption->saveCredentials( 
+        $_oOption->saveCredentials( 
             array(    
                 'access_token' => $_aAccessTokens['oauth_token'],
                 'access_secret' => $_aAccessTokens['oauth_token_secret'],
