@@ -1,5 +1,8 @@
 == Change log ==
 
+= 2.4.0 =
+- Changed the media elements to be displayed outsize the container of the tweet text container and made the text enclosed in `p` tags, defined in the templates.
+
 = 2.3.6 =
 - Changed it not to enclose tweets in `p` tags as media elements are enclosed in `div` tags.
 - Added an option to enable/disable separator lines.

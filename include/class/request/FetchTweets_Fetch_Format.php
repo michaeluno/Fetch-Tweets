@@ -115,24 +115,27 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
          * This is supposed to be called from the front-end. So if the external embedded media element does not exist in the response array, do nothing. 
          * The background caching system will take care of it.
          * 
-         * @since            2.3.1
+         * @since           2.3.1
+         * @since           2.4.0       Changed not to add to the text element as the text only consists of pure text without HTML tags. The media will be addes to the media element.
          */
         protected function _replceEmbeddedMedia( & $aTweet, $fTwitterMedia, $fExternalMedia ) {
             
             if ( ! isset( $aTweet['text'] ) ) { 
                 return; 
             }
+
+            $aTweet['_media'] = '';
             
             // Insert external media files at the bottom of the tweet.
             if ( $fExternalMedia ) {
-                $aTweet['text'] .= isset( $aTweet['entities']['embed_external_media'] )
+                $aTweet['_media'] .= isset( $aTweet['entities']['embed_external_media'] )
                     ? $aTweet['entities']['embed_external_media']    // the plugin inserts this element in the background
                     : '';
             }
         
             // Insert twitter media files at the bottom of the tweet. 
             if ( $fTwitterMedia ) {
-                $aTweet['text'] .= isset( $aTweet['entities']['embed_twitter_media'] )
+                $aTweet['_media'] .= isset( $aTweet['entities']['embed_twitter_media'] )
                     ? $aTweet['entities']['embed_twitter_media']    // the plugin inserts this element in the background
                     : $this->getTwitterMedia( isset( $aTweet['entities']['media'] ) ? $aTweet['entities']['media'] : array() );
             }            
@@ -211,9 +214,9 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
      */
     protected function makeClickableMedia( $sText, $aMedia ) {
         
-        foreach( ( array ) $aMedia as $aDetails ) {
+        foreach( ( array ) $aMedia as $_aDetails ) {
             
-            $aDetails = $aDetails + array(    // avoid undefined index warnings.
+            $_aDetails = $_aDetails + array(    // avoid undefined index warnings.
                 'media_url'         => null,
                 'media_url_https'   => null,
                 'url'               => null,
@@ -227,8 +230,8 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
             );
             
             $sText = str_replace( 
-                $aDetails['url'],    // needle 
-                "<a href='" . esc_url( $aDetails['expanded_url'] ) . "' target='_blank' rel='nofollow'>{$aDetails['display_url']}</a>",     // replace
+                $_aDetails['url'],    // needle 
+                "<a href='" . esc_url( $_aDetails['expanded_url'] ) . "' target='_blank' rel='nofollow'>{$_aDetails['display_url']}</a>",     // replace
                 $sText     // haystack
             );    
         }
@@ -242,15 +245,15 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
      */
     protected function makeClickableHashTags( $sText, $aHashTags ) {
         
-        foreach( ( array ) $aHashTags as $aDetails ) {
+        foreach( ( array ) $aHashTags as $_aDetails ) {
             
-            $aDetails = $aDetails + array(    // avoid undefined index warnings.
-                'text' => null,
-                'indices' => null,
+            $_aDetails = $_aDetails + array(    // avoid undefined index warnings.
+                'text'      => null,
+                'indices'   => null,
             );
             
             $sText = preg_replace( 
-                '/#(\Q' . $aDetails['text'] . '\E)(\W|$)/',     // needle
+                '/#(\Q' . $_aDetails['text'] . '\E)(\W|$)/',     // needle
                 '<a href="' . esc_url( 'https://twitter.com/search?q=%23$1&src=hash' ) . '" target="_blank" rel="nofollow">#$1</a>$2',    // replacement
                 $sText     // haystack
             );
@@ -262,18 +265,18 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
     protected function makeClickableUsers( $sText, $aMentions ) {
         
         // There are urls in the tweet text. So they need to be converted into hyper links.
-        foreach( ( array ) $aMentions as $aDetails ) {
+        foreach( ( array ) $aMentions as $_aDetails ) {
             
-            $aDetails = $aDetails + array(    // avoid undefined index warnings.
-                'screen_name' => null,
-                'name' => null,
-                'id' => null, 
-                'id_str' => null,
-                'indices' => null,
+            $_aDetails = $_aDetails + array(    // avoid undefined index warnings.
+                'screen_name'   => null,
+                'name'          => null,
+                'id'            => null, 
+                'id_str'        => null,
+                'indices'       => null,
             );
             
             $sText = preg_replace( 
-                '/@(\Q' . $aDetails['screen_name'] . '\E)(\W|$)/i',     // needle, case insensitive
+                '/@(\Q' . $_aDetails['screen_name'] . '\E)(\W|$)/i',     // needle, case insensitive
                 '<a href="' . esc_url( 'https://twitter.com/$1' ) . '" target="_blank" rel="nofollow">@$1</a>$2',    // replacement
                 $sText     // haystack
             );
@@ -312,17 +315,20 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
      */
     protected function adjustProfileImageSize( $strURL, $intImageSize ) {
 
-        if ( empty( $strURL ) ) return $strURL;
+        if ( empty( $strURL ) ) { return $strURL; }
         
         $intImageSize = ! is_numeric( $intImageSize ) ? 48 : $intImageSize;
         
         $strNeedle = '/\/.+\K(_normal)(?=(\..+$)|$)/';
-        if ( $intImageSize <= 24 )
+        if ( $intImageSize <= 24 ) {
             return preg_replace( $strNeedle, '_mini', $strURL );
-        if ( $intImageSize <= 48 )
+        }
+        if ( $intImageSize <= 48 ) {
             return $strURL;
-        if ( $intImageSize <= 73 )
+        }
+        if ( $intImageSize <= 73 ) {
             return preg_replace( $strNeedle, '_bigger', $strURL );
+        }
         return preg_replace( $strNeedle, '', $strURL );    // the original picture size.
         
     }        
@@ -347,10 +353,10 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
                 'display_url'   => null,
             );
 
-            if ( empty( $__aURLDetails['expanded_url'] ) ) continue;
+            if ( empty( $__aURLDetails['expanded_url'] ) ) { continue; }
             
             $_sEmbed = $this->oEmbed->get_html( $__aURLDetails['expanded_url'], array( 'discover' => false, ) );
-            if ( empty( $_sEmbed ) ) continue;
+            if ( empty( $_sEmbed ) ) { continue; }
             
             $_aOutput[] = "<div class='fetch-tweets-external-media'>"
                     . $_sEmbed
@@ -367,32 +373,32 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
      * @remark            Currently only photos are supported.
      * @since            1.2.0
      */ 
-    protected function getTwitterMedia( $arrMedia ) {
+    protected function getTwitterMedia( $aMedia ) {
         
-        $arrOutput = array();
-        foreach( ( array ) $arrMedia as $arrMedium ) {
+        $_aOutput = array();
+        foreach( ( array ) $aMedia as $_aMedium ) {
             
             // avoid undefined index warnings.
-            $arrMedium = $arrMedium + array(
+            $_aMedium = $_aMedium + array(
                 'type'              => null,
                 'expanded_url'      => null,
                 'media_url'         => null,        
                 'media_url_https'   => null,                
             );
             
-            if ( 'photo' !== $arrMedium['type'] || ! $arrMedium['media_url'] ) { continue; }
+            if ( 'photo' !== $_aMedium['type'] || ! $_aMedium['media_url'] ) { continue; }
             
-            $arrOutput[] = "<div class='fetch-tweets-media-photo'>"
-                    . "<a href='" . esc_url( $arrMedium['expanded_url'] ) . "'>"
-                        . "<img src='" . esc_url( $this->fIsSSL ? $arrMedium['media_url_https'] : $arrMedium['media_url'] ) . "' alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "'>"
+            $_aOutput[] = "<div class='fetch-tweets-media-photo'>"
+                    . "<a href='" . esc_url( $_aMedium['expanded_url'] ) . "'>"
+                        . "<img src='" . esc_url( $this->fIsSSL ? $_aMedium['media_url_https'] : $_aMedium['media_url'] ) . "' alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "'>"
                     . "</a>"
                 . "</div><!-- fetch-tweets-media-photo -->";
 
         }
-        return ( empty( $arrOutput ) 
+        return ( empty( $_aOutput ) 
                 ? ''
                 : "<div class='fetch-tweets-media'>" 
-                    . implode( PHP_EOL, $arrOutput ) 
+                    . implode( PHP_EOL, $_aOutput ) 
                 . "</div><!-- fetch-tweets-media -->" 
             );
         
@@ -405,16 +411,16 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
      * @remark            This should be called from an action event which runs in the background because this takes some time.
      * @since            1.3.0
      */
-    public function addEmbeddableMediaElements( &$arrTweets ) {
+    public function addEmbeddableMediaElements( &$aTweets ) {
 
-        foreach( $arrTweets as $intIndex => &$arrTweet ) {
+        foreach( $aTweets as $iIndex => &$_aTweet ) {
                             
             // Check if it is a re-tweet.
-            if ( isset( $arrTweet['retweeted_status']['text'] ) ) {
-                $arrTweet['retweeted_status'] = $this->_addEmbeddableMediaElement( $arrTweet['retweeted_status'] );
+            if ( isset( $_aTweet['retweeted_status']['text'] ) ) {
+                $_aTweet['retweeted_status'] = $this->_addEmbeddableMediaElement( $_aTweet['retweeted_status'] );
             }
             
-            $arrTweet = $this->_addEmbeddableMediaElement( $arrTweet );
+            $_aTweet = $this->_addEmbeddableMediaElement( $_aTweet );
                         
         }                    
     
@@ -425,20 +431,20 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
          * This is a helper method for the above addEmbeddableMediaElements() method.
          * 
          * @since            1.3.0
-         * @remark            The element with the keys 'embed_external_media' and 'embed_twitter_media' will be inserted into the 'entities' key element.
-         * @return            array            The modified tweet element array.
+         * @remark           The element with the keys 'embed_external_media' and 'embed_twitter_media' will be inserted into the 'entities' key element.
+         * @return           array            The modified tweet element array.
          */
-        protected function _addEmbeddableMediaElement( $arrTweet ) {
+        protected function _addEmbeddableMediaElement( $aTweet ) {
             
-            if ( isset( $arrTweet['entities']['urls'] ) ) {
-                $arrTweet['entities']['embed_external_media'] = $this->getExternalMedia( $arrTweet['entities']['urls'] );
+            if ( isset( $aTweet['entities']['urls'] ) ) {
+                $aTweet['entities']['embed_external_media'] = $this->getExternalMedia( $aTweet['entities']['urls'] );
             }
                             
-            if ( isset( $arrTweet['entities']['media'] ) ) {
-                $arrTweet['entities']['embed_twitter_media'] = $this->getTwitterMedia( $arrTweet['entities']['media'] );
+            if ( isset( $aTweet['entities']['media'] ) ) {
+                $aTweet['entities']['embed_twitter_media'] = $this->getTwitterMedia( $aTweet['entities']['media'] );
             }
             
-            return $arrTweet;
+            return $aTweet;
             
         }
         

@@ -1,4 +1,7 @@
 == Change log ==
+
+= 2.4.0 =
+- Changed the media elements to be displayed outsize the container of the tweet text container and made the text enclosed in `p` tags, defined in the templates.
  
 = 2.3.8 =
 - Added the Follow button visibility option.

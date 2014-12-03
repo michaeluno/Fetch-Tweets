@@ -233,10 +233,11 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 = 2.4.0 =
 - Added the `get` argument for the shortcode and the PHP function that converts URL query key-values to the shortcode/function parameters.
+- Changed the media elements to be displayed outsize the container of the tweet text container and made the text enclosed in `p` tags, defined in the templates.
 
 = 2.3.9 - 11/30/2014 =
 - Fixed an issue that templates could not be automatically detected when the user moves the site or changes the plugin directory name.
-- Fixed a PHP warning occurred in the background: call_user_func_array() function.call-user-func-array: First argument is expected to be a valid callback, 'FetchTweets_oEmbed::_strip_newlines' was given in ...plugin.php on line 214.
+- Fixed a PHP warning occurred occasionally in the background: call_user_func_array() function.call-user-func-array: First argument is expected to be a valid callback, 'FetchTweets_oEmbed::_strip_newlines' was given in ...plugin.php on line 214.
 
 = 2.3.8 - 10/16/2014 =
 - Added the Follow button visibility option for the `Plain` template.

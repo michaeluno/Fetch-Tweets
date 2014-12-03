@@ -137,3 +137,7 @@ ul.fetch-tweets-single-intent-buttons li {
 	background-position: -16px 0 !important;
 }
 
+.fetch-tweets-single-item  .fetch-tweets-media {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}

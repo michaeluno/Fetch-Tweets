@@ -49,9 +49,6 @@ final class FetchTweets_Bootstrap {
         // 5. Set up deactivation hook.
         register_deactivation_hook( $this->_sFilePath, array( $this, '_replyToDoWhenPluginDeactivates' ) );
         
-        // 6. Set up localization.
-        $this->_localize();
-        
         // 7. Check requirements.
         if ( $this->_bIsAdmin ) {
             add_action( 'admin_init', array( $this, '_replyToCheckRequirements' ) );
@@ -180,7 +177,9 @@ final class FetchTweets_Bootstrap {
     public function _replyToLoadPluginComponents() {
         
         // All the necessary classes have been already loaded.
-                
+        // 1. Set up localization.
+        $this->_localize();
+        
         // 2. Option Object - the instantiation will handle the initial set-up
         FetchTweets_Option::getInstance();
 

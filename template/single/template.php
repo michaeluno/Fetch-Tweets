@@ -189,7 +189,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
     ?>
     <div class='fetch-tweets-single-item <?php echo $sRetweetClassProperty; ?>' style='<?php echo $_sBorder; ?>'>
         <div class='fetch-tweets-single-body'>
-            <div class='fetch-tweets-single-text'>
+            <p class='fetch-tweets-single-text'>
                 <?php echo $aTweet['text']; ?>
                 <span class='fetch-tweets-single-credit'>
                     <?php if ( $_bIsRetweet ) : ?>
@@ -210,8 +210,10 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
                     <?php endif; ?>
                     
                 </span>
-            </div><!-- fetch-tweets-single-text -->
-
+            </p><!-- fetch-tweets-single-text -->
+            <?php if ( isset( $aTweet['_media'] ) ) : ?>
+                <?php echo $aTweet['_media']; ?>
+            <?php endif; ?>
             <?php if ( $aArgs['intent_buttons'] ) : ?>
                 <?php
                 $sURLReplyButton    = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ) );

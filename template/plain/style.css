@@ -82,6 +82,8 @@ div.fetch-tweets-body p.fetch-tweets-text {
 	height: auto !important;	
 }
 .fetch-tweets .fetch-tweets-media {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 .fetch-tweets-intent-buttons {
