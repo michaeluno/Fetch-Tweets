@@ -13,7 +13,10 @@ function fetchTweets( $aArgs, $bEcho=true ) {
 			return $_sOutput;
 		}
 	}
-	
+    
+    // Sanitize the array.- drops null or an empty( '' ). A value of zero will remain. Dropping null is required to perform aray unite (+).
+    $aArgs = array_filter( $aArgs, 'strlen' );
+    
 	$_oFetch = new FetchTweets_Fetch();
     if ( isset( $aArgs['get'] ) && $aArgs['get'] ) {
         $aArgs = $aArgs + $_GET;
@@ -49,7 +52,7 @@ if ( ! function_exists( 'getTwitterProfileImageURLBySize' ) ) :
 function getTwitterProfileImageURLBySize( $sProfileImageURLNormal, $iImageSize ) {
 		
 	// Parts
-	$_aURLParts = parse_url( $sProfileImageURLNormal );
+	$_aURLParts  = parse_url( $sProfileImageURLNormal );
 	$_aPathParts = pathinfo( $_aURLParts['path'] ) + array( 'extension' => null );
 
 	// Path
