@@ -2,7 +2,7 @@
 
 ### Welcome to our GitHub Repository
 
-Fetch Tweets is an open source WordPress plugin that insets links of the uploader modal window anywhere in the admin area.
+Fetch Tweets is an open source WordPress plugin that fetches and displays tweets from Twitter.com with the Twitter API.
 
 ## Screenshots ##
 Coming soon..
