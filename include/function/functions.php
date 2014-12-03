@@ -16,7 +16,7 @@ function fetchTweets( $aArgs, $bEcho=true ) {
 	
 	$_oFetch = new FetchTweets_Fetch();
     if ( isset( $aArgs['get'] ) && $aArgs['get'] ) {
-        $aArgs = $_GET;
+        $aArgs = $aArgs + $_GET;
     }
 	if ( isset( $aArgs['id'] ) || isset( $aArgs['ids'] ) || isset( $aArgs['q'] ) || isset( $aArgs['screen_name'] ) ) {
 		$_sOutput = $_oFetch->getTweetsOutput( $aArgs );
