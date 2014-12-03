@@ -123,13 +123,13 @@ final class FetchTweets_Bootstrap {
         new FetchTweets_Requirements( 
             $this->_sFilePath,
             array(
-                'php' => array(
-                    'version' => '5.2.4',
-                    'error' => 'The plugin requires the PHP version %1$s or higher.',
+                'php'       => array(
+                    'version'   => '5.2.4',
+                    'error'     => 'The plugin requires the PHP version %1$s or higher.',
                 ),
                 'wordpress' => array(
-                    'version' => '3.3',
-                    'error' => 'The plugin requires the WordPress version %1$s or higher.',
+                    'version'   => '3.3',
+                    'error'     => 'The plugin requires the WordPress version %1$s or higher.',
                 ),
                 'functions' => array(
                     'curl_version' => sprintf( __( 'The plugin requires the %1$s to be installed.', 'fetch-tweets' ), 'the cURL library' ),
@@ -328,7 +328,9 @@ final class FetchTweets_Bootstrap {
         private function _getTweetType() {
 
             // If the GET 'tweet_type' query value is set, use it.
-            if ( isset( $_GET['tweet_type'] ) && $_GET['tweet_type'] ) return $_GET['tweet_type'];
+            if ( isset( $_GET['tweet_type'] ) && $_GET['tweet_type'] ) { 
+                return $_GET['tweet_type']; 
+            }
         
             // If the 'action' query value is edit, search for the meta field value which previously set when it is saved.
             if ( isset( $_GET['action'], $_GET['post'] ) && $_GET['action'] == 'edit' ) {
