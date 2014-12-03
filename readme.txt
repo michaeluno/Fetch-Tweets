@@ -234,6 +234,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 = 2.4.0 =
 - Added the `get` argument for the shortcode and the PHP function that converts URL query key-values to the shortcode/function parameters.
 - Changed the media elements to be displayed outsize the container of the tweet text container and made the text enclosed in `p` tags, defined in the templates.
+- Updated the [Admin Page Framework](http://wordpress.org/plugins/admin-page-framework/) library.
 
 = 2.3.9 - 11/30/2014 =
 - Fixed an issue that templates could not be automatically detected when the user moves the site or changes the plugin directory name.

@@ -15,15 +15,18 @@ class FetchTweets_MetaBox_TweetID extends FetchTweets_AdminPageFramework_MetaBox
             array(
                 'field_id'        => 'tweet_type',
                 'type'            => 'hidden',
-                'value'            => 'tweet_id',
-                'hidden'        =>    true,
+                'value'           => 'tweet_id',
+                'hidden'          => true,
             ),                
             array(
                 'field_id'        => 'tweet_id',
-                'title'            => __( 'Target Tweet IDs', 'fetch-tweets' ),
-                'description'    => __( 'Enter here the target Tweet IDs separated by commas', 'fetch-tweets' )
+                'title'           => __( 'Target Tweet IDs', 'fetch-tweets' ),
+                'description'     => __( 'Enter here the target Tweet IDs separated by commas', 'fetch-tweets' )
                     . ' e.g. <code>210462857140252672, 456502643738030080</code>',
                 'type'            => 'text',
+                'attributes'      => array(
+                    'size'  => 40,
+                ),                   
             ),
             array()
         );

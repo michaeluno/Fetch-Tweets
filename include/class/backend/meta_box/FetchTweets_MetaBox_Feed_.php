@@ -11,17 +11,20 @@ class FetchTweets_MetaBox_Feed_ extends FetchTweets_AdminPageFramework_MetaBox {
         
         $this->addSettingFields(        
             array(
-                'field_id'        => 'tweet_type',
-                'type'            => 'hidden',
-                'value'            => 'feed',
-                'hidden'        =>    true,
+                'field_id'       => 'tweet_type',
+                'type'           => 'hidden',
+                'value'          => 'feed',
+                'hidden'         => true,
             ),                        
             array(
-                'field_id'        => 'json_url',
-                'title'            => __( 'JSON URL', 'fetch-tweets' ),
+                'field_id'       => 'json_url',
+                'title'          => __( 'JSON URL', 'fetch-tweets' ),
                 'description'    => __( 'The URL of the JSON feed.', 'fetch-tweets' ) 
                     . ' ' . sprintf( __( 'In order to get JSON feeds, the <a href="%1$s" target="_blank">Feeder</a> extension is required.', 'fetch-tweets' ), 'http://en.michaeluno.jp/fetch-tweets/extensions/feeder/' ),
-                'type'            => 'text',
+                'type'           => 'text',
+                'attributes'     => array(
+                    'size'  => 40,
+                ),
             ),    
             array()
         );
