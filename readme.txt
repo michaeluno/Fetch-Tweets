@@ -124,6 +124,22 @@ In order to set multiple tags, pass them with commas as the delimiter. e.g.
 
 `<?php fetchTweets( array( 'id' => 678, twitter_media="0" external_media="1" ) ); ?>`
 
+- **get** - [2.4.0+] true (1) / false (0). Converts URL query key-values into the functiom/shortcode parameters.
+
+`[fetch_tweets get="1" ]`
+
+`<?php fetchTweets( array( 'get' => true, ) ); ?>`
+
+Then access the page that has the shortcode or the page by passing the arguments in the url.
+
+`
+http://your-site.domain/page-slug/?screen_name=miunosoft
+`
+
+`
+http://your-site.domain/page-slug/?q=wordpress
+`
+
 = How to Create Own Template =
 
 **Step 1**
