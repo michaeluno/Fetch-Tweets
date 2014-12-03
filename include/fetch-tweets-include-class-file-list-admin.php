@@ -2,6 +2,7 @@
 $_aAdminClassFiles = array( 
 	"FetchTweets_Redirects"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/FetchTweets_Redirects.php", 
 	"FetchTweets_AdminPage"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/FetchTweets_AdminPage.php", 
+	"FetchTweets_AdminPage_Contact"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/FetchTweets_AdminPage_Contact.php", 
 	"FetchTweets_AdminPage_Form_AddRuleByList"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/FetchTweets_AdminPage_Form_AddRuleByList.php", 
 	"FetchTweets_AdminPage_Form_Setting"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/FetchTweets_AdminPage_Form_Setting.php", 
 	"FetchTweets_AdminPage_Page_Extension"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/FetchTweets_AdminPage_Page_Extension.php", 

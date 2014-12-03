@@ -232,6 +232,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 == Changelog ==
 
 = 2.4.0 =
+- Added a contact form in the plugin setting page.
 - Added the `get` argument for the shortcode and the PHP function that converts URL query key-values to the shortcode/function parameters.
 - Changed the media elements to be displayed outsize the container of the tweet text container and made the text enclosed in `p` tags, defined in the templates.
 - Updated the [Admin Page Framework](http://wordpress.org/plugins/admin-page-framework/) library.

@@ -40,15 +40,14 @@ abstract class FetchTweets_Option_ extends FetchTweets_Option_Format {
         
         $this->sOptionKey   = $sOptionKey;
         $this->aOptions     = $this->setOption( $sOptionKey );
-// FetchTweets_Debug::log( $this->aOptions );
+
     }    
     
 
     /*
      * Front end methods
      * */
-     
-     
+       
     public function getAccessTokenAuto() {
         return $this->aOptions['twitter_connect']['access_token'];
     }    

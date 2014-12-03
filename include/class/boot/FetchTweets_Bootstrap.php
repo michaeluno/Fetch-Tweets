@@ -188,7 +188,8 @@ final class FetchTweets_Bootstrap {
         
         // 4. Admin pages
         if ( $this->_bIsAdmin ) {
-            new FetchTweets_AdminPage( FetchTweets_Commons::$sAdminKey, $this->_sFilePath );        
+            new FetchTweets_AdminPage( FetchTweets_Commons::$sAdminKey, $this->_sFilePath );
+            new FetchTweets_AdminPage_Contact( '', $this->_sFilePath );
         }
         
         // 5. Post Type - no need to check is_admin() because posts of custom post type can be accessed from the front-end.
