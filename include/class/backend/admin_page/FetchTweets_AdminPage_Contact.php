@@ -35,7 +35,7 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
             array(
                 'title'        => __( 'Contact', 'fetch-tweets' ),
                 'page_slug'    => 'fetch_tweets_contact',
-                'screen_icon'  => 'page',
+                'screen_icon'  => 'feedback',
             )
         );
 
@@ -127,6 +127,18 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
                 ),                
             ),     
             array(
+                'field_id'          => 'attachments',
+                'title'             => __( 'Screenshots', 'fetch-tweets' ),
+                'type'              => 'image',
+                'repeatable'        => true,
+                'attributes'        => array(
+                    'size'  => 40,
+                    'preview' => array(
+                        'style' => 'max-width: 200px;'
+                    ),
+                ),                                
+            ),               
+            array(
                 'field_id'      => 'system_information',
                 'type'          => 'system',     
                 'title'         => __( 'System Information', 'fetch-tweets' ),
@@ -151,7 +163,7 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
                     'MySQL'                 => '', 
                     'Server'                => '',
                 ) 
-                + get_option( FetchTweets_Commons::$sAdminKey, array() ), // the stored options of the main demo class
+                + $this->_getOptionsForReport(), 
                 'attributes'    => array(
                     'rows'          =>  10,
                 ),
@@ -198,10 +210,35 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
         );
         
     }
+        /**
+         * Returns the options array by removing private informatin.
+         * 
+         * It is the stored options of the main demo class
+         * 
+         * @since       2.4.0
+         */
+        private function _getOptionsForReport()  {
+            
+            $_aOptions = get_option( FetchTweets_Commons::$sAdminKey, array() );
+            $_aOptions['twitter_connect']['access_token'] = isset( $_aOptions['twitter_connect']['access_token'] ) && $_aOptions['twitter_connect']['access_token']
+                ? 'set'
+                : 'not set';
+            $_aOptions['twitter_connect']['access_secret'] = isset( $_aOptions['twitter_connect']['access_secret'] ) && $_aOptions['twitter_connect']['access_secret']
+                ? 'set'
+                : 'not set';                
+            $_aOptions['authentication_keys']['access_token'] = isset( $_aOptions['authentication_keys']['access_token'] ) && $_aOptions['authentication_keys']['access_token']
+                ? 'set'
+                : 'not set';
+            $_aOptions['authentication_keys']['access_secret'] = isset( $_aOptions['authentication_keys']['access_secret'] ) && $_aOptions['authentication_keys']['access_secret']
+                ? 'set'
+                : 'not set'; 
+            return $_aOptions;
+            
+        }
     
     /**
      * Validates the submitted data.
-     * @sicne       2.4..0
+     * @sicne       2.4.0
      */
     public function validation_fetch_tweets_contact_report( $aInput, $aOldInput, $oFactory ) {
       
