@@ -231,6 +231,9 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 == Changelog ==
 
+= 2.4.1 - 12/06/2014 =
+- Fixed the PHP Warning: `strlen() expects parameter 1 to be string...` occured in the `fetchTweets()` function introduced in v2.4.0.
+
 = 2.4.0 - 12/06/2014 =
 - Added a contact form in the plugin setting page.
 - Added the `get` argument for the shortcode and the PHP function that converts URL query key-values to the shortcode/function parameters.
