@@ -1,17 +1,20 @@
 <?php
 /**
- *    Handles the initial set-up for the plugin.
+ * Handles the initial set-up for the plugin.
  *    
- * @package     Fetch Tweets
- * @copyright   Copyright (c) 2013, Michael Uno
+ * @package      Fetch Tweets
+ * @copyright    Copyright (c) 2013, Michael Uno
  * @authorurl    http://michaeluno.jp
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @license      http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since        1.0.0
- * @since        1.3.4            Renamed to FetchTweets_Bootstrap from FetchTweets_InitialLoader
- * 
- * 
-*/
+ * @since        1.3.4            Renamed to FetchTweets_Bootstrap from FetchTweets_InitialLoader * 
+ */
 
+/**
+ * Loads the plugin.
+ * 
+ * @action      do      fetch_tweets_action_loaded_plugin       2.4.2+ Triggered after loading plugin components. Modules (extentions) should use this hook.
+ */
 final class FetchTweets_Bootstrap {
     
     /**
@@ -217,6 +220,10 @@ final class FetchTweets_Bootstrap {
         
         // 11. WordPress version backward compatibility.
         $this->_defineConstantesForBackwardCompatibility();
+
+        do_action( 'fetch_tweets_action_loaded_plugin' );
+
+// FetchTweets_Debug::log( $GLOBALS['oFetchTweets_Option']->aOptions );        
         
     }
 

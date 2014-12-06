@@ -28,13 +28,13 @@ class FetchTweets_Template {
         }
         
         // At this point a string slug is given.
-        $sTemplateSlug = $asTemplateSlugOrData;
-        if ( ! $sTemplateSlug ) {
-            $this->aData = $this->_getDefault();
+        $_sTemplateSlug = $asTemplateSlugOrData;
+        if ( ! $_sTemplateSlug ) {
+            $this->aData = $this->_getDefault();          
             return;
         }
-        $this->aData = $this->_getTemplateBySlug( $sTemplateSlug );
-        
+        $this->aData = $this->_getTemplateBySlug( $_sTemplateSlug );
+     
     }
         
         /**
@@ -44,21 +44,17 @@ class FetchTweets_Template {
         private function _getDefault() {
             return empty( $this->oOption->aOptions['arrDefaultTemplate'] )
                 ? $this->oOption->findDefaultTemplateDetails()
-                : $this->oOption->aOptions['arrDefaultTemplate'];
+                : $this->_getAsArray( $this->oOption->aOptions['arrDefaultTemplate'] );
         }
         /**
          * Returns the template array by slug.
          * @since       2.3.9
          */
         private function _getTemplateBySlug( $sSlug ) {
-// if ( './wp-content/plugins/fetch-tweets/template/single' == $sSlug )  {
-    // var_dump( $sSlug );
-// }           
-            // First find from the active templates. It is fast because the active templates are stores in the options.
-            $_aActiveTemplates = $this->oOption->aOptions[ 'arrTemplates' ];
-// if ( './wp-content/plugins/fetch-tweets/template/single' == $sSlug )  {
-    // var_dump( $_aActiveTemplates );
-// }           
+
+            // First find from the active templates + default template. It is fast because the they are stores in the options.
+            $_aActiveTemplates = $this->_getAsArray( $this->oOption->aOptions[ 'arrTemplates' ] );
+             
             $_aTemplate = $this->_findTemplateBySlug( $sSlug, $_aActiveTemplates );
             if ( $_aTemplate ) {
                 return $_aTemplate;
@@ -70,11 +66,10 @@ class FetchTweets_Template {
             if ( $_aTemplate ) {
                 return $_aTemplate;
             }            
-// if ( './wp-content/plugins/fetch-tweets/template/single' == $sSlug )  {
-    // var_dump( 'not found. Returning the default template.' );
-// }            
+      
             // At this point, the template is not found. Then use the default template.
             return $this->_getDefault();
+            
         }
             /**
              * Attempts to find a template of the given slug from the given tempaltes array.
@@ -86,6 +81,7 @@ class FetchTweets_Template {
                 if ( isset( $aTemplates[ $sSlug ] ) ) {
                     return $aTemplates[ $sSlug ];
                 }
+                                
                 // It could be that the slug is of an old format.
                 foreach( $aTemplates as $_aTemplate ) {
                     if ( $sSlug === $_aTemplate['sOldSlug'] ) {
@@ -226,7 +222,7 @@ class FetchTweets_Template {
      * @since       2.3.9
      */
     public function get( $sKey ) {
-        
+
         if ( isset( $this->aData[ $sKey ] ) ) {
             return $this->aData[ $sKey ];
         }
@@ -254,7 +250,7 @@ class FetchTweets_Template {
         private function _getTemplateData( $sFilePath, $sType='fetch_tweets' )    {
         
             if ( isset( self::$_aTemplateData[ $sFilePath ] ) ) {
-                return self::$_aTemplateData;
+                return self::$_aTemplateData[ $sFilePath ];
             }
         
             $_aData = get_file_data( 
@@ -285,5 +281,23 @@ class FetchTweets_Template {
             
         }        
 
-    
+    /*
+     * Utility methods
+     */
+    /**
+     * Returns the value as an array.
+     * 
+     * @since       2.4.2
+     */
+    private function _getAsArray( $vValue ) {
+        
+        if ( is_array( $vValue ) ) {
+            return $vValue;
+        }
+        if ( $vValue ) {
+            return ( array ) $vValue;
+        }
+        return array();
+        
+    }    
 }

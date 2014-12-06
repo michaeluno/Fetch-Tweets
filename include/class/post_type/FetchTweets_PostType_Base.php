@@ -178,7 +178,7 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
         
     }
     public function cell_fetch_tweets_tweettype( $sCell, $iPostID ) {    // cell_{post type slug}_{column key}
-        
+
         switch ( get_post_meta( $iPostID, 'tweet_type', true ) ) {
             case 'search':
                 return __( 'Search', 'fetch-tweets' );
@@ -198,11 +198,14 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
 
     }
     
+    /**
+     * Retursn the template name by post ID.
+     */
     public function cell_fetch_tweets_template( $sCell, $iPostID ) {    // cell_{post type slug}_{column key}
-        
+
         $_sTemplateSlug = get_post_meta( $iPostID, 'fetch_tweets_template', true );
         $_oTemplate     = new FetchTweets_Template( $_sTemplateSlug );
-        return $_oTemplate->get( 'sName' );
+        return $sCell . $_oTemplate->get( 'sName' );
         
     }
     
