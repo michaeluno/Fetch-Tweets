@@ -4,7 +4,7 @@ Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.3
 Tested up to:       4.0.1
-Stable tag:         2.3.9
+Stable tag:         2.4.0
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,7 +124,7 @@ In order to set multiple tags, pass them with commas as the delimiter. e.g.
 
 `<?php fetchTweets( array( 'id' => 678, twitter_media="0" external_media="1" ) ); ?>`
 
-- **get** - [2.4.0+] true (1) / false (0). Converts URL query key-values into the functiom/shortcode parameters.
+- **get** - [2.4.0+] true (1) / false (0). Converts URL query key-values of the HTTP GET method into the functiom/shortcode arguments.
 
 `[fetch_tweets get="1" ]`
 
@@ -231,7 +231,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 == Changelog ==
 
-= 2.4.0 =
+= 2.4.0 - 12/06/2014 =
 - Added a contact form in the plugin setting page.
 - Added the `get` argument for the shortcode and the PHP function that converts URL query key-values to the shortcode/function parameters.
 - Changed the media elements to be displayed outsize the container of the tweet text container and made the text enclosed in `p` tags, defined in the templates.
