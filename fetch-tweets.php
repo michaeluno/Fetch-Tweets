@@ -5,7 +5,7 @@
 	Description:    Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.
 	Author:         miunosoft (Michael Uno)
 	Author URI:     http://michaeluno.jp
-	Version:        2.4.2b01
+	Version:        2.4.2b02
 	Requirements:   PHP 5.2.4 or above, WordPress 3.3 or above.
 */
 
@@ -16,7 +16,7 @@
  */
 class FetchTweets_Commons_Base {
     
-	const Version        = '2.4.2b01';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
+	const Version        = '2.4.2b02';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
 	const Name           = 'Fetch Tweets';
 	const Description    = 'Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.';
 	const URI            = 'http://en.michaeluno.jp/fetch-tweets';
@@ -26,10 +26,19 @@ class FetchTweets_Commons_Base {
 	const License        = 'GPL v2 or later';
 	const Contributors   = '';
     
+    /**
+     * Returns the information of this class.
+     * 
+     * @since       2.4.2
+     */
+    static public function getInfo() {
+        $_oReflection = new ReflectionClass( __CLASS__ );
+        return $_oReflection->getConstants()
+            + $_oReflection->getStaticProperties()
+        ;
+    }        
+    
 }
-
-// Do not load if accessed directly
-if ( ! defined( 'ABSPATH' ) ) { return; }
 
 final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	
@@ -55,7 +64,7 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	public static $sPluginStoreURI      = '';   // will be deprecated
 	
 	const TextDomain                    = 'fetch-tweets';
-    const TextDomainPath                = './languange';
+    const TextDomainPath                = '/languange';
 	const PluginName                    = 'Fetch Tweets';
 	const PostTypeSlug                  = 'fetch_tweets';
 	const PostTypeSlugAccounts          = 'fetchtweets_accounts';		// post type slugs cannot exceed 20 characters. 
@@ -107,6 +116,11 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	}    
 	
 }
+
+// Do not load if accessed directly. Not exiting here because other scripts will load this main file such as uninstall.php and inclusion list generator 
+// and if it exists their scripts will not complete.
+if ( ! defined( 'ABSPATH' ) ) { return; }
+if ( defined( 'DOWING_UNINSTALL' ) ) { return; }
 
 include( dirname( __FILE__ ). '/include/class/boot/FetchTweets_Bootstrap.php' );
 include( dirname( __FILE__ ). '/include/class/boot/registry/FetchTweets_RegisterClasses.php' );
