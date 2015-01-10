@@ -232,6 +232,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 == Changelog ==
 
 = 2.4.2 =
+- Fixed an issue that a `fetch-tweets` template directory could not be loaded in child themes.
 - Fixed a bug that template names were not listed properly in the rule listing table in one of the plugin setting pages.
 
 = 2.4.1 - 12/06/2014 =

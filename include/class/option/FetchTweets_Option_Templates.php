@@ -137,7 +137,7 @@ abstract class FetchTweets_Option_Templates {
                 
                 $_aTemplateContainerDirs    = array();
                 $_aTemplateContainerDirs[]  = FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template';
-                $_aTemplateContainerDirs[]  = get_template_directory() . DIRECTORY_SEPARATOR . 'fetch-tweets';
+                $_aTemplateContainerDirs[]  = get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'fetch-tweets';
                 $_aTemplateContainerDirs    = apply_filters( 'fetch_tweets_filter_template_container_directories', $_aTemplateContainerDirs );
                 $_aTemplateContainerDirs    = array_filter( $_aTemplateContainerDirs );    // drops elements of empty values.
                 return array_unique( $_aTemplateContainerDirs );
