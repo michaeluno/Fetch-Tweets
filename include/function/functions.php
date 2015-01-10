@@ -22,7 +22,9 @@ function fetchTweets( $aArgs, $bEcho=true ) {
 		$_sOutput = $_oFetch->getTweetsOutput( $aArgs );
 	} else if ( isset( $aArgs['tag'] ) || isset( $aArgs['tags'] ) ) {
 		$_sOutput = $_oFetch->getTweetsOutputByTag( $aArgs );
-	}
+	} else {
+        $_sOutput = $_oFetch->getTweetsOutput( $aArgs );
+    }
 
 	if ( $bEcho ) {
 		echo $_sOutput;
