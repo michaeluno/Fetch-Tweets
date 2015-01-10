@@ -4,7 +4,7 @@ Template URI:   http://en.michaeluno.jp
 Author:         Michael Uno
 Author URI:     http://en.michaeluno.jp
 Description:    Displays tweets for a single account.
-Version:        2.3.5
+Version:        2.4.2
 License:        GNU General Public License v2 or later
 License URI:    http://www.gnu.org/licenses/gpl-2.0.html
 Tags:           single
@@ -15,6 +15,12 @@ Text Domain:    fetch-tweets
 	overflow-y: auto !important;	
 	overflow-x: hidden !important;
 }
+
+.fetch-tweets-single-container a {
+    /* removes the underlines of hyper links in the Twenty Fifteenth theme [2.4.2+] */
+    border-bottom: 0 !important;
+}
+
 .fetch-tweets-single-user-profile {
 
 }

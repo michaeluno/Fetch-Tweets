@@ -1,5 +1,8 @@
 == Change log ==
 
+= 2.4.2 =
+- removed the underlines of hyper links in the Twenty Fifteenth theme */
+
 = 2.4.0 =
 - Changed the media elements to be displayed outsize the container of the tweet text container and made the text enclosed in `p` tags, defined in the templates.
  

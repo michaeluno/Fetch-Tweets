@@ -4,7 +4,7 @@ Template URI:   http://en.michaeluno.jp
 Author:         Michael Uno
 Author URI:     http://en.michaeluno.jp
 Description:    Displays tweets for multiple accounts. 
-Version:        2.3.6
+Version:        2.4.2
 License:        GNU General Public License v2 or later
 License URI:    http://www.gnu.org/licenses/gpl-2.0.html
 Tags:           default
@@ -19,6 +19,10 @@ Text Domain:    fetch-tweets
 	display: inline-block !important; 
 	padding-bottom: 0.5em !important;	
 	width: 100% !important;
+}
+.fetch-tweets-item  a {
+    /* removes the underlines of hyper links in the Twenty Fifteenth theme */
+    border-bottom: 0 !important;
 }
 .fetch-tweets-retweet {
 }
