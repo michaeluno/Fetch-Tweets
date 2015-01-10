@@ -13,7 +13,8 @@
 /**
  * Loads the plugin.
  * 
- * @action      do      fetch_tweets_action_loaded_plugin       2.4.2+ Triggered after loading plugin components. Modules (extentions) should use this hook.
+ * @action      do      fetch_tweets_action_before_loading_plugin       [2.4.2+] Triggered before loading plugin components. Modules (extensions) should use this hook.
+ * @action      do      fetch_tweets_action_after_loading_plugin        [2.4.2+] Triggered after loading plugin components. Modules (extensions) should use this hook.
  */
 final class FetchTweets_Bootstrap {
     
@@ -59,6 +60,9 @@ final class FetchTweets_Bootstrap {
         
         // 8. Schedule to call start up functions when all the plugins get loaded.
         add_action( 'plugins_loaded', array( $this, '_replyToLoadPluginComponents' ), 999, 1 );
+            
+        // 9. Schedule localization.
+        add_action( 'init', array( $this, '_replyToSetUpLocalization' ) );
             
     }    
     
@@ -159,7 +163,13 @@ final class FetchTweets_Bootstrap {
         
     }    
     
-    private function _localize() {
+    /**
+     * Sets up plugin localization.
+     * 
+     * @since       unknown
+     * @since       2.4.2       Changed the name from `_localize()`.
+     */
+    public function _replyToSetUpLocalization() {
         
         load_plugin_textdomain( 
             FetchTweets_Commons::TextDomain, 
@@ -177,12 +187,16 @@ final class FetchTweets_Bootstrap {
         
     }        
     
+    
+    /**
+     * Loads all necessary plugin components.
+     * 
+     * @remark      A callback of the 'plugins_loaded' action hook.
+     */
     public function _replyToLoadPluginComponents() {
-        
-        // All the necessary classes have been already loaded.
-        // 1. Set up localization.
-        $this->_localize();
-        
+                
+        do_action( 'fetch_tweets_action_before_loading_plugin' );        
+                
         // 2. Option Object - the instantiation will handle the initial set-up
         FetchTweets_Option::getInstance();
 
@@ -221,9 +235,7 @@ final class FetchTweets_Bootstrap {
         // 11. WordPress version backward compatibility.
         $this->_defineConstantesForBackwardCompatibility();
 
-        do_action( 'fetch_tweets_action_loaded_plugin' );
-
-// FetchTweets_Debug::log( $GLOBALS['oFetchTweets_Option']->aOptions );        
+        do_action( 'fetch_tweets_action_after_loading_plugin' );
         
     }
 
