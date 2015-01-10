@@ -2,7 +2,7 @@
 /**
  * Cleans up the plugin options.
  *    
- * @package      Feth Tweets
+ * @package      Fetch Tweets
  * @copyright    Copyright (c) 2013-2015, <Michael Uno>
  * @author       Michael Uno
  * @authorurl    http://michaeluno.jp
