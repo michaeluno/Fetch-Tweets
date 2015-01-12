@@ -36,7 +36,7 @@ if ( file_exists( dirname( __FILE__ ). '/' . $_sMaingPluginFileName ) ) {
 if ( class_exists( 'FetchTweets_Commons' ) ) :
 
     // Delete the plugin option
-    delete_option( FetchTweets_Commons::AdminOptionKey );
+    // delete_option( FetchTweets_Commons::AdminOptionKey );
     
     // Delete transients
     $_aPrefixes = array(
