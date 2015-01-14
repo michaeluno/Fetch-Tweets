@@ -170,12 +170,9 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                 
             </div><!-- fetch-tweets-heading -->
             <div class='fetch-tweets-body'>
-                <p class='fetch-tweets-text'>
-                    <?php echo $aTweet['text']; ?>
+                <p class='fetch-tweets-text'><?php echo $aTweet['text']; ?>
                     <?php if ( isset( $_aDetail['retweeted_status']['text'] ) ) : ?>
-                    <span class='fetch-tweets-retweet-credit'>
-                        <?php _e( 'Retweeted by', 'fetch-tweets' ) . ' '; ?>
-                        <a href='<?php echo esc_url( "https://twitter.com/" . $_aDetail['user']['screen_name'] ); ?>' target='_blank'>
+                    <span class='fetch-tweets-retweet-credit'><?php _e( 'Retweeted by', 'fetch-tweets' ) . ' '; ?><a href='<?php echo esc_url( "https://twitter.com/" . $_aDetail['user']['screen_name'] ); ?>' target='_blank'>
                             <?php echo $_aDetail['user']['name']; ?>
                         </a>
                     </span>

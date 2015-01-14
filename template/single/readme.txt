@@ -1,5 +1,8 @@
 == Change log ==
 
+= 2.4.3 =
+- Removed the `!important` notations.
+
 = 2.4.2 =
 - Removed the underlines of hyper links in the Twenty Fifteenth theme
 
