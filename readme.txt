@@ -231,6 +231,9 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 == Changelog ==
 
+= 2.4.3 - 01/15/2015 =
+- Removed the `!important` notations from the CSS files of the built-in templates.
+
 = 2.4.2 - 01/12/2015 =
 - Fixed an issue that custom arguments could not be set in the `fetchTweeets()` function and the plugin shortcode.
 - Fixed an issue that a `fetch-tweets` template directory could not be loaded in child themes.
