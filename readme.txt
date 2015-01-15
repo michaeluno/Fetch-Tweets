@@ -201,25 +201,34 @@ An example template is available [here](https://github.com/michaeluno/fetch-twee
 
 == Frequently Asked Questions ==
 
-= Do I need API keys to use the plugin ? =
-They are not necessary as of v1.3.0. Just click on the *Connect* button in the Authentication page of the plugin and it will redirect you to the Twitter's authentication page. Then you log in to Twitter there and authorize the plugin.
+<h4>How to Set up</h4>
+<h5><strong>Do I need API keys to use the plugin?</strong></h5>
+They are not necessary as of v1.3.0. Just click on the **Connect** button in the `Authentication` (`Dashboard` -> `Fetch Tweets` -> `Settings` -> `Authentication`) page of the plugin. It will redirect you to the Twitter's authentication page. Then you log in to Twitter there and authorize the plugin.
 
-Though you can use your own keys with the existing method. In that case, click on the *Set Keys Manually* button that redirects you to the page to set the keys manually.
+<h5><strong>Can I use own API Application keys for authentication?</strong></h5>
+Yes. Click on the *Set Keys Manually* button in the **Authentication** tab. It will redirects you to the page to set the keys manually.
 
-If you set authentication keys manually, you need to create an application to access the Twitter API [here](https://dev.twitter.com/apps). Then create *consumer key*, *consumer secret*, *access token*, and *access token secret*. Without these, you won't be able to fetch tweets.
+If you do this, you need to create an application to access the Twitter API [here](https://dev.twitter.com/apps). Then create *consumer key*, *consumer secret*, *access token*, and *access token secret*. Without these, you won't be able to fetch tweets.
 
-= How can I create my own template file? =
+<h4>Customizing Outputs</h4>
+<h5><strong>How can I create my own template file?</strong></h5>
 See the How to Create Own Template section of the **[Other Notes](http://wordpress.org/plugins/fetch-tweets/other_notes/)** page.
 
-= How do I display tweets with a certain hashtag from a specific user? =
+<h4>Techniques</h4>
+<h5><strong>How do I display tweets with a certain hashtag from a specific user?</strong></h5>
 
-* Go to Dashboard -> Fetch Tweets -> Add Rule by Search.
-* Type `#HASHTAG AND from:SCREENNAME` in the Search Keyword meta box option field. Change the part, `#HASHTAG`, to your searching hash tag and the part, `SCREENNAME`, to the account's screen name to fetch tweets from.
-* Create a rule by pressing the Publish button.
+- Go to Dashboard -> Fetch Tweets -> Add Rule by Search.
+- Type `#HASHTAG AND from:SCREENNAME` in the Search Keyword meta box option field. Change the part, `#HASHTAG`, to your searching hash tag and the part, `SCREENNAME`, to the account's screen name to fetch tweets from.
+- Create a rule by pressing the Publish button.
 
-= Why don't tweets update? =
+<h4>Troubleshooting</h4>
+<h5><strong>Why don't tweets update?</strong></h5>
 
 It could be that your host disables WP Cron. In that case, try the `intense` caching mode which can be configured via `Dashboard` -> `Fetch Tweets` -> `Settings` -> `General` -> `Cache Settings` -> `Caching Mode`.
+
+<h5><strong>I get the error "WordPress database error: [Lost connection to MySQL server during query]"?</strong></h5>
+
+Increase the value set to `max_allowed_packet` the setting of MySQL server. (for [instruction](https://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html))
 
 == Screenshots ==
 
