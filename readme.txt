@@ -11,7 +11,7 @@ License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 Fetches and displays tweets from twitter.com with the Twitter API.
 
 == Description ==
-It displays tweets anywhere you want such as in the sidebar, posts, and pages. It does not rely on JavaScript so the tweets will be displayed to visitors disabling JavaScript in their browsers. Not only can you show your own tweets but also the mashed up results of multiple user's timelines.
+It displays tweets in the sidebar, posts, and pages. It does not rely on JavaScript so the tweets will be displayed to visitors disabling JavaScript in their browsers. Not only can you show your own tweets but also the mashed up results of multiple user's timelines.
 
 It is easy to set up for WordPress beginners. It does not require you to provide authentication keys. 
 
@@ -35,7 +35,7 @@ If you are a theme developer, you can easily customize the template for the twee
 - **Background Cache Renewal** - it renews the caches in the background so it will prevent the page load from suddenly getting stuck for fetching external sources.
 - **Embedded Media** - urls of media elements can be automatically converted to embedded elements.
 - **URL Query** - show tweets by setting a url query key such as `?screen_name=yourscreenamehere` to dynamically display tweets.
-- **Server-side Processing** - the output of tweets is handled server-side. This means even your visitors turn off JavaScript in their browsers, tweets will be visible and search engines can catch those contents.
+- **Server-side Processing** - the outputs of tweets are handled server-side. This means even your visitors turn off JavaScript in their browsers, tweets will be visible and search engines can catch those contents.
   
 == Installation ==
 
@@ -230,7 +230,7 @@ It could be that your host disables WP Cron. In that case, try the `intense` cac
 
 <h5><strong>I get the error "WordPress database error: [Lost connection to MySQL server during query]"?</strong></h5>
 
-Increase the value set to `max_allowed_packet` the setting of MySQL server. (for [instruction](https://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html))
+Increase the value set to `max_allowed_packet` in the MySQL server configuration file. (for [instruction](https://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html))
 
 == Screenshots ==
 
