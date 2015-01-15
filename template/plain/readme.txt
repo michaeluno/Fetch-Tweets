@@ -1,5 +1,8 @@
 == Change log ==
 
+= 2.4.4 =
+- Tweaked the width of the container element as imagees wer not shurunk on some sites.
+
 = 2.4.3 =
 - Removed the `!important` notations.
 

@@ -11,30 +11,32 @@ License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 Fetches and displays tweets from twitter.com with the Twitter API.
 
 == Description ==
-It enables to display tweets anywhere you want such as in the sidebar, posts, and pages. It does not rely on JavaScript so the tweets will be displayed for visitors disabling JavaScript in their browsers. Not only can you show your own tweets but also the mashed up results of multiple user's timelines.
+It displays tweets anywhere you want such as in the sidebar, posts, and pages. It does not rely on JavaScript so the tweets will be displayed to visitors disabling JavaScript in their browsers. Not only can you show your own tweets but also the mashed up results of multiple user's timelines.
 
 It is easy to set up for WordPress beginners. It does not require you to provide authentication keys. 
 
-Media files are automatically displayed such as YouTube videos and photos posted in tweets. You can disable them with the setting. 
+Media files are automatically displayed such as YouTube videos and photos posted in tweets. You can disable them with the setting.
 
 It allows developers to write additional add-ons and templates. One of the extensions, [Feeder](http://en.michaeluno.jp/fetch-tweets/extensions/feeder/), supports feeds so you can subscribe your favorite person’s tweets as RSS, which has become harder as the Twitter API was upgraded and the previous version no longer support tweet feed without authentication keys. With this addon, if you are a programmer, you can import the tweet data as JSON to your application by making the WordPress as own Twitter API server.
 
 If you are a theme developer, you can easily customize the template for the tweet outputs. Just copy the existing template and modify the copied files and rename the template name. Then place the copied folder into the theme folder. And there you go! Your own template will be listed in the plugin’s setting page. This way, when the plugin updates, you won’t loose your modifications.
 
 <h4>Features</h4>
-* **Fetching Timeline** - by specifying the user name, the timeline can be fetched and displayed as well as your account's home timeline.
-* **Search Results** - by specifying the search keyword, the results can be fetched and displayed.
-* **Lists**	- tweet timeline for members of the specified list can be fetched and displayed.
-* **Custom API Query** - if you are a developer and familiar with Twitter API, you can directly specify the query url to send to Twitter.
-* **Tweet ID** - you can fetch tweets by Tweet ID.
-* **Mashups** - you can display the combined results from multiple rule sets of your choosing.
-* **Widget** - tweets can be displayed in the widgets that the plugin provides.
-* **Shortcode** - with the shortcode, the fetched tweets can be displayed in posts and pages.
-* **PHP Code** - with the PHP function, the fetched tweets can be embedded in the templates.
-* **Custom Templates** - you can change the design by modifying/creating the template file.
-* **Background Cache Renewal** - it renews the caches in the background so it will prevent the page load from suddenly getting stuck for fetching external sources.
-* **Embedded Media** - urls of media elements can be automatically converted to embedded elements.
- 
+- **Fetching Timeline** - by specifying the user name, the timeline can be fetched and displayed as well as your account's home timeline.
+- **Search Results** - by specifying the search keyword, the results can be fetched and displayed.
+- **Lists**	- tweet timeline for members of the specified list can be fetched and displayed.
+- **Custom API Query** - if you are a developer and familiar with Twitter API, you can directly specify the query url to send to Twitter.
+- **Tweet ID** - you can fetch tweets by Tweet ID.
+- **Mashups** - you can display the combined results from multiple rule sets of your choosing.
+- **Widget** - tweets can be displayed in the widgets that the plugin provides.
+- **Shortcode** - with the shortcode, the fetched tweets can be displayed in posts and pages.
+- **PHP Code** - with the PHP function, the fetched tweets can be embedded in the templates.
+- **Custom Templates** - you can change the design by modifying/creating the template file.
+- **Background Cache Renewal** - it renews the caches in the background so it will prevent the page load from suddenly getting stuck for fetching external sources.
+- **Embedded Media** - urls of media elements can be automatically converted to embedded elements.
+- **URL Query** - show tweets by setting a url query key such as `?screen_name=yourscreenamehere` to dynamically display tweets.
+- **Server-side Processing** - the output of tweets is handled server-side. This means even your visitors turn off JavaScript in their browsers, tweets will be visible and search engines can catch those contents.
+  
 == Installation ==
 
 = Install = 
@@ -239,6 +241,9 @@ Increase the value set to `max_allowed_packet` the setting of MySQL server. (for
 5. ***Authentication***
 
 == Changelog ==
+
+= 2.4.4 - 01/16/2015 =
+- Tweaked the styling of built-in templates.
 
 = 2.4.3 - 01/15/2015 =
 - Removed the `!important` notations from the CSS files of the built-in templates.
