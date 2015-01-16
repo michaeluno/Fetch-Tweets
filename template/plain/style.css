@@ -12,9 +12,9 @@ Text Domain:    fetch-tweets
 */
 
 .fetch-tweets {
-	overflow-y: auto;	
+    overflow-y: auto;	
 	overflow-x: hidden;
-    widht: inherit;
+    width: inherit;
 }
 .fetch-tweets > .fetch-tweets-item {
 	display: inline-block; 

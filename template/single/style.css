@@ -14,7 +14,7 @@ Text Domain:    fetch-tweets
 div.fetch-tweets-single-container {
 	overflow-y: auto;	
 	overflow-x: hidden;
-    widht: inherit;
+    width: inherit;
 }
 
 div.fetch-tweets-single-container a {
