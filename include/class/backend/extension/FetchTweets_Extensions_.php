@@ -1,11 +1,16 @@
 <?php
 /**
- * @package     Fetch Tweets
- * @copyright   Copyright (c) 2013, Michael Uno
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since        1.0.0.4
- * @description    Loads plugin extensions.
+ * Loads plugin extensions.
+ * 
+ * @package       Fetch Tweets
+ * @copyright     Copyright (c) 2013, Michael Uno
+ * @license       http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since         1.0.0.4
 */
+
+/**
+ * Loads plugin extensions.
+ */
 abstract class FetchTweets_Extensions_ {
 
     // Container arrays
@@ -38,12 +43,12 @@ abstract class FetchTweets_Extensions_ {
                 $oFeed = $this->getFeedObj( $strURL, null, $fCacheRenew ? 0 : 3600 );
                 foreach ( $oFeed->get_items() as $oItem )     // foreach ( $oFeed->get_items( 0, $numItems * 3 ) as $item ) does not change the memory usage
                     $this->arrFeedItems[ $strURLID ][ $oItem->get_title() ] = array( 
-                        'strContent'        => $oItem->get_content(),
+                        'strContent'     => $oItem->get_content(),
                         'description'    => $oItem->get_description(),
-                        'title'            => $oItem->get_title(),
-                        'strDate'            => $oItem->get_title(),
-                        'strAuthor'            => $oItem->get_date( 'j F Y, g:i a' ),
-                        'strLink'            => $oItem->get_permalink(),    // get_link() may be used as well        
+                        'title'          => $oItem->get_title(),
+                        'strDate'        => $oItem->get_title(),
+                        'strAuthor'      => $oItem->get_date( 'j F Y, g:i a' ),
+                        'strLink'        => $oItem->get_permalink(),    // get_link() may be used as well        
                     );
                 
                 // For PHP below 5.3 to release the memory.
