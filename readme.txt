@@ -242,7 +242,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
-= 2.4.5 =
+= 2.4.5 - 0203/2015 =
 - Added an option to disable content security policy warnings which appear in the browser console when the Follow button is displayed.
 - Refined some form fields in the plugin setting page.
 - Fixed broken links in extension and template lists.
