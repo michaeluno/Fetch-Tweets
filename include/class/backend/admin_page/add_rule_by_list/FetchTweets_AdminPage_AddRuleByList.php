@@ -7,68 +7,79 @@
  * http://en.michaeluno.jp/fetch-tweets/
  * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
  */
- 
-/**
- * Defines the form elements and their behavior of the Add Rule by List page.
- * 
- * @filter            fetch_tweets_filter_authenticated_accounts - receives an array holding accounts IDs and the screen name connected to Twitter.
- * @filter            fetch_tweets_filter_credentials - receives an array holding accounts credentials and the account ID. 
- */
-abstract class FetchTweets_AdminPage_Form_AddRuleByList extends FetchTweets_AdminPage_Form_Setting {
-        
-        
-   /**
-     * Sets up form elements of the 'fetch_tweets_add_rule_by_list' page.
-     */
-    public function load_fetch_tweets_add_rule_by_list( $oAdminPage ) { // load_{page slug}
 
-        $this->addSettingSections(
-            'fetch_tweets_add_rule_by_list',    // target page slug
+/**
+ * Defines an admin page.
+ * 
+ * @since       2.4.5
+ */
+class FetchTweets_AdminPage_AddRuleByList extends FetchTweets_AdminPage_Page_Base {
+
+    /**
+     * Called when the page loads.
+     * 
+     */
+    public function replyToLoadPage( $oFactory ) {
+        
+        $this->oOption  = $GLOBALS['oFetchTweets_Option'];
+        $_sSectionID    = 'add_rule_by_list';
+        $oFactory->addSettingSections(
+            $this->sPageSlug,    // target page slug
             array(
-                'section_id'    => 'add_rule_by_list',
-                'title'            => __( 'Specify the Screen Name', 'fetch-tweets' ),
-                'description'    => __( 'In order to select list, the user name(screen name) of the account that owns the list must be specified.', 'fetch-tweets' ),
+                'section_id'    => $_sSectionID,
+                'title'         => __( 'Specify the Screen Name', 'fetch-tweets' ),
+                'description'   => __( 'In order to select list, the user name(screen name) of the account that owns the list must be specified.', 'fetch-tweets' ),
             )        
         );
         
-        $this->addSettingFields(
-            'add_rule_by_list',    // target section id
+        $oFactory->addSettingFields(
+            $_sSectionID,    // target section id
             array(    
-                'field_id' => 'list_owner_accounts',
-                'title' => __( 'Owner Accounts', 'fetch-tweets' ),
-                'description' => __( 'Select the screen name that owns the list.', 'fetch-tweets' ),
-                'type' => 'select',
-                'value' => '',
+                'field_id'      => 'list_owner_accounts',
+                'title'         => __( 'Owner Accounts', 'fetch-tweets' ),
+                'description'   => __( 'Select the screen name that owns the list.', 'fetch-tweets' ),
+                'type'          => 'select',
+                'value'         => '',
             ),            
             array(    
-                'field_id' => 'list_owner_screen_name',
-                'title' => __( 'Owner Screen Name', 'fetch-tweets' ) . ' <span class="optional">(' . __( 'optional', 'fetch-tweets' ) . ')</span>',
-                'description' => __( 'The screen name(user name) that owns the list. When the target screen name is not listed above, specify here.', 'fetch-tweets' ) . '<br />'
+                'field_id'      => 'list_owner_screen_name',
+                'title'         => __( 'Owner Screen Name', 'fetch-tweets' ) . ' <span class="optional">(' . __( 'optional', 'fetch-tweets' ) . ')</span>',
+                'description'   => __( 'The screen name(user name) that owns the list. When the target screen name is not listed above, specify here.', 'fetch-tweets' ) . '<br />'
                     . 'e.g. miunosoft',
-                'type' => 'text',
-                'value' => '',
-                'attributes'    =>    array(
-                    'size'    =>    40,
+                'type'          => 'text',
+                'value'         => '',
+                'attributes'    => array(
+                    'size'    => 40,
                 ),                
             ),
             array(  // single button
-                'field_id' => 'list_proceed',
-                'type' => 'submit',
-                'before_field' => "<div class='right-button'>",
-                'after_field' => "</div>",
-                'label' => __( 'Proceed', 'fetch-tweets' ),
-                'attributes'    =>    array(
-                    'class'    =>    'button button-primary',
+                'field_id'      => 'list_proceed',
+                'type'          => 'submit',
+                'before_field'  => "<div class='right-button'>",
+                'after_field'   => "</div>",
+                'label'         => __( 'Proceed', 'fetch-tweets' ),
+                'attributes'    => array(
+                    'class'    => 'button button-primary',
                 ),                    
             )        
         );        
         
+        $_sSectionID    = 'add_rule_by_list';
+        $_sFieldID      = 'list_owner_accounts';
+        add_filter( "field_definition_{$oFactory->oProp->sClassName}_{$_sSectionID}_{$_sFieldID}", array( $this, 'replyToModifyField_ListOwnerAccounts' ) );
+        add_filter( "validation_{$this->sPageSlug}", array( $this, 'validatePageFormData' ), 10, 4 );
+        
     }
     
+
     /**
      * Field definition callbacks
+     * 
+     * @remark      field_definition_{class name}_{section id}_{field id}
+     * @since       unknown
+     * @since       2.4.5       Changed the name from 'field_definition_FetchTweets_AdminPage_add_rule_by_list_list_owner_accounts'
      */
-    public function field_definition_FetchTweets_AdminPage_add_rule_by_list_list_owner_accounts( $aField ) {    // field_definition_{class name}_{section id}_{field id}
+    public function replyToModifyField_ListOwnerAccounts( $aField ) {   
     
         $_aCredentials = $this->oOption->getCredentials();
         if ( ! ( $_aCredentials['consumer_key'] && $_aCredentials['consumer_secret'] && $_aCredentials['access_token'] && $_aCredentials['access_secret'] ) ) {
@@ -95,7 +106,7 @@ abstract class FetchTweets_AdminPage_Form_AddRuleByList extends FetchTweets_Admi
         return $aField;
         
     }
-        protected function _getScreenName( $aCredentials ) {
+        private function _getScreenName( $aCredentials ) {
             
             /* Create TwitteroAuth object with app key/secret and token key/secret from default phase */
             $_oConnect = new FetchTweets_TwitterAPI_Verification( 
@@ -113,32 +124,35 @@ abstract class FetchTweets_AdminPage_Form_AddRuleByList extends FetchTweets_Admi
             
         }
     
-    /*
-     * Add Rule by List Page
+    /**
+     * Validates submitted form data of the page. 
+     * @remark validation_{page slug}
+     * 
+     * @since       unknown
+     * @since       2.4.5       Changed the name from 'validation_fetch_tweets_add_rule_by_list'.
      */
-
-    public function validation_fetch_tweets_add_rule_by_list( $aInput, $aOldInput ) {    // validation_{page slug}
+    public function validatePageFormData( $aInput, $aOldInput, $oFactory, $aSubmitInformation ) {   
                 
         // Check if the input has been properly sent.        
         if ( ! isset( $aInput['add_rule_by_list']['list_owner_screen_name'], $aInput['add_rule_by_list']['list_owner_accounts'] ) ) {
-            $this->setSettingNotice( __( 'Something went wrong. Your input could not be received. Try again and if this happens again, contact the developer.', 'fetch-tweets' ) );
+            $oFactory->setSettingNotice( __( 'Something went wrong. Your input could not be received. Try again and if this happens again, contact the developer.', 'fetch-tweets' ) );
             return $aOldInput;
         }
         
         $_aCredentials = $this->_getCredentiaslByAccountID( $aInput['add_rule_by_list']['list_owner_accounts'] );
         
         // Variables
-        $_aErrors = array();    // error array
-        $_iAccountID = $aInput['add_rule_by_list']['list_owner_accounts'] == -1 ? 0 : $aInput['add_rule_by_list']['list_owner_accounts'];                        
-        $_sOwnerScreenName = $aInput['add_rule_by_list']['list_owner_accounts'] == '-1'
+        $_aErrors           = array();    // error array
+        $_iAccountID        = $aInput['add_rule_by_list']['list_owner_accounts'] == -1 ? 0 : $aInput['add_rule_by_list']['list_owner_accounts'];                        
+        $_sOwnerScreenName  = $aInput['add_rule_by_list']['list_owner_accounts'] == '-1'
             ? $aInput['add_rule_by_list']['list_owner_screen_name']    // the manually typed
             : $_aCredentials['screen_name'];
         
         // The list owner screen name must be provided.
         if ( empty( $_sOwnerScreenName ) ) {
             $_aErrors['add_rule_by_list']['list_owner_screen_name'] = __( 'The screen name of the list owner must be specified: ' ) . $_sOwnerScreenName;
-            $this->setFieldErrors( $_aErrors );        
-            $this->setSettingNotice( __( 'There was an error in your input.', 'fetch-tweets' ) );
+            $oFactory->setFieldErrors( $_aErrors );        
+            $oFactory->setSettingNotice( __( 'There was an error in your input.', 'fetch-tweets' ) );
             return $aOldInput;                        
         }
         
@@ -151,14 +165,14 @@ abstract class FetchTweets_AdminPage_Form_AddRuleByList extends FetchTweets_Admi
         );
         $_aLists = $_oFetch->getListNamesFromScreenName( $_sOwnerScreenName, $_iAccountID );
         if ( empty( $_aLists ) ) {
-            $this->setSettingNotice( __( 'No list found.', 'fetch-tweets' ) );
+            $oFactory->setSettingNotice( __( 'No list found.', 'fetch-tweets' ) );
             return $aOldInput;            
         }
 
         // Set the transient of the fetched IDs. This will be used right next page load.
         $_sListCacheID = uniqid();
         FetchTweets_WPUtilities::setTransient( $_sListCacheID, $_aLists, 60 );        
-        die( 
+        exit( 
             wp_redirect( 
                 add_query_arg(     // go to the Manage Accounts page. 
                     array( 
@@ -180,9 +194,12 @@ abstract class FetchTweets_AdminPage_Form_AddRuleByList extends FetchTweets_Admi
          * @since            2
          */
         private function _getCredentiaslByAccountID( $iAccountID ) {
-            
-            return $this->oOption->getCredentialsByID( $iAccountID == -1 ? 0 : $iAccountID );
-            
-        }
-                            
+            return $this->oOption->getCredentialsByID( 
+                -1 == $iAccountID 
+                    ? 0 
+                    : $iAccountID 
+            );
+        }    
+    
+ 
 }
