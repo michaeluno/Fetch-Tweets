@@ -4,7 +4,7 @@ Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.3
 Tested up to:       4.1.0
-Stable tag:         2.4.3
+Stable tag:         2.4.4
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -241,6 +241,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 5. ***Authentication***
 
 == Changelog ==
+
+= 2.4.5 =
+- Fixed a bug in the Single template that media elements were not shown.
 
 = 2.4.4 - 01/16/2015 =
 - Tweaked the styling of built-in templates.

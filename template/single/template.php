@@ -183,7 +183,9 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
         // Check if it's a .retweet
         $_bIsRetweet            = isset( $_aDetail['retweeted_status']['text'] );        
         if ( $_bIsRetweet && ! $aArgs['include_rts'] ) { continue; }
-        $aTweet                 = $_bIsRetweet ? $_aDetail['retweeted_status'] : $_aDetail;
+        $aTweet                 = $_bIsRetweet 
+            ? $_aDetail['retweeted_status'] + $_aDetail     // merge with the top level element for media elements.
+            : $_aDetail;
         $sRetweetClassProperty  = $_bIsRetweet ? 'fetch-tweets-single-retweet' : '';
         $_sBorder = $aArgs['visibilities']['separator'] ? '' : 'border-width: 0px !important;';
     ?>
