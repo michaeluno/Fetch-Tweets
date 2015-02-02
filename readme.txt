@@ -247,6 +247,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 - Refined some form fields in the plugin setting page.
 - Fixed broken links in extension and template lists.
 - Fixed a bug in the Single template that media elements were not shown.
+- Updated the [Admin Page Framework](http://admin-page-framework/michaeluno.jp/) library.
 
 = 2.4.4 - 01/16/2015 =
 - Tweaked the styling of built-in templates.
