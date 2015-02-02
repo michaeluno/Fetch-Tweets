@@ -1,6 +1,5 @@
 <?php
 abstract class FetchTweets_AdminPage_Start extends FetchTweets_AdminPageFramework {
-    // abstract class FetchTweets_AdminPage_Start extends AdminPageFramework {
 
     public function start() {
                 
@@ -49,10 +48,7 @@ abstract class FetchTweets_AdminPage_Start extends FetchTweets_AdminPageFramewor
             $this->oTemplateListTable = new FetchTweets_ListTable(
                 $this->oOption->getActiveTemplates() + $this->oOption->getUploadedTemplates()
             );
-// var_dump( '$this->oOption->getUploadedTemplates()' );
-// var_dump( $this->oOption->getUploadedTemplates() );
-// var_dump( 'getActiveTemplates()' );
-// var_dump( $this->oOption->getActiveTemplates() );
+
 
             $this->oTemplateListTable->process_bulk_action();
             
