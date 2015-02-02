@@ -96,10 +96,8 @@ div.fetch-tweets-body > p.fetch-tweets-text {
 .fetch-tweets-intent-buttons .fetch-tweets-intent-icon a:hover {
 	text-decoration: none;
 }
-.fetch-tweets-body > .fetch-tweets-intent-buttons li {
+.fetch-tweets-body > ul.fetch-tweets-intent-buttons > li {
 	display: inline;
-}
-.fetch-tweets-body > ul.fetch-tweets-intent-buttons li {
 	margin-left: 0;
 	list-style-type: none;
 }
