@@ -1,5 +1,14 @@
 <?php
 /**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ */
+ 
+/**
  * Defines the Setting page.
  * 
  * @action    fetch_tweets_action_updated_credentials - triggered when the main credentials are updated.

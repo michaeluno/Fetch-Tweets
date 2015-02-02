@@ -1,5 +1,15 @@
 <?php
 /**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ */
+ 
+ 
+/**
  * Defines the form elements and their behavior of the Setting page.
  * 
  * @filter            fetch_tweets_filter_authenticated_accounts - receives an array holding accounts IDs and the screen name connected to Twitter.

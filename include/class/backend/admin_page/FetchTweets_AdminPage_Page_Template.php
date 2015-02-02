@@ -1,5 +1,14 @@
 <?php
 /**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ */
+ 
+/**
  * Defines the template page.
  */
 abstract class FetchTweets_AdminPage_Page_Template extends FetchTweets_AdminPage_Page_Extension {

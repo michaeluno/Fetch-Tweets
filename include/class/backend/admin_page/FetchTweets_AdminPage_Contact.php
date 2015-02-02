@@ -2,11 +2,12 @@
 /**
  * Fetch Tweets
  * 
- * http://en.michaeluno.jp/admin-page-framework/
- * Copyright (c) 2013-2014 Michael Uno; Licensed GPLv2
+ * Fetches and displays tweets from twitter.com.
  * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
  */
-
+ 
 /**
  * Adds a Contact page to the plugin.
  * 
