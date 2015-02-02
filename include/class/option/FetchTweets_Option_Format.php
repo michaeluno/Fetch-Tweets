@@ -37,6 +37,11 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         ),
         'arrTemplates'          => array(),    // stores template info arrays.
         'arrDefaultTemplate'    => array(),    // stores the default template info.
+        
+        // 2.4.5+
+        'content_security_policy' => array(
+            'disable_warnings' => false,
+        ),
     );
     
     public $aStructure_DefaultParams = array(

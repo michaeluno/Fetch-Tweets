@@ -21,6 +21,7 @@ class FetchTweets_TemplatesLoader {
      * 
      */
     static private $_bLoaded = false;
+    
     /**
      * Loads active template components.
      */
@@ -35,8 +36,37 @@ class FetchTweets_TemplatesLoader {
         $this->loadStylesOfActiveTemplates();        
         $this->loadSettingsOfActiveTemplates();
 
+        $this->disableContentSecurityPolicyWarnings();
+        
     }    
 
+    /**
+     * Disables content security policy warnings.
+     * 
+     * The warnings appear in the browser console when the Follow button is displayed that accesses twitter.com via JavaScript.
+     * 
+     * @since       2.4.5
+     */
+    protected function disableContentSecurityPolicyWarnings(){
+        
+        if ( is_admin() ) { return; }
+        
+        $_oOption       = $GLOBALS['oFetchTweets_Option'];
+        if ( $_oOption->get( array( 'content_security_policy', 'disable_warnings' ) ) ) {
+            add_action('wp_head', array( $this, 'replyToAddHeadTagElements' ) );
+        }
+        
+    }
+        /**
+         * Called when the head tag is rendered.
+         * 
+         * @since       2.4.5
+         */
+        public function replyToAddHeadTagElements() {
+            echo '<meta name="twitter:widgets:csp" content="on" class="fetch-tweets-disable-content-security-policy-warnings" />';
+        }
+    
+    
     /**
      * Includes activated templates' functions.php files.
      * 

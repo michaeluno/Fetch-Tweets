@@ -17,6 +17,7 @@ $_aAdminClassFiles = array(
 	"FetchTweets_AdminPage_Setting_General_Search"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/setting/general/FetchTweets_AdminPage_Setting_General_Search.php", 
 	"FetchTweets_AdminPage_Setting_MISC"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/setting/misc/FetchTweets_AdminPage_Setting_MISC.php", 
 	"FetchTweets_AdminPage_Setting_MISC_Capability"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/setting/misc/FetchTweets_AdminPage_Setting_MISC_Capability.php", 
+	"FetchTweets_AdminPage_Setting_MISC_ContentSecurity"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/setting/misc/FetchTweets_AdminPage_Setting_MISC_ContentSecurity.php", 
 	"FetchTweets_AdminPage_Setting_Reset"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/setting/reset/FetchTweets_AdminPage_Setting_Reset.php", 
 	"FetchTweets_AdminPage_Setting_Reset_Cache"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/setting/reset/FetchTweets_AdminPage_Setting_Reset_Cache.php", 
 	"FetchTweets_AdminPage_Setting_Reset_Option"	=>	FetchTweets_Commons::$sDirPath . "/include/class/backend/admin_page/setting/reset/FetchTweets_AdminPage_Setting_Reset_Option.php", 

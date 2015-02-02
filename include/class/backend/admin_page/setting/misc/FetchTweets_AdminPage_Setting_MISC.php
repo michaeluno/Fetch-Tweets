@@ -23,6 +23,15 @@ class FetchTweets_AdminPage_Setting_MISC extends FetchTweets_AdminPage_Tab_Base 
     public function replyToLoadTab( $oFactory ) {
             
         // Form sections  
+        new FetchTweets_AdminPage_Setting_MISC_ContentSecurity(
+            $oFactory,
+            $this->sPageSlug,
+            array(
+                'section_id'    => 'content_security_policy',
+                'tab_slug'      => 'misc',
+                'title'         => __( 'Content Security Policy', 'fetch-tweets' ),
+            )        
+        );        
         new FetchTweets_AdminPage_Setting_MISC_Capability(
             $oFactory,
             $this->sPageSlug,
@@ -34,7 +43,7 @@ class FetchTweets_AdminPage_Setting_MISC extends FetchTweets_AdminPage_Tab_Base 
                 'description'   => __( 'Set the access levels to the plugin setting pages.', 'fetch-tweets' ),
             )
         );
-        
+                
     }
     
 }
