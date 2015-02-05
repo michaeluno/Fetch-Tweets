@@ -2,9 +2,9 @@
 /**
  * Fetches and displays tweets.
  * 
- * @package            Fetch Tweets
+ * @package           Fetch Tweets
  * @subpackage        
- * @copyright        Michael Uno
+ * @copyright         Michael Uno
  * @filter            fetch_tweets_template_path - specifies the template path.
  * @action            fetch_tweets_action_transient_renewal - for WP Cron single event.
  * @action            fetch_tweets_action_transient_add_oembed_elements - for WP Cron single event.
@@ -18,11 +18,10 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
      */
     public function getTweetsOutput( $aArgs ) {   
         
-        // Capture the output buffer.
-        ob_start(); // Start buffer.
+        ob_start();
         $this->drawTweets( $aArgs );
-        $_sContent = ob_get_contents(); // Assign the content buffer to a variable.
-        ob_end_clean(); // End buffer and remove the buffer.
+        $_sContent = ob_get_contents();
+        ob_end_clean();
         return $_sContent;
         
     }
@@ -58,18 +57,7 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
      */    
     public function drawTweets( $aArgs ) {
 
-        $aRawArgs       = ( array ) $aArgs; 
-        $aArgs          = FetchTweets_Utilities::uniteArrays( $aRawArgs, $this->oOption->aOptions['default_values'], $this->oOption->aStructure_DefaultParams, $this->oOption->aStructure_DefaultTemplateOptions );
-        $aArgs['id']    = isset( $aArgs['ids'] ) && ! empty( $aArgs['ids'] ) ? $aArgs['ids'] : $aArgs['id'];    // backward compatibility
-        $aArgs['id']    = is_array( $aArgs['id'] ) ? $aArgs['id'] : preg_split( "/[,]\s*/", trim( ( string ) $aArgs['id'] ), 0, PREG_SPLIT_NO_EMPTY );
-
-        // Debug
-        // echo var_dump( $aArgs );
-        // echo "<pre>" . htmlspecialchars( print_r( $aArgs, true ) ) . "</pre>";    
-        // echo "<pre>" . htmlspecialchars( print_r( $this->oOption->aOptions, true ) ) . "</pre>";    
-        // return;        
-
-        $_aTweets = $this->getTweetsAsArray( $aArgs, $aRawArgs );
+        $_aTweets   = $this->getTweetsAsArray( $aArgs );
         if ( empty( $_aTweets ) || ! is_array( $_aTweets ) ) {
             _e( 'No result could be fetched.', 'fetch-tweets' );
             return;
@@ -82,12 +70,13 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
             echo '<strong>Fetch Tweets</strong>: ' . $_aTweets['error'];    
             return;
         }
-
-        // Format the tweet response array.
-        $this->_formatTweetArrays( $_aTweets, $aArgs ); // the array is passed as reference.
     
         // Include the template to render the output - this method is also called from filter callbacks( which requires a return value ) but go ahead and render the output. 
-        $this->_includeTemplate( $_aTweets, $aArgs, $this->oOption->aOptions );
+        $this->_includeTemplate(
+            $_aTweets, 
+            $aArgs, 
+            $this->oOption->aOptions 
+        );
          
     }
 
@@ -95,39 +84,114 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
     /**
      * Fetches tweets based on the argument.
      * 
-     * @remark           The scope is public as the feed extension uses it.
-     * @param            array            $aArgs                The argument array that is merged with the default option values. It is passed by reference to let assign post meta options.
-     * @param            array            $aRawArgs            The raw argument array that is not merged with any. Used by the _getTweetsAsArrayByPostIDs() method that fetches tweets by post ID.
+     * @remark      The scope is public as the feed extension uses it.
+     * @since       unknown
+     * @since       2.4.6       Deprecated the second parameter.
+     * @param       array       $aArgs      The argument array that is merged with the default option values. It is passed by reference to let assign post meta options.
      */
-    public function getTweetsAsArray( & $aArgs, $aRawArgs ) {    
+    public function getTweetsAsArray( & $aArgs, $mDeprecated=null ) {    
+        
+        $_aRawArgs  = ( array ) $aArgs ;
+        $aArgs      = $this->_getFormattedArguments( $_aRawArgs );
+        
+        switch( $this->_getRequestType( $aArgs ) ) {
+            case 'search':
+                $_aTweets = $this->getTweetsBySearch(
+                    $aArgs['q'],
+                    $aArgs['count'],
+                    $aArgs['lang'],
+                    $aArgs['result_type'],
+                    $aArgs['until'],
+                    $aArgs['geocode'],
+                    $aArgs['cache']
+                );
+                break;
+            
+            case 'screen_name':
+                $_aTweets = $this->getTweetsByScreenNames(
+                    $aArgs['screen_name'],
+                    $aArgs['count'],
+                    $aArgs['include_rts'],
+                    $aArgs['exclude_replies'],
+                    $aArgs['cache'] 
+                );
+                break;
+            
+            case 'list':
+                $_aTweets = $this->_getTweetsByListID(
+                    $aArgs['list_id'],
+                    $aArgs['include_rts'],
+                    $aArgs['cache']
+                );
+                break;                
+                
+            case 'timeline':
+                $_aTweets = $this->_getTweetsByHomeTimeline(
+                    $aArgs['account_id'],
+                    $aArgs['exclude_replies'],
+                    $aArgs['include_rts']
+                );
+                break;                                
 
-        // custom call by search keyword
-        if ( isset( $aArgs['q'] ) )    {
-            return $this->getTweetsBySearch( $aArgs['q'], $aArgs['count'], $aArgs['lang'], $aArgs['result_type'], $aArgs['until'], $aArgs['geocode'], $aArgs['cache'] );
+            case 'tweet_id':
+                $_aTweets = $this->_getResponseByTweetID( 
+                    $aArgs['tweet_id'], 
+                    $aArgs['cache']
+                );
+                break;                                
+                
+            // normal
+            default:
+                $_aTweets = $this->_getTweetsAsArrayByPostIDs( 
+                    $aArgs['id'], 
+                    $aArgs, 
+                    $_aRawArgs 
+                );
+                break;
+                
         }
-        
-        // custom call by screen name
-        if ( isset( $aArgs['screen_name'] ) ) {
-            return $this->getTweetsByScreenNames( $aArgs['screen_name'], $aArgs['count'], $aArgs['include_rts'], $aArgs['exclude_replies'], $aArgs['cache'] );
-        }
-        
-        // only public list can be fetched with this method
-        if ( isset( $aArgs['list_id'] ) ) {
-            return $this->_getTweetsByListID( $aArgs['list_id'], $aArgs['include_rts'], $aArgs['cache'] );
-        }
-        
-        if ( isset( $aArgs['account_id'] ) ) {
-            return $this->_getTweetsByHomeTimeline( $aArgs['account_id'], $aArgs['exclude_replies'], $aArgs['include_rts'] );
-        }
-        
-        if ( isset( $aArgs['tweet_id'] ) ) {
-            return $this->_getResponseByTweetID( $aArgs['tweet_id'], $aArgs['cache'] );
-        }
-        
-        // normal
-        return $this->_getTweetsAsArrayByPostIDs( $aArgs['id'], $aArgs, $aRawArgs );
+                        
+        // Format the array and return it.
+        $this->_formatTweetArrays( 
+            $_aTweets,      // passed by reference
+            $aArgs 
+        ); 
+        return $_aTweets;
         
     }
+    
+        /**
+         * Determines the request type.
+         */
+        private function _getRequestType( array $aArgs ) {
+            
+            // custom call by search keyword
+            if ( isset( $aArgs['q'] ) ) {   
+                return 'search';
+            }
+            
+            // custom call by screen name
+            if ( isset( $aArgs['screen_name'] ) ) {
+                return 'screen_name';
+            }
+            
+            // only public list can be fetched with this method
+            if ( isset( $aArgs['list_id'] ) ) {
+                return 'list';
+            }
+            
+            // Time line by registered account.
+            if ( isset( $aArgs['account_id'] ) ) {
+                return 'timeline';
+            }
+            
+            // Tweet ID
+            if ( isset( $aArgs['tweet_id'] ) ) {
+                return 'tweet_id';
+            }
+            
+        }
+    
         /**
          * 
          * @param            array|integer            $vPostIDs            The target post ID of the Fetch Tweet rule post type.

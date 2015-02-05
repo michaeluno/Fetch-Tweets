@@ -4,7 +4,7 @@ Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.3
 Tested up to:       4.1.0
-Stable tag:         2.4.4
+Stable tag:         2.4.5
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -242,7 +242,10 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
-= 2.4.5 - 0203/2015 =
+= 2.4.6 =
+- Fixed a compatibility issue with extension plugins that arguments and tweets were not formatted.
+
+= 2.4.5 - 02/03/2015 =
 - Added an option to disable content security policy warnings which appear in the browser console when the Follow button is displayed.
 - Refined some form fields in the plugin setting page.
 - Fixed broken links in extension and template lists.

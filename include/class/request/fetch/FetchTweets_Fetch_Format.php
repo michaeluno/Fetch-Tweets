@@ -22,6 +22,34 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
     }
     
     /**
+     * Returns the formatted argument array.
+     * 
+     * @since       2.4.6
+     */
+    protected function _getFormattedArguments( array $aArgs ) {
+        
+        $aArgs          = FetchTweets_Utilities::uniteArrays( 
+            $aArgs,         // passed arguments for the API request
+            $this->oOption->aOptions['default_values']  // user saved options
+            + $this->oOption->aStructure_DefaultParams  // class0defined option structure
+            + $this->oOption->aStructure_DefaultTemplateOptions // class-defined template option structure
+        );
+        $aArgs['id']    = isset( $aArgs['ids'] ) && ! empty( $aArgs['ids'] ) 
+            ? $aArgs['ids'] 
+            : $aArgs['id'];    // backward compatibility
+        $aArgs['id']    = is_array( $aArgs['id'] ) 
+            ? $aArgs['id'] 
+            : preg_split( 
+                "/[,]\s*/", 
+                trim( ( string ) $aArgs['id'] ), 
+                0, 
+                PREG_SPLIT_NO_EMPTY 
+            );
+        return $aArgs;
+        
+    }    
+    
+    /**
      * Truncates tweet items.
      */
     protected function _truncateTweetArrays( & $aTweets, $iCount ) {
@@ -62,9 +90,9 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
     /**
      * Formats the tweets.
      * 
-     * @since            1.x
-     * @since            1.3.3            Added the ability to eliminate duplicated items for mash up results.
-     * @since            2.3.1            
+     * @since           1.x
+     * @since           1.3.3           Added the ability to eliminate duplicated items for mash up results.
+     * @since           2.3.1            
      */
     protected function _formatTweetArrays( & $aTweets, $aArgs ) {
 
