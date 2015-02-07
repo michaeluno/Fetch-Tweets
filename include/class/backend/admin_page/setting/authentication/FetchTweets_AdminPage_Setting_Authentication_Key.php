@@ -85,9 +85,9 @@ class FetchTweets_AdminPage_Setting_Authentication_Key extends FetchTweets_Admin
         );             
         
         add_filter( "validation_{$oFactory->oProp->sClassName}_{$sSectionID}", array( $this, 'replyToValidate' ), 10, 4 );
-        
+                  
     }    
-   
+
     /**
      * Triggered when the manual keys are set and submitted.
      * 

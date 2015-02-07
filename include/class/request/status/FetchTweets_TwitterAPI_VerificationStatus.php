@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles Twitter API verification
+ * Provides methods to output Twitter API authentication statues.
  * 
  * @package          Fetch Tweets
  * @subpackage        

@@ -20,7 +20,7 @@ class FetchTweets_AdminPage_Setting extends FetchTweets_AdminPage_Page_Base {
      * 
      */
     public function replyToLoadPage( $oFactory ) {
-        
+                
         // Add in-page-tabs.
         new FetchTweets_AdminPage_Setting_Authentication(
             $oFactory,

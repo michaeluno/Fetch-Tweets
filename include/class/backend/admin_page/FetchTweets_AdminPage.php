@@ -208,7 +208,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
     public function load_FetchTweets_AdminPage( $oAdminPage ) {
         
         $this->_setUpStyles();
-                
+         
         if ( ! $this->oOption->isAuthKeysManuallySet() && ! $this->oOption->isAuthKeysAutomaticallySet() ) { 
             $_sSettingPageURL = add_query_arg( array( 'post_type' => 'fetch_tweets', 'page' => 'fetch_tweets_settings', 'tab' => 'twitter_redirect' ), admin_url( $this->oProp->sPageNow ) ); 
             $this->setAdminNotice(
@@ -229,7 +229,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
             $this->enqueueStyle( FetchTweets_Commons::getPluginURL( '/asset/css/fetch_tweets_templates.css' ), 'fetch_tweets_templates' );
             $this->enqueueStyle( FetchTweets_Commons::getPluginURL( '/asset/css/fetch_tweets_settings.css' ), 'fetch_tweets_settings' );
             $this->enqueueStyle( FetchTweets_Commons::getPluginURL( '/asset/css/fetch_tweets_add_rule_by_list.css' ), 'fetch_tweets_add_rule_by_list' );
-
-        }                        
-    
+            
+        }        
+        
 }

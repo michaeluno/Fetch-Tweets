@@ -59,9 +59,14 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
     public function getRemaining( array $aDimensionalKeys ) {
         
         $aDimensionalKeys[] = 'remaining';
-        $_aStatuses  = $this->getStatus();
-        $_aResources = isset( $_aStatuses['resources'] ) ? $_aStatuses['resources'] : array();
-        return $this->_getDimensionalElement( $_aResources, $aDimensionalKeys );
+        $_aStatuses         = $this->getStatus();
+        $_aResources        = isset( $_aStatuses['resources'] ) 
+            ? $_aStatuses['resources'] 
+            : array();
+        return $this->_getDimensionalElement( 
+            $_aResources, 
+            $aDimensionalKeys 
+        );
         
     }
         private function _getDimensionalElement( $aSubject, array $aDimensionalKeys ) {
@@ -106,35 +111,35 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
                     . self::_getRateLimitRows( isset( $aStatus['resources'] ) ? $aStatus['resources'] : array() )
                     . "</tbody>" . PHP_EOL
                 . "</table>" . PHP_EOL;
-                
-            
+                        
         }
             static private function _getRateLimitRows( array $aStatusResources ) {
                 
                 $_aTranslation = array(
-                    'statuses'                        =>    __( 'Statuses', 'fetch-tweets' ),
-                    'lists'                            =>    __( 'Lists', 'fetch-tweets' ),
-                    'search'                        =>    __( 'Search', 'fetch-tweets' ),
-                    '/lists/subscribers'            =>    __( 'Subscribers', 'fetch-tweets' ),
-                    '/lists/list'                    =>    __( 'List', 'fetch-tweets' ),
-                    '/lists/memberships'            =>    __( 'Memberships', 'fetch-tweets' ),
-                    '/lists/ownerships'                =>    __( 'Ownerships', 'fetch-tweets' ),
-                    '/lists/subscriptions'            =>    __( 'Subscriptions', 'fetch-tweets' ),
-                    '/lists/members'                =>    __( 'members', 'fetch-tweets' ),
-                    '/lists/subscribers/show'        =>    __( 'Subscribers Show', 'fetch-tweets' ),
-                    '/lists/statuses'                =>    __( 'Statuses', 'fetch-tweets' ),
-                    '/lists/members/show'            =>    __( 'Members Show', 'fetch-tweets' ),
-                    '/lists/show'                    =>    __( 'Show', 'fetch-tweets' ),                    
-                    '/search/tweets'                =>    __( 'Tweets', 'fetch-tweets' ),    
-                    '/statuses/mentions_timeline'    =>    __( 'Mentions Timeline', 'fetch-tweets' ),    
-                    '/statuses/lookup'                =>    __( 'Lookup', 'fetch-tweets' ),    
-                    '/statuses/show/:id'            =>    __( 'Show ID', 'fetch-tweets' ),    
-                    '/statuses/oembed'                =>    __( 'Oembed', 'fetch-tweets' ),    
-                    '/statuses/retweeters/ids'        =>    __( 'Retweeters IDs', 'fetch-tweets' ),    
-                    '/statuses/home_timeline'        =>    __( 'Home Timeline', 'fetch-tweets' ),    
-                    '/statuses/user_timeline'        =>    __( 'User Timeline', 'fetch-tweets' ),    
-                    '/statuses/retweets/:id'        =>    __( 'Retweets ID', 'fetch-tweets' ),    
-                    '/statuses/retweets_of_me'         =>    __( 'Retweets Of Me', 'fetch-tweets' ),    
+                    'statuses'                      => __( 'Statuses', 'fetch-tweets' ),
+                    'lists'                         => __( 'Lists', 'fetch-tweets' ),
+                    'search'                        => __( 'Search', 'fetch-tweets' ),
+                    '/lists/subscribers'            => __( 'Subscribers', 'fetch-tweets' ),
+                    '/lists/list'                   => __( 'List', 'fetch-tweets' ),
+                    '/lists/memberships'            => __( 'Memberships', 'fetch-tweets' ),
+                    '/lists/ownerships'             => __( 'Ownerships', 'fetch-tweets' ),
+                    '/lists/subscriptions'          => __( 'Subscriptions', 'fetch-tweets' ),
+                    '/lists/members'                => __( 'Members', 'fetch-tweets' ),
+                    '/lists/subscribers/show'       => __( 'Subscribers Show', 'fetch-tweets' ),
+                    '/lists/statuses'               => __( 'Statuses', 'fetch-tweets' ),
+                    '/lists/members/show'           => __( 'Members Show', 'fetch-tweets' ),
+                    '/lists/show'                   => __( 'Show', 'fetch-tweets' ),                    
+                    '/search/tweets'                => __( 'Tweets', 'fetch-tweets' ),    
+                    '/statuses/mentions_timeline'   => __( 'Mentions Timeline', 'fetch-tweets' ),    
+                    '/statuses/lookup'              => __( 'Lookup', 'fetch-tweets' ),    
+                    '/statuses/show/:id'            => __( 'Show ID', 'fetch-tweets' ),    
+                    '/statuses/oembed'              => __( 'Oembed', 'fetch-tweets' ),    
+                    '/statuses/retweeters/ids'      => __( 'Retweeters IDs', 'fetch-tweets' ),    
+                    '/statuses/home_timeline'       => __( 'Home Timeline', 'fetch-tweets' ),    
+                    '/statuses/user_timeline'       => __( 'User Timeline', 'fetch-tweets' ),    
+                    '/statuses/friends'             => __( 'Friends', 'fetch-tweets' ),
+                    '/statuses/retweets/:id'        => __( 'Retweets ID', 'fetch-tweets' ),    
+                    '/statuses/retweets_of_me'      => __( 'Retweets Of Me', 'fetch-tweets' ),    
                 );
                 $_aTranslation = apply_filters( 'fetch_tweets_filter_rate_limit_status_translation', $_aTranslation );
                 
@@ -178,22 +183,35 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
                 return implode( PHP_EOL, $_aOutput );
                 
             }
+                                
             static private function _getRateLimitResourceRow( $sStatusKey, $aStatus, $aTranslation ) {
                 
+                $_iPercentage       = round( $aStatus['remaining'] / $aStatus['limit'] * 100 );                
                 return "<tr valign='top'>" . PHP_EOL
                         . "<th scope='row'>"    
-                            . ( isset( $aTranslation[ $sStatusKey ] ) ? $aTranslation[ $sStatusKey ] : $sStatusKey )
+                            . ( 
+                                isset( $aTranslation[ $sStatusKey ] )
+                                    ? $aTranslation[ $sStatusKey ]
+                                    : $sStatusKey 
+                            )
                         . "</th>"
                         . "<td>"
-                            . self::_getReadableRateLimitStatus( $aStatus )
+                            . "<div class='progress-bar button button-secondary' style='margin-bottom: 1em; padding: 0; width: 100%; height: 1em; background-color: #fff;'>" 
+                                . "<div class='button button-primary' style='margin: 0; padding: 0; width: {$_iPercentage}%; height: inherit; background-color:#5dade2';>"
+                                . "</div>"
+                            . "</div>"
+                            . "<div class='progress-bar-label'>"
+                                . self::_getReadableRateLimitStatus( $aStatus )
+                            . "</div>"
                         . "</td>"
                     . "</tr>" . PHP_EOL;
                 
             }
+            
             static private function _getReadableRateLimitStatus( array $aStatus ){
                 
                 static $_iOffsetSeconds;
-                $_iOffsetSeconds = $_iOffsetSeconds ? $_iOffsetSeconds : get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;                
+                $_iOffsetSeconds = $_iOffsetSeconds ? $_iOffsetSeconds : get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
                 
                 if ( ! isset( $aStatus['remaining'], $aStatus['limit'], $aStatus['reset'] ) ) {
                     return __( 'n/a', 'fetch-tweets' );
@@ -214,8 +232,8 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
          */
         static private function _printConnectionStatus( $aStatus ) {
             
-            $_fIsConnected = isset( $aStatus['id'] ) && $aStatus['id'];
-            $_sScreenName = isset( $aStatus['screen_name'] ) ? $aStatus['screen_name'] : "";
+            $_bIsConnected = isset( $aStatus['id'] ) && $aStatus['id'];
+            $_sScreenName  = isset( $aStatus['screen_name'] ) ? $aStatus['screen_name'] : "";
             
             ?>            
             <h3><?php _e( 'Status', 'fetch-tweets' ); ?></h3>
@@ -227,7 +245,7 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
                         </th>
                         <td>
                             <?php 
-                                echo $_fIsConnected 
+                                echo $_bIsConnected 
                                     ? '<span class="authenticated">' . __( 'Authenticated', 'fetch-tweets' ) . '</span>'
                                     : '<span class="unauthenticated">' . __( 'Not authenticated', 'fetch-tweets' ) . '</span>'; 
                             ?>
