@@ -16,36 +16,56 @@ abstract class FetchTweets_Fetch_ByScreenName extends FetchTweets_Fetch_ByList {
      * 
      * @since            1.3.3
      */
-    protected function getTweetsByScreenNames( $strUsers, $intCount, $fIncludeRetweets=false, $fExcludeReplies=false, $intCacheDuration=1200 ) {
+    protected function getTweetsByScreenNames( $sUsers, $iCount, $bIncludeRetweets=false, $bExcludeReplies=false, $iCacheDuration=1200 ) {
 
-        $arrTweets      = array();
-        $arrScreenNames = FetchTweets_Utilities::convertStringToArray( $strUsers, ',' );
-        foreach( $arrScreenNames as $strScreenName ) {
-            $arrTweets  = array_merge( $this->_getTweetsByScreenName( $strScreenName, $intCount, $fIncludeRetweets, $fExcludeReplies, $intCacheDuration ), $arrTweets );
+        $_aTweets      = array();
+        foreach( FetchTweets_Utilities::convertStringToArray( $sUsers, ',' ) as $_sScreenName ) {
+            $_aTweets  = array_merge( 
+                $this->_getTweetsByScreenName( 
+                    $_sScreenName, 
+                    $iCount, 
+                    $bIncludeRetweets, 
+                    $bExcludeReplies, 
+                    $iCacheDuration 
+                ), 
+                $_aTweets 
+            );
         }        
-            
-        return $arrTweets;
+        return $_aTweets;
         
     }
     
         /**
          * Fetches tweets by screen name.
          * 
-         * @see                https://dev.twitter.com/docs/api/1.1/get/statuses/user_timeline
-         * @since            1.0.0
+         * @see     https://dev.twitter.com/docs/api/1.1/get/statuses/user_timeline
+         * @since   1.0.0
+         * @param       string      $sUser
+         * @param       integer     $_deprecated        As of 1.3.4 the maximum number of tweets are fetched so that the data can be reused for different count requests.
+         * @param       boolean     $bIncludeRetweets
+         * @param       boolean     $bExcludeReplies
+         * @param       integer     $iCacheDuration     Default: `1200`
          */ 
-        protected function _getTweetsByScreenName( $strUser, $intCount, $fIncludeRetweets=false, $fExcludeReplies=false, $intCacheDuration=1200 ) {
+        protected function _getTweetsByScreenName( $sUser, $_deprecated, $bIncludeRetweets=false, $bExcludeReplies=false, $iCacheDuration=1200 ) {
 
-            // Compose the request URI.
-            // $intCount = ( ( int ) $intCount ) > 200 ? 200 : $intCount;
-            $intCount = 200;    // as of 1.3.4 the maximum number of tweets are fetched so that the data can be reused for different count requests.
-            $strRequestURI = "https://api.twitter.com/1.1/statuses/user_timeline.json"
-                . "?screen_name={$strUser}"
-                . "&count={$intCount}"
-                . "&include_rts=" . ( $fIncludeRetweets ? 1 : 0 )
-                . "&exclude_replies=" . ( $fExcludeReplies ? 1 : 0 );
-            
-            return $this->doAPIRequest_Get( $strRequestURI, null, $intCacheDuration, array( 'statuses', '/statuses/user_timeline' ) );
+            $_sRequestURI = add_query_arg(
+                array(
+                    'screen_name'       => $sUser,
+                    'count'             => 200,     // set maximum
+                    'include_rts'       => $bIncludeRetweets ? 1 : 0,
+                    'exclude_replies'   => $bExcludeReplies ? 1 : 0,
+                ),
+                'https://api.twitter.com/1.1/statuses/user_timeline.json'
+            );
+            return $this->doAPIRequest_Get( 
+                $_sRequestURI, 
+                null, 
+                $iCacheDuration, 
+                array( 
+                    'statuses', 
+                    '/statuses/user_timeline' 
+                )
+            );
                     
         }
     

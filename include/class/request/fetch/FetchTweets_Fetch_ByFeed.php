@@ -12,7 +12,7 @@ abstract class FetchTweets_Fetch_ByFeed extends FetchTweets_Fetch_ByHomeTimeline
     /**
      * Retrieves tweets of the given feed.
      * 
-     * @since            2.1
+     * @since       2.1
      */
     protected function _getTweetsByJSONFeed( $sFeedURL, $iCacheDuration=600 ) {
         
@@ -22,9 +22,12 @@ abstract class FetchTweets_Fetch_ByFeed extends FetchTweets_Fetch_ByHomeTimeline
             return array();            
         }
         
-        return $this->doAPIRequest_Get( $sFeedURL, '_not_api_request', $iCacheDuration );
-        
-        
+        return $this->doAPIRequest_Get( 
+            $sFeedURL, 
+            '_not_api_request', 
+            $iCacheDuration 
+        );
+          
     }
     
     

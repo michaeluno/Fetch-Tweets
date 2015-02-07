@@ -12,25 +12,32 @@ abstract class FetchTweets_Fetch_ByTweetID extends FetchTweets_Fetch_ByCustomReq
     /**
      * Retrieves tweets by the given tweet IDs.
      * 
-     * @see                https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid
+     * @see              https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid
      * @since            2.3
      */
     protected function _getResponseByTweetID( $sTweetIDs, $iCacheDuration ) {
         
-        $_aTweetIDs = preg_split( "/[,]\s*/", trim( ( string ) $sTweetIDs ), 0, PREG_SPLIT_NO_EMPTY );
-        
+        $_aTweetIDs = preg_split( "/[,]\s*/", trim( ( string ) $sTweetIDs ), 0, PREG_SPLIT_NO_EMPTY );        
         $_aResponse = array();
         foreach( $_aTweetIDs as $__sTweetID ) {
         
-            $_aQueryArgs = array(
-                'id'                =>    $__sTweetID,
+            $_aResponse[] = $this->doAPIRequest_Get( 
+                add_query_arg( 
+                    array(
+                        'id' => $__sTweetID,
+                    ), 
+                    "https://api.twitter.com/1.1/statuses/show.json" 
+                ),  // request URI
+                null, 
+                $iCacheDuration, 
+                array( 
+                    'statuses',
+                    '/statuses/show/:id'
+                )
             );
-            $_sRequestURI = add_query_arg( $_aQueryArgs, "https://api.twitter.com/1.1/statuses/show.json" );            
-            $_aResponse[] = $this->doAPIRequest_Get( $_sRequestURI, null, $iCacheDuration, array( 'statuses', '/statuses/show/:id' ) );
             
         }
         return $_aResponse;
-        
         
     }
     

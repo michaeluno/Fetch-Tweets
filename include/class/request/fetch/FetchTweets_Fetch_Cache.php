@@ -46,10 +46,10 @@ abstract class FetchTweets_Fetch_Cache {
             // If the keys are directly given to the class constructor, use them.
             if ( $sConsumerKey && $sConsumerSecret && $sAccessToken && $sAccessSecret ) {
                 return array(
-                    'consumer_key' => $sConsumerKey,
-                    'consumer_secret' => $sConsumerSecret,
-                    'access_token' => $sAccessToken,
-                    'access_secret' => $sAccessSecret,
+                    'consumer_key'      => $sConsumerKey,
+                    'consumer_secret'   => $sConsumerSecret,
+                    'access_token'      => $sAccessToken,
+                    'access_secret'     => $sAccessSecret,
                 );
             }
             
