@@ -1,5 +1,8 @@
 == Change log ==
 
+= 2.4.6
+- Added `overflow-y: hidden` to the container element when the width is 1005 to remove the vertical scroll bar.
+
 = 2.4.4 =
 - Tweaked the width of the container element as imagees wer not shurunk on some sites.
 

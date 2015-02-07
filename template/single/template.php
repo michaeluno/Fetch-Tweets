@@ -102,7 +102,9 @@ $aArgs['follow_button_screen_name'] = isset( $aArgs['follow_button_screen_name']
 $aArgs['follow_button_count']       = isset( $aArgs['follow_button_count'] ) ? $aArgs['follow_button_count'] : ( $aArgs['follow_button_elements']['follower_count'] ? $aArgs['follow_button_elements']['follower_count'] : "false" );
 
 $sWidth             = $aArgs['width'] ? "max-width: " . $aArgs['width'] . $aArgs['width_unit'] . "; " : '';
-$sHeight            =  $aArgs['height'] ? "max-height: " . $aArgs['height'] . $aArgs['height_unit'] . "; " : '';
+$sHeight            = $aArgs['height'] ? "max-height: " . $aArgs['height'] . $aArgs['height_unit'] . "; " : '';
+$sBackgroundColor   = $aArgs['background_color'] ? "background-color: {$aArgs['background_color']}; " : '';
+$sOverflowY         = '100%' === $aArgs['height'] . $aArgs['height_unit'] ? 'overflow-y: hidden; ' : '';     // removes the vertical scroll bar.
 $sMarginTop         = empty( $aArgs['margin_top'] ) ? "" : $aArgs['margin_top'] . $aArgs['margin_top_unit'];
 $sMarginRight       = empty( $aArgs['margin_right'] ) ? "" : $aArgs['margin_right'] . $aArgs['margin_right_unit'];
 $sMarginBottom      = empty( $aArgs['margin_bottom'] ) ? "" : $aArgs['margin_bottom'] . $aArgs['margin_bottom_unit'];
@@ -130,8 +132,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
  */ 
 ?>
 
-<div class="fetch-tweets-single-container" style="<?php echo $sWidth; ?><?php echo $sHeight; ?>background-color: <?php echo $aArgs['background_color']; ?>; <?php echo $sMargins; ?> <?php echo $sPaddings; ?>">
-    
+<div class="fetch-tweets-single-container" style="<?php echo esc_attr( $sWidth . $sHeight . $sBackgroundColor . $sMargins . $sPaddings . $sOverflowY ); ?>">
     <div class='fetch-tweets-single-heading'>
         <?php if ( $aArgs['avatar_size'] > 0  && $aArgs['visibilities']['avatar'] ) : ?>
         <div class='fetch-tweets-single-profile-image' style="max-width:<?php echo $aArgs['avatar_size'];?>px; float:<?php echo $aArgs['avatar_position']; ?>; clear:<?php echo $aArgs['avatar_position']; ?>;">

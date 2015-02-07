@@ -243,6 +243,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 == Changelog ==
 
 = 2.4.6 =
+- Fixed an issue with the default templates that a vertical scroll bar did not disappear in some themes even when the height is set to `100%`.
 - Fixed a compatibility issue with extension plugins that arguments and tweets were not formatted.
 
 = 2.4.5 - 02/03/2015 =

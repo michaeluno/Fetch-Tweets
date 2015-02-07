@@ -84,7 +84,9 @@ $aArgs['follow_button_count']       = isset( $aArgs['follow_button_count'] ) ? $
 
 
 $sWidth             = $aArgs['width'] ? "max-width: " . $aArgs['width'] . $aArgs['width_unit'] . "; " : '';
-$sHeight            =  $aArgs['height'] ? "max-height: " . $aArgs['height'] . $aArgs['height_unit'] . "; " : '';
+$sHeight            = $aArgs['height'] ? "max-height: " . $aArgs['height'] . $aArgs['height_unit'] . "; " : '';
+$sBackgroundColor   = $aArgs['background_color'] ? "background-color: {$aArgs['background_color']}; " : '';
+$sOverflowY         = '100%' === $aArgs['height'] . $aArgs['height_unit'] ? 'overflow-y: hidden; ' : '';     // removes the vertical scroll bar.
 $sMarginTop         = empty( $aArgs['margin_top'] ) ? 0 : $aArgs['margin_top'] . $aArgs['margin_top_unit'];
 $sMarginRight       = empty( $aArgs['margin_right'] ) ? 0 : $aArgs['margin_right'] . $aArgs['margin_right_unit'];
 $sMarginBottom      = empty( $aArgs['margin_bottom'] ) ? 0 : $aArgs['margin_bottom'] . $aArgs['margin_bottom_unit'];
@@ -111,7 +113,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
 // Start the layout. 
 ?>
 
-<div class='fetch-tweets' style="<?php echo $sWidth; ?><?php echo $sHeight; ?>background-color: <?php echo $aArgs['background_color']; ?>; <?php echo $sMargins; ?> <?php echo $sPaddings; ?>">
+<div class='fetch-tweets' style="<?php echo esc_attr( $sWidth . $sHeight . $sBackgroundColor . $sMargins . $sPaddings . $sOverflowY ); ?>">
 
     <?php foreach ( $aTweets as $_aDetail ) : ?>
     <?php 
