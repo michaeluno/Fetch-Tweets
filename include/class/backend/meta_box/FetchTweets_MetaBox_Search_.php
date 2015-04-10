@@ -51,6 +51,9 @@ class FetchTweets_MetaBox_Search_ extends FetchTweets_AdminPageFramework_MetaBox
                 'field_id'        => 'language',
                 'title'           => __( 'Language ', 'fetch-tweets' ),
                 'type'            => 'select',
+                // @see https://dev.twitter.com/rest/reference/get/search/tweets
+                // @todo list all the items listed in this page http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+                // @todo use a method (function) to set this array as extension plugin also needs to set this.
                 'label'           => array( 
                     'none' => __( 'Any Language', 'fetch-tweets' ),
                     'am' => __( 'Amharic (አማርኛ)', 'fetch-tweets' ),
@@ -132,11 +135,11 @@ class FetchTweets_MetaBox_Search_ extends FetchTweets_AdminPageFramework_MetaBox
                 'description'     => __( 'Restricts tweets to users located within a given radius of the given latitude/longitude. Leave them empty not to set any.', 'fetch-tweets' ),
                 'type'            => 'geometry',
 
-// TODO: convert the latitude key to 0 and the longitude key to 1 for APF v2
-// 'label'            => array(
-    // 'latitude' => __( 'Latitude', 'fetch-tweets' ),
-    // 'longitude' => __( 'Longitude', 'fetch-tweets' ),
-// ),
+                // @todo: convert the latitude key to 0 and the longitude key to 1 for APF v2
+                // 'label'            => array(
+                    // 'latitude' => __( 'Latitude', 'fetch-tweets' ),
+                    // 'longitude' => __( 'Longitude', 'fetch-tweets' ),
+                // ),
             ),
             array(    // since 1.3.3
                 'field_id'        => 'geocentric_radius',
