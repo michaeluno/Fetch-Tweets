@@ -230,7 +230,7 @@ class FetchTweets_ListTable_ extends WP_List_Table {
         }   
         
         $_oOption->saveOptions();
-        wp_redirect( admin_url( 'edit.php?post_type=' . FetchTweets_Commons::PostTypeSlug . '&page=' . FetchTweets_Commons::PageSlug_Templates ) );
+        wp_redirect( admin_url( 'edit.php?post_type=' . FetchTweets_Commons::PostTypeSlug . '&page=' . FetchTweets_Commons::$aPageSlugs[ 'template' ] ) );
         
     }
 

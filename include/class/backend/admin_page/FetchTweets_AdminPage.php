@@ -33,7 +33,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
         // Disable object caching in the plugin pages to help some caching plugins not to prevent the settings from being saved.
         if (
             isset( $_GET['post_type'] )
-            && in_array( $_GET['post_type'], array( FetchTweets_Commons::PostTypeSlug, FetchTweets_Commons::PostTypeSlugAccounts ) )
+            && in_array( $_GET['post_type'], array( FetchTweets_Commons::PostTypeSlug, FetchTweets_Commons::$aPostTypes['account'] ) )
         ) {
             $GLOBALS['_wp_using_ext_object_cache'] = false;    
         }        
@@ -212,8 +212,8 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
         if ( ! $this->oOption->isAuthKeysManuallySet() && ! $this->oOption->isAuthKeysAutomaticallySet() ) { 
             $_sSettingPageURL = add_query_arg( array( 'post_type' => 'fetch_tweets', 'page' => 'fetch_tweets_settings', 'tab' => 'twitter_redirect' ), admin_url( $this->oProp->sPageNow ) ); 
             $this->setAdminNotice(
-                "<strong>" . FetchTweets_Commons::PluginName . "</strong>: "
-                . sprintf( __( '<a href="%1$s">The API authentication keys need to be set</a> in order to use this plugin.', 'fetch-tweets' ), $_sSettingPageURL )            
+                "<strong>" . FetchTweets_Commons::NAME . "</strong>: "
+                . sprintf( __( '<a href="%1$s">The API authentication keys need to be set</a> in order to use this plugin.', 'fetch-tweets' ), $_sSettingPageURL )
             );
         } 
         

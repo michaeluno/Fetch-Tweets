@@ -172,7 +172,7 @@ final class FetchTweets_Bootstrap {
     public function _replyToSetUpLocalization() {
         
         load_plugin_textdomain( 
-            FetchTweets_Commons::TextDomain, 
+            FetchTweets_Commons::TEXT_DOMAIN, 
             false, 
             dirname( plugin_basename( $this->_sFilePath ) ) . '/language/'
         );

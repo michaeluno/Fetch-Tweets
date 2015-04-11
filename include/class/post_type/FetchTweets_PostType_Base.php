@@ -33,7 +33,7 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
         );
 
         $this->addTaxonomy( 
-            FetchTweets_Commons::PrimaryTaxonomySlug, 
+            FetchTweets_Commons::TagSlug, 
             array(
                 'labels'                => $this->oProp->bIsAdmin 
                     ? $this->_getTaxonomyTagLabelArgumnents()

@@ -16,15 +16,15 @@
  */
 class FetchTweets_Commons_Base {
     
-	const Version        = '2.4.7b01';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
-	const Name           = 'Fetch Tweets';
-	const Description    = 'Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.';
+	const VERSION        = '2.4.7b01';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
+	const NAME           = 'Fetch Tweets';
+	const DESCRIPTION    = 'Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.';
 	const URI            = 'http://en.michaeluno.jp/fetch-tweets';
-	const Author         = 'miunosoft (Michael Uno)';
-	const AuthorURI      = 'http://en.michaeluno.jp/';
-	const Copyright      = 'Copyright (c) 2013-2014, Michael Uno';
-	const License        = 'GPL v2 or later';
-	const Contributors   = '';
+	const AUTHOR         = 'miunosoft (Michael Uno)';
+	const AUTHOR_URI     = 'http://en.michaeluno.jp/';
+	const COPYRIGHT      = 'Copyright (c) 2013-2014, Michael Uno';
+	const LICENSE        = 'GPL v2 or later';
+	const CONTRIBUTORS   = '';
     
     /**
      * Returns the information of this class.
@@ -63,19 +63,73 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	public static $sPluginSiteWide      = '';   // deprecated
 	public static $sPluginStoreURI      = '';   // will be deprecated
 	
-	const TextDomain                    = 'fetch-tweets';
-    const TextDomainPath                = '/languange';
-	const PluginName                    = 'Fetch Tweets';
-	const PostTypeSlug                  = 'fetch_tweets';
-	const PostTypeSlugAccounts          = 'fetchtweets_accounts';		// post type slugs cannot exceed 20 characters. 
+	const TEXT_DOMAIN                   = 'fetch-tweets';
+    const TEXT_DOMAIN_PATH              = '/languange';
+
+    /**
+     * Stores the main post type slug.
+     * @remark      Some extensions access this class constant.
+     * @remark      Use the `$aPosTypes['main']` static property. This is kept for backward compatibility.
+     * @deprecated
+     */
+	const PostTypeSlug                  = 'fetch_tweets';   
+    
+    /**
+     * 
+     * @since       2.4.7
+     * @remark      post type slugs cannot exceed 20 characters. 
+     */
+    public static $aPostTypes = array(
+        'main'      => 'fetch_tweets',
+        'account'   => 'fetchtweets_accounts',
+    );
+    
+    /**
+     * The plugin main taxonomy slug.
+     * 
+     * @remark      Some extensions access this value.
+     */
 	const TagSlug                       = 'fetch_tweets_tag';
+    
+    /**
+     * The plugin option key.
+     * 
+     * @remark      Some extensions access this value.
+     */
 	const AdminOptionKey                = 'fetch_tweets_admin';
+    
+    /**
+     * The plugin setting page slug.
+     * @remark      Some extensions access this value.
+     */
 	const PageSettingsSlug              = 'fetch_tweets_settings';
-    const PageSlug_Templates            = 'fetch_tweets_templates';
+    
+    /**
+     * Stores page slugs.
+     * @since       2.4.7
+     */
+    static public $aPageSlugs = array(
+        'template' => 'fetch_tweets_templates',
+    );
+    
+    /**
+     * The plugin transient prefix.
+     * @remark      Accessed from some extensions.
+     */
 	const TransientPrefix               = 'FTWS';
+    
+    /**
+     * 
+     * @remark      Accessed from some extensions.
+     */
 	const ConsumerKey                   = '97LqHiMs06VhV2rf5tUQw';
 	const ConsumerSecret                = 'FIH9cr0eXtd7q9caYVqBjd5mvfUS6hZqREYsUhh9wA';
-    const PrimaryTaxonomySlug           = 'fetch_tweets_tag';
+    
+    /**
+     * 
+     * @deprecated      2.4.7
+     */
+    // const PrimaryTaxonomySlug           = 'fetch_tweets_tag';
 	
 	static public function setUp( $sPluginFilePath ) {
 		
@@ -85,14 +139,14 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 		// These static properties are for backward compatibility.
         self::$sPluginPath          = $sPluginFilePath;             // backward compat
         self::$sPluginDirPath       = self::$sDirPath;              // backward compat
-        self::$sPluginName          = self::Name;
-        self::$sPluginVersion       = self::Version;
-        self::$sPluginDescription   = self::Description;
-        self::$sPluginAuthor        = self::Author;
-        self::$sPluginAuthorURI     = self::AuthorURI;
+        self::$sPluginName          = self::NAME;
+        self::$sPluginVersion       = self::VERSION;
+        self::$sPluginDescription   = self::DESCRIPTION;
+        self::$sPluginAuthor        = self::AUTHOR;
+        self::$sPluginAuthorURI     = self::AUTHOR_URI;
         self::$sPluginStoreURI      = 'http://michaeluno.jp';
-        self::$sPluginTextDomain    = self::TextDomain;
-        self::$sPluginDomainPath    = self::TextDomainPath;
+        self::$sPluginTextDomain    = self::TEXT_DOMAIN;
+        self::$sPluginDomainPath    = self::TEXT_DOMAIN_PATH;
         
 	}
 	
