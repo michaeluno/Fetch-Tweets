@@ -3,8 +3,8 @@ Contributors:       Michael Uno, miunosoft
 Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.3
-Tested up to:       4.1.0
-Stable tag:         2.4.5
+Tested up to:       4.1.1
+Stable tag:         2.4.6
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,6 +142,8 @@ http://your-site.domain/page-slug/?screen_name=miunosoft
 http://your-site.domain/page-slug/?q=wordpress
 `
 
+- **show_meessage_on_no_result** - [2.4.7+] true / false. Determines whether a message should be shown when no result is fetched.
+
 = How to Create Own Template =
 
 **Step 1**
@@ -154,8 +156,8 @@ Edit the following files.
 
 * **style.css** - defines the template's CSS rules. Also some of the information in the header comment sections will appear in the template listing table.
 * **template.php** - defines the layout of the tweets. PHP coding skill is required.
-* **functions.php** ( optional ) - loaded if the template is activated when the plugin starts. If you don't edit this file, do not include it. Be careful not to declare any PHP function or class that is already declared in the original file.
-* **settings.php** ( optional ) - loaded only in the admin area if the template is activated. If you don't edit this file, do not include it. Be careful not to declare any PHP function or class that is already declared in the original file.
+* **functions.php** (optional) - loaded if the template is activated when the plugin starts. If you don't edit this file, do not include it. Be careful not to declare any PHP function or class that is already declared in the original file.
+* **settings.php** (optional) - loaded only in the admin area if the template is activated. If you don't edit this file, do not include it. Be careful not to declare any PHP function or class that is already declared in the original file.
 
 In the *style.css* file, include the comment area ( with /* */ ) at the top of the file with the following entries.
 
@@ -175,7 +177,7 @@ e.g.
 	Version: 1.0.0
 */`
 
-**Step 3** ( optional )
+**Step 3** (optional)
 
 Include a thumbnail image. Prepare an image with the name screenshot.jpg, screenshot.png, or screenshot.gif, and place the image in the working(copied in step 1) folder.
 
@@ -241,6 +243,10 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 5. ***Authentication***
 
 == Changelog ==
+
+= 2.4.7 - 04/11/2015 =
+- Added the `show_meessage_on_no_result` argument.
+- Added more languages for the Search rule type.
 
 = 2.4.6 - 02/08/2015 =
 - Added progress bars for rate limit statuses in the plugin setting page.
