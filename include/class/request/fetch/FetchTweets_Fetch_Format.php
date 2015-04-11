@@ -2,7 +2,7 @@
 /**
  * Formats fetched tweets data.
  * 
- * @package            Fetch Tweets
+ * @package          Fetch Tweets
  * @subpackage        
  * @copyright        Michael Uno
  * @since            1.3.4
@@ -88,13 +88,14 @@ abstract class FetchTweets_Fetch_Format extends FetchTweets_Fetch_APIRequest {
         }            
     
     /**
-     * Formats the tweets.
+     * Formats the tweets array.
      * 
-     * @since           1.x
-     * @since           1.3.3           Added the ability to eliminate duplicated items for mash up results.
-     * @since           2.3.1            
+     * @since       1.x
+     * @since       1.3.3           Added the ability to eliminate duplicated items for mash up results.
+     * @since       2.3.1            
+     * @return      void
      */
-    protected function _formatTweetArrays( & $aTweets, $aArgs ) {
+    protected function _formatTweetArrays( array & $aTweets, $aArgs ) {
 
         // To prevent duplicates.
         $_aTweetIDs = array();

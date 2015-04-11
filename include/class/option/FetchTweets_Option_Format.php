@@ -30,7 +30,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         'capabilities'          => array(),
         'cache_settings'        => array(
             'cache_for_errors'  => false,
-            'caching_mode'      =>    'normal',    // [2.1+]
+            'caching_mode'      =>    'normal',    // 2.1+
         ),
         'search'                =>    array(
             'is_searchable'    => false,
@@ -60,14 +60,14 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         
         // for custom function calls
         'q'                     => null,    
-        'screen_name'           => null,    // 
-        'include_rts'           => 0,        // 
-        'exclude_replies'       => 0,        // 
-        'cache'                 => 1200,    // Cache lifespan in seconds.
-        'lang'                  => null,    // 
-        'result_type'           => 'mixed',    // 
-        'until'                 => '',        // since 1.3.3
-        'geocode'               => '',        // since 1.3.3 - this is for shortcode parametrs while geocentric_coordinate and geocentric_radius are for the meta box options.
+        'screen_name'           => null,    
+        'include_rts'           => 0,       
+        'exclude_replies'       => 0,       
+        'cache'                 => 1200,     // Cache lifespan in seconds.
+        'lang'                  => null,    
+        'result_type'           => 'mixed',  
+        'until'                 => '',       // since 1.3.3
+        'geocode'               => '',       // since 1.3.3 - this is for shortcode parametrs while geocentric_coordinate and geocentric_radius are for the meta box options.
         'geocentric_coordinate' => array(    // since 1.3.3
             'latitude'  => '',
             'longitude' => '',
@@ -77,13 +77,16 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
             'unit' => 'mi',
         ),
         
-        // [1.2.0+]
+        // 1.2.0+
         'list_id'               => null,    
         'twitter_media'         => true,
         'external_media'        => true,
         
-        // [2+]
+        // 2+
         'account_id'            => null,    // do not set the default ID of 0 here. The fetching method will check if the value is set and if so, it considers as the home timeline tweet type.
+        
+        // 2.4.7+
+        'show_error_on_no_result'   => true,
         
     );
     public $aStructure_DefaultTemplateOptions = array(

@@ -5,9 +5,6 @@
  * @package           Fetch Tweets
  * @subpackage        
  * @copyright         Michael Uno
- * @filter            fetch_tweets_template_path - specifies the template path.
- * @action            fetch_tweets_action_transient_renewal - for WP Cron single event.
- * @action            fetch_tweets_action_transient_add_oembed_elements - for WP Cron single event.
  */
 abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
     
@@ -45,7 +42,7 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
      *    list_id - default: null. e.g. 8044403
      *    twitter_media - ( boolean ) determines whether the Twitter media should be displayed or not. Currently only photos are supported by the Twitter API.
      *    external_media - ( boolean ) determines whether the plugin attempts to replace external media links to embedded elements.
-     *
+     * show_messagae_on_no_result - 2.4.7+ default: true
      * Template options
      *    template - the template slug.
      *    width - 
@@ -57,21 +54,17 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
      */    
     public function drawTweets( $aArgs ) {
 
-        $_aTweets   = $this->getTweetsAsArray( $aArgs );
-        if ( empty( $_aTweets ) || ! is_array( $_aTweets ) ) {
-            _e( 'No result could be fetched.', 'fetch-tweets' );
-            return;
-        }
-        if ( isset( $_aTweets['errors'][ 0 ]['message'], $_aTweets['errors'][ 0 ]['code'] ) ) {
-            echo '<strong>Fetch Tweets</strong>: ' . $_aTweets['errors'][ 0 ]['message'] . ' ' . __( 'Code', 'fetch-tweets' ) . ':' . $_aTweets['errors'][ 0 ]['code'];    
-            return;
-        }
-        if ( isset( $_aTweets['error'] ) && $_aTweets['error'] && is_string( $_aTweets['error'] ) ) {
-            echo '<strong>Fetch Tweets</strong>: ' . $_aTweets['error'];    
+        $_aTweets   = $this->getTweetsAsArray( 
+            $aArgs // Passed by reference. Gets formatted and updated in the method.
+        );
+        $_sError    = $this->_getErrorMessage( $_aTweets, $aArgs );
+        if ( $_sError ) {
+            echo $_sError;
             return;
         }
     
-        // Include the template to render the output - this method is also called from filter callbacks( which requires a return value ) but go ahead and render the output. 
+        // Include the template to render the output - this method is also called from filter callbacks (which requires a return value)
+        // but go ahead and render the output. 
         $this->_includeTemplate(
             $_aTweets, 
             $aArgs, 
@@ -79,7 +72,29 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
         );
          
     }
-
+    
+    /**
+     * 
+     * @since       2.4.7
+     * @return      string      the error message. An empty string on no error.
+     */
+    private function _getErrorMessage( array $_aTweets, array $aArgs ) {
+                
+        if ( empty( $_aTweets ) ) {
+            return isset( $aArgs[ 'show_error_on_no_result' ] ) && $aArgs[ 'show_error_on_no_result' ]
+                ? __( 'No result could be fetched.', 'fetch-tweets' )
+                : '';
+        }
+        
+        if ( isset( $_aTweets['errors'][ 0 ]['message'], $_aTweets['errors'][ 0 ]['code'] ) ) {
+            return '<strong>Fetch Tweets</strong>: ' . $_aTweets['errors'][ 0 ]['message'] . ' ' . __( 'Code', 'fetch-tweets' ) . ':' . $_aTweets['errors'][ 0 ]['code'];    
+        }
+        if ( isset( $_aTweets['error'] ) && $_aTweets['error'] && is_string( $_aTweets['error'] ) ) {
+            return '<strong>Fetch Tweets</strong>: ' . $_aTweets['error'];    
+        }        
+        return '';
+        
+    }
     
     /**
      * Fetches tweets based on the argument.
@@ -87,7 +102,9 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
      * @remark      The scope is public as the feed extension uses it.
      * @since       unknown
      * @since       2.4.6       Deprecated the second parameter.
-     * @param       array       $aArgs      The argument array that is merged with the default option values. It is passed by reference to let assign post meta options.
+     * @param       array       $aArgs      The argument array that is merged with the default option values. 
+     * It is passed by reference to format the arguments. Also to let post meta options being applied.
+     * @return      array
      */
     public function getTweetsAsArray( & $aArgs, $mDeprecated=null ) {    
         
