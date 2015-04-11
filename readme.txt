@@ -247,6 +247,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 = 2.4.7 - 04/11/2015 =
 - Added the `show_meessage_on_no_result` argument.
 - Added more languages for the Search rule type.
+- Updated the [Admin Page Framework](http://admin-page-framework/michaeluno.jp/) library.
 
 = 2.4.6 - 02/08/2015 =
 - Added progress bars for rate limit statuses in the plugin setting page.
