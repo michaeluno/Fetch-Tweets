@@ -3,7 +3,6 @@
 abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_PostType {
 // abstract class FetchTweets_PostType_ extends AdminPageFramework_PostType {
     
-    // public function setUp() {
     public function start() {
 
         $this->oOption = $GLOBALS['oFetchTweets_Option'];
@@ -27,7 +26,6 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
                     ? FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
                     : '',        
                 'exclude_from_search' => ! FetchTweets_Option::get( array( 'search', 'is_searchable' ) ),
-                // 'exclude_from_search' => ! $this->oOption->aOptions['search']['is_searchable'],
                 
             )        
         );
@@ -43,7 +41,7 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
                 'hierarchical'          => false,
                 'show_admin_column'     => true,
                 'show_in_nav_menus'     => false,
-                'show_table_filter'     => true,        // framework specific key
+                'show_table_filter'     => true,    // framework specific key
                 'show_in_sidebar_menus' => true,    // framework specific key
             )
         );
@@ -137,15 +135,12 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
         
         return    array(
             'cb'                =>    '<input type="checkbox" />',    // Checkbox for bulk actions. 
-            'title'                =>    __( 'Rule Name', 'fetch-tweets' ),        // Post title. Includes "edit", "quick edit", "trash" and "view" links. If $mode (set from $_REQUEST['mode']) is 'excerpt', a post excerpt is included between the title and links.
-            'tweettype'            =>    __( 'Tweet Type', 'fetch-tweets' ),
-            'template'            =>    __( 'Template',    'fetch-tweets' ),
-            // 'author'            => __( 'Author', 'fetch-tweets' ),        // Post author.
-            'fetch_tweets_tag'    => __( 'Tags', 'fetch-tweets' ),    // Tags for the post. 
-            'code'                => __( 'Shortcode / PHP Code', 'fetch-tweets' ),
-            // 'date'            => __( 'Date', 'fetch-tweets' ),     // The date and publish status of the post. 
-        );            
-        
+            'title'             =>    __( 'Rule Name', 'fetch-tweets' ),        // Post title. Includes "edit", "quick edit", "trash" and "view" links. If $mode (set from $_REQUEST['mode']) is 'excerpt', a post excerpt is included between the title and links.
+            'tweettype'         =>    __( 'Tweet Type', 'fetch-tweets' ),
+            'template'          =>    __( 'Template',    'fetch-tweets' ),
+            'fetch_tweets_tag'  => __( 'Tags', 'fetch-tweets' ),    // Tags for the post. 
+            'code'              => __( 'Shortcode / PHP Code', 'fetch-tweets' ),
+        );                    
         
     }    
 
@@ -162,7 +157,9 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
         $_aTerms = get_the_terms( $iPostID, FetchTweets_Commons::TagSlug );
     
         // If no tag is assigned to the post,
-        if ( empty( $_aTerms ) ) return '—';
+        if ( empty( $_aTerms ) ) {
+            return '—';
+        }
     
         // Loop through each term, linking to the 'edit posts' page for the specific term. 
         $_aOutput = array();
@@ -199,7 +196,7 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
     }
     
     /**
-     * Retursn the template name by post ID.
+     * Returns the template name by post ID.
      */
     public function cell_fetch_tweets_template( $sCell, $iPostID ) {    // cell_{post type slug}_{column key}
 
