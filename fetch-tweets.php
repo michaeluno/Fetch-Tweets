@@ -5,7 +5,7 @@
 	Description:    Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.
 	Author:         miunosoft (Michael Uno)
 	Author URI:     http://michaeluno.jp
-	Version:        2.4.7b01
+	Version:        2.4.7
 	Requirements:   PHP 5.2.4 or above, WordPress 3.3 or above.
 */
 
@@ -16,13 +16,13 @@
  */
 class FetchTweets_Commons_Base {
     
-	const VERSION        = '2.4.7b01';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
+	const VERSION        = '2.4.7';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
 	const NAME           = 'Fetch Tweets';
 	const DESCRIPTION    = 'Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.';
 	const URI            = 'http://en.michaeluno.jp/fetch-tweets';
 	const AUTHOR         = 'miunosoft (Michael Uno)';
 	const AUTHOR_URI     = 'http://en.michaeluno.jp/';
-	const COPYRIGHT      = 'Copyright (c) 2013-2014, Michael Uno';
+	const COPYRIGHT      = 'Copyright (c) 2013-2015, Michael Uno';
 	const LICENSE        = 'GPL v2 or later';
 	const CONTRIBUTORS   = '';
     
