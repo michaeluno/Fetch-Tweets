@@ -12,8 +12,9 @@
  * Defines an in-page tab.
  * 
  * @since       2.4.5
+ * @since       2.4.8       Changed the class name from `FetchTweets_AdminPage_Setting_General_Cache`
  */
-class FetchTweets_AdminPage_Setting_General_Cache extends FetchTweets_AdminPage_Section_Base {
+class FetchTweets_AdminPage_Setting_Cache_Cache extends FetchTweets_AdminPage_Section_Base {
 
     /**
      * Called when adding fields.
@@ -39,7 +40,18 @@ class FetchTweets_AdminPage_Setting_General_Cache extends FetchTweets_AdminPage_
                 ),
                 'after_label'    => '<br />',
                 'default'        => 'normal',
-            )     
+            ),    
+            array(  // single button
+                'field_id'          => 'submit_cache_settings',
+                'type'              => 'submit',
+                'before_field'      => "<div class='right-button'>",
+                'after_field'       => "</div>",
+                'label_min_width'   => 0,
+                'label'             => __( 'Save Changes', 'fetch-tweets' ),
+                'attributes'        => array(
+                    'class'    => 'button button-primary',
+                ),
+            )            
         );     
         
     }    

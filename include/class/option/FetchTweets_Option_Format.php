@@ -42,6 +42,12 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         'content_security_policy' => array(
             'disable_warnings' => false,
         ),
+        
+        // 2.4.8+
+        'sensitive_material'        => array(
+            'possibly_sensitive'            => 'do_nothing', // 'remove', 'replace_media_with_message'          
+        )
+        
     );
     
     public $aStructure_DefaultParams = array(

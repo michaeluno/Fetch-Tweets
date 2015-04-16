@@ -229,7 +229,7 @@ See the How to Create Own Template section of the **[Other Notes](http://wordpre
 <h4>Troubleshooting</h4>
 <h5><strong>Why don't tweets update?</strong></h5>
 
-It could be that your host disables WP Cron. In that case, try the `intense` caching mode which can be configured via `Dashboard` -> `Fetch Tweets` -> `Settings` -> `General` -> `Cache Settings` -> `Caching Mode`.
+It could be that your host disables WP Cron. In that case, try the `intense` caching mode which can be configured via `Dashboard` -> `Fetch Tweets` -> `Settings` -> `Cache` -> `Cache Settings` -> `Caching Mode`.
 
 <h5><strong>I get the error "WordPress database error: [Lost connection to MySQL server during query]"?</strong></h5>
 
@@ -247,6 +247,8 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 = 2.4.8 =
 - Added the `apply_template_on_no_result` argument.
+- Added the `Possibly Sensitive Materials` option.
+- Changed the locations of some settings in the plugin admin pages.
 - Changed the access rights set in the plugin settings applied to the menu/page access rights of the rule listing, definition, and tag pages.
 
 = 2.4.7 - 04/11/2015 =

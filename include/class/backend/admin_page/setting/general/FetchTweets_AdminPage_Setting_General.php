@@ -33,15 +33,24 @@ class FetchTweets_AdminPage_Setting_General extends FetchTweets_AdminPage_Tab_Ba
                     . __( 'These values will be overridden by the argument set directly to the widget options or shortcode.', 'fetch-tweets' ),
             )        
         );
-        new FetchTweets_AdminPage_Setting_General_Cache(
+        new FetchTweets_AdminPage_Setting_General_SensitiveMaterial(
             $oFactory,
             $this->sPageSlug,        
             array(
-                'section_id'    => 'cache_settings',
+                'section_id'    => 'sensitive_material',
                 'tab_slug'      => 'general',
-                'title'         => __( 'Cache Settings', 'fetch-tweets' ),
-            )     
-        );
+                'title'         => __( 'Sensitive Materials', 'fetch-tweets' ),
+            )        
+        );     
+        new FetchTweets_AdminPage_Setting_MISC_ContentSecurity(
+            $oFactory,
+            $this->sPageSlug,
+            array(
+                'section_id'    => 'content_security_policy',
+                'tab_slug'      => 'general',
+                'title'         => __( 'Content Security Policy', 'fetch-tweets' ),
+            )        
+        );           
         new FetchTweets_AdminPage_Setting_General_Search(
             $oFactory,
             $this->sPageSlug,        

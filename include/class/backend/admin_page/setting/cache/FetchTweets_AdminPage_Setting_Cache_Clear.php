@@ -12,8 +12,9 @@
  * Defines an in-page tab.
  * 
  * @since       2.4.5
+ * @since       2.4.8       Changed the name from `FetchTweets_AdminPage_Setting_Reset_Cache`.
  */
-class FetchTweets_AdminPage_Setting_Reset_Cache extends FetchTweets_AdminPage_Section_Base {
+class FetchTweets_AdminPage_Setting_Cache_Clear extends FetchTweets_AdminPage_Section_Base {
 
     /**
      * Called when adding fields.
@@ -26,6 +27,10 @@ class FetchTweets_AdminPage_Setting_Reset_Cache extends FetchTweets_AdminPage_Se
                 'field_id'          => 'clear_caches',
                 'title'             => __( 'Clear Tweet Caches', 'fetch-tweets' ),
                 'type'              => 'submit',
+                'href'              => add_query_arg(
+                    $_GET,
+                    isset( $GLOBALS['pagenow'] ) ? $GLOBALS['pagenow'] : 'edit.php'
+                ),
                 'label'             => __( 'Clear', 'fetch-tweets' ),
                 'description'   => __( 'If you need to refresh the fetched tweets, clear the caches.', 'fetch-tweets' ),
                 'attributes'        => array(

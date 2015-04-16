@@ -32,15 +32,6 @@ class FetchTweets_AdminPage_Setting_Reset extends FetchTweets_AdminPage_Tab_Base
                 'title'         => __( 'Reset Settings', 'fetch-tweets' ),
             )
         );
-        new FetchTweets_AdminPage_Setting_Reset_Cache(
-            $oFactory,
-            $this->sPageSlug,
-            array(
-                'section_id'    => 'caches',
-                'tab_slug'      => 'reset',
-                'title'         => __( 'Caches', 'fetch-tweets' ),
-            )            
-        );
         
     }
     

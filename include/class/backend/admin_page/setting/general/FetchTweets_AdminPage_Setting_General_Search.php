@@ -29,7 +29,7 @@ class FetchTweets_AdminPage_Setting_General_Search extends FetchTweets_AdminPage
                 'label'             => __( 'Make the preview pages of created rules searchable with the WordPress search form.', 'fetch-tweets' ),
             ),        
             array(  // single button
-                'field_id'          => 'submit_cache_settings',
+                'field_id'          => 'submit_general_settings',
                 'type'              => 'submit',
                 'before_field'      => "<div class='right-button'>",
                 'after_field'       => "</div>",
