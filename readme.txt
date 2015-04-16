@@ -142,7 +142,8 @@ http://your-site.domain/page-slug/?screen_name=miunosoft
 http://your-site.domain/page-slug/?q=wordpress
 `
 
-- **show_meessage_on_no_result** - [2.4.7+] true / false. Determines whether a message should be shown when no result is fetched.
+- **show_error_on_no_result** - [2.4.7+] true / false. Determines whether a message should be shown when no result is fetched.
+- **apply_template_on_no_result** - [2.4.8+] true / false. Determines whether a plugin template should be applied to the fetched tweets data when no result is fetched.
 
 = How to Create Own Template =
 
@@ -244,8 +245,12 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
+= 2.4.8 =
+- Added the `apply_template_on_no_result` argument.
+- Changed the access rights set in the plugin settings applied to the menu/page access rights of the rule listing, definition, and tag pages.
+
 = 2.4.7 - 04/11/2015 =
-- Added the `show_meessage_on_no_result` argument.
+- Added the `show_error_on_no_result` argument.
 - Added more languages for the Search rule type.
 - Updated the [Admin Page Framework](http://admin-page-framework/michaeluno.jp/) library.
 

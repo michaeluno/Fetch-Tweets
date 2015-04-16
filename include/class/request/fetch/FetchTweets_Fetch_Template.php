@@ -11,6 +11,30 @@
 abstract class FetchTweets_Fetch_Template extends FetchTweets_Fetch_Format {
     
     /**
+     * Outputs the tweets by applying the template.
+     * 
+     * This method is also called from filter callbacks (which requires a return value)
+     * 
+     * @since       2.4.8
+     * @remark      Echoes an output.
+     * @remark      The scope must be public as some extension plugins access this method.
+     * @return      void
+     */
+    public function applyTemplate( array $aTweets, array $aArgs ) {
+
+        if ( empty( $aTweets ) && ! $aArgs[ 'apply_template_on_no_result' ] ) {
+            return;
+        }    
+        
+        $this->_includeTemplate(
+            $aTweets, 
+            $aArgs, 
+            $this->oOption->aOptions 
+        );
+        
+    }      
+    
+    /**
      * Includes the template.
      * 
      * @since       2

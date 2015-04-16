@@ -42,7 +42,8 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
      *    list_id - default: null. e.g. 8044403
      *    twitter_media - ( boolean ) determines whether the Twitter media should be displayed or not. Currently only photos are supported by the Twitter API.
      *    external_media - ( boolean ) determines whether the plugin attempts to replace external media links to embedded elements.
-     * show_messagae_on_no_result - 2.4.7+ default: true
+     * show_error_on_no_result     - 2.4.7+ default: true
+     * apply_template_on_no_result - 2.4.8+ default: true
      * Template options
      *    template - the template slug.
      *    width - 
@@ -57,28 +58,25 @@ abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
         $_aTweets   = $this->getTweetsAsArray( 
             $aArgs // Passed by reference. Gets formatted and updated in the method.
         );
-        $_sError    = $this->_getErrorMessage( $_aTweets, $aArgs );
+        $_sError    = $this->getErrorMessage( $_aTweets, $aArgs );
         if ( $_sError ) {
             echo $_sError;
             return;
         }
     
-        // Include the template to render the output - this method is also called from filter callbacks (which requires a return value)
-        // but go ahead and render the output. 
-        $this->_includeTemplate(
-            $_aTweets, 
-            $aArgs, 
-            $this->oOption->aOptions 
-        );
-         
+        // Output the tweets by applying the template 
+        $this->applyTemplate( $_aTweets, $aArgs );
+        
     }
-    
+ 
     /**
+     * Generates error message from the tweets array.
      * 
      * @since       2.4.7
+     * @since       2.4.8       Changed the scope to public to let some extension plugins access this method.
      * @return      string      the error message. An empty string on no error.
      */
-    private function _getErrorMessage( array $_aTweets, array $aArgs ) {
+    private function getErrorMessage( array $_aTweets, array $aArgs ) {
                 
         if ( empty( $_aTweets ) ) {
             return isset( $aArgs[ 'show_error_on_no_result' ] ) && $aArgs[ 'show_error_on_no_result' ]

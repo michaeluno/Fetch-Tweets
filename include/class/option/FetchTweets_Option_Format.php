@@ -86,7 +86,10 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         'account_id'            => null,    // do not set the default ID of 0 here. The fetching method will check if the value is set and if so, it considers as the home timeline tweet type.
         
         // 2.4.7+
-        'show_error_on_no_result'   => true,
+        'show_error_on_no_result'       => true,
+        
+        // 2.4.8
+        'apply_template_on_no_result'   => true,
         
     );
     public $aStructure_DefaultTemplateOptions = array(
