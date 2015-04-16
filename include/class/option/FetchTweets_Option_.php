@@ -224,9 +224,6 @@ abstract class FetchTweets_Option_ extends FetchTweets_Option_Format {
      * Returns the specified option value.
      * 
      * @since       2.3.5
-     * @todo        This method uses FetchTweets_AdminPageFramework_WPUtility which belongs to the framework files.
-     * The framework files are loaded only when is_admin() yields true. This means this method will throw an error 
-     * when a third-party extension uses in the front-end. So this limitation should be removed.
      */
     static public function get( $asKey=null, $vDefault=null ) {
                 
