@@ -1,7 +1,18 @@
 <?php
+/**
+ * Fetches and display tweets.
+ *
+ * @package     Fetch Tweets
+ * @copyright   Copyright (c) 2013-2015, Michael Uno
+ * @authorurl   http://michaeluno.jp
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * 
+ */
 
+/**
+ * Defines the main plugin post type used for tweet fetching rules.
+ */
 abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_PostType {
-// abstract class FetchTweets_PostType_ extends AdminPageFramework_PostType {
     
     public function setUp() {
 
