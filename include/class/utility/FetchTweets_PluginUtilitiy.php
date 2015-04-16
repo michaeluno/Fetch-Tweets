@@ -4,9 +4,9 @@
  *
  * @package     Fetch Tweets
  * @copyright   Copyright (c) 2013, Michael Uno
- * @authorurl    http://michaeluno.jp
+ * @authorurl   http://michaeluno.jp
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since        2.3.6
+ * @since       2.3.6
  * 
  */
 
