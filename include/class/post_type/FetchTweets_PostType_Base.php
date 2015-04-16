@@ -18,7 +18,7 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
 
         $this->oOption = $GLOBALS['oFetchTweets_Option'];
 
-        $_sCapability = FetchTweets_Option::get( array( 'capabilities', 'setting_page_capability' ) );
+        $_sCapability = FetchTweets_Option::get( array( 'capabilities', 'setting_page_capability' ), 'manage_options' );
         
         $this->setArguments(
             array(            // argument - for the array structure, refer to http://codex.wordpress.org/Function_Reference/register_post_type#Arguments
