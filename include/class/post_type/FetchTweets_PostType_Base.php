@@ -3,11 +3,13 @@
 abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_PostType {
 // abstract class FetchTweets_PostType_ extends AdminPageFramework_PostType {
     
-    public function start() {
+    public function setUp() {
 
         $this->oOption = $GLOBALS['oFetchTweets_Option'];
 
-        $this->setPostTypeArgs(
+        $_sCapability = FetchTweets_Option::get( array( 'capabilities', 'setting_page_capability' ) );
+        
+        $this->setArguments(
             array(            // argument - for the array structure, refer to http://codex.wordpress.org/Function_Reference/register_post_type#Arguments
                 'labels'            => $this->oProp->bIsAdmin 
                     ? $this->_getPostTypeLabelArguments() 
@@ -26,7 +28,17 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
                     ? FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
                     : '',        
                 'exclude_from_search' => ! FetchTweets_Option::get( array( 'search', 'is_searchable' ) ),
-                
+                'capabilities' => array(    // 2.4.8+
+                    'publish_posts'         => $_sCapability, // 'publish_assignments',
+                    'edit_posts'            => $_sCapability, // 'edit_assignments',
+                    'edit_others_posts'     => $_sCapability, // 'edit_others_assignments',
+                    'delete_posts'          => $_sCapability, // 'delete_assignments',
+                    'delete_others_posts'   => $_sCapability, // 'delete_others_assignments',
+                    'read_private_posts'    => $_sCapability, // 'read_private_assignments',
+                    'edit_post'             => $_sCapability, // 'edit_assignment',
+                    'delete_post'           => $_sCapability, // 'delete_assignment',
+                    'read_post'             => $_sCapability, // 'read_assignment'
+                ),                
             )        
         );
 
@@ -60,9 +72,10 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
             
         }
         
-        add_filter( 'the_content', array( $this, '_replyToPreviewTweets' ) );    
+        // add_filter( 'the_content', array( $this, '_replyToPreviewTweets' ) );    
                 
     }
+   
         private function _getPostTypeLabelArguments() {            
             return array(
                 'name'                  => __( 'Fetch Tweets', 'fetch-tweets' ),
@@ -102,30 +115,22 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
         // Text links will be inserted here.
     }
     
-    
-    /*
-     * Methods to print out the fetched tweets.
-     * */
-    public function _replyToPreviewTweets( $sContent ) {
 
-        global $post;
-        // Used for the post type single page that functions as preview the result.
-
-        if ( ! isset( $post->post_type ) || $post->post_type != $this->oProp->sPostType ) {
-            return $sContent;
-        }
-
-        $_iPostID = $post->ID;
-        $_iCount  = get_post_meta( $_iPostID, 'item_count', true );
+    /**
+     * Displays tweet previews in the front-end.
+     * 
+     * @since       Unknown
+     * @since       2.4.8       Changed the name from `_replyToPreviewTweets`.
+     */
+    public function content( $sContent ) {
         return $sContent 
             . fetchTweets( 
                 array( 
-                    'id'    => $_iPostID,
-                    'count' => $_iCount,
+                    'id'    => $GLOBALS['post']->ID,
+                    'count' => get_post_meta( $GLOBALS['post']->ID, 'item_count', true ),
                 ),
-                false // do not echo
+                false // do not echo but return the output
             );    
-    
     }
 
     /*
