@@ -3,8 +3,8 @@ Contributors:       Michael Uno, miunosoft
 Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.3
-Tested up to:       4.1.1
-Stable tag:         2.4.7
+Tested up to:       4.2
+Stable tag:         2.4.8
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -244,6 +244,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 5. ***Authentication***
 
 == Changelog ==
+
+= 2.4.9 - 04/25/2015 =
+- Fixed a compatibility issue with WordPress 4.2 in the template listing page.
 
 = 2.4.8 - 04/17/2015 =
 - Added the `apply_template_on_no_result` argument.

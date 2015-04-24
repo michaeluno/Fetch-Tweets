@@ -1,34 +1,46 @@
 <?php
 /**
-    Handles the list table of Fetch Tweets templates. 
-    
- * @package     Fetch Tweets
- * @copyright   Copyright (c) 2013, Michael Uno
- * @authorurl    http://michaeluno.jp
+ * Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.
+ *  
+ * @copyright   Copyright (c) 2013-2015, Michael Uno
+ * @authorurl   http://michaeluno.jp
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since        1.0.0
- * @filters
- *  - fetch_tweets_filter_template_listing_table_action_links
- 
-*/
+ * 
+ */
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-
+/**
+ * Handles the list table of Fetch Tweets templates. 
+ * 
+ * @package     Fetch Tweets
+ * @since       1.0.0
+ * @filter      fetch_tweets_filter_template_listing_table_action_links
+ */
 class FetchTweets_ListTable_ extends WP_List_Table {
     
+    /**
+     * Stores the data of the listing items.
+     * 
+     * @remark      Declare it to be compatible with WordPress v4.2.
+     */
+    public $aData = array();
+       
+    /**
+     * Stores the arguments.
+     * @remark      Declare it to be compatible with WordPress v4.2.
+     */
+    public $aArgs = array();
+       
     /**
      * Sets up properties and hooks.
      */
     public function __construct( $aData ){
-// var_dump( '$aData' );              
-// var_dump( $aData );                
+         
         // Data
         $this->aData = $this->_formatItems( $aData );
-// var_dump( '$this->aData' );
-// var_dump( $this->aData ); 
 
         // Set parent defaults
         $this->aArgs = array(
@@ -53,12 +65,15 @@ class FetchTweets_ListTable_ extends WP_List_Table {
          * Converts the template array into an object as object handles backward compatibility formatting processes.
          * 
          * @since       2.3.9
+         * @return      array
          */
         private function _formatItems( array $aItems ) {
 
             $_aItems = array();
             foreach( $aItems as $_sSlug => $_aItem ) {
-                if ( ! isset( $_aItem[ 'sSlug' ] ) ) { continue; }
+                if ( ! isset( $_aItem[ 'sSlug' ] ) ) {
+                   continue; 
+                }
                 $_aItems[ $_aItem[ 'sSlug' ] ] = new FetchTweets_Template( $_aItem );
             }
             return $_aItems;
@@ -206,18 +221,12 @@ class FetchTweets_ListTable_ extends WP_List_Table {
                 }
             
                 // Set the other templates not to be default.
-/*                 foreach( $this->aData as &$_oTemplate ) {
-                    // $_aTemplate['bIsDefault'] = false;
-                    $_oTemplate->aData['bIsDefault'] = false;
-                }
-                unset( $_oTemplate ); // release the reference in foreach(), to be safe. */
                 foreach( $_oOption->aOptions['arrTemplates'] as &$_aTemplate )  {   // the saved template option array
                     $_aTemplate['bIsDefault'] = false;
                 }
                 unset( $_oTemplate ); // release the reference in foreach(), to be safe.
                 
                 // Enable the selected default template.
-                // $this->aData[ $_REQUEST['template'] ]['bIsDefault'] = true;                
                 $_aDefaultTemplate = $this->aData[ $_REQUEST['template'] ]->aData;
                 $_aDefaultTemplate['bIsDefault'] = true;
                 $_oOption->aOptions['arrTemplates'][ $_REQUEST['template'] ] = $_aDefaultTemplate;
@@ -246,16 +255,17 @@ class FetchTweets_ListTable_ extends WP_List_Table {
          * Define our column headers. 
          */
         $this->_column_headers = array( 
-            $this->get_columns(),     // $arrColumns
-            array(),    // $arrHidden
-            $this->get_sortable_columns()    // $arrSortable
+            $this->get_columns(), // $arrColumns
+            array(), // $arrHidden
+            $this->get_sortable_columns() // $arrSortable
         );
         
      
         /**
          * Process bulk actions.
          */
-        // $this->process_bulk_action(); // in our case, it is dealt before the header is sent. ( with the Admin page class )
+        // in our case, it is dealt before the header is sent. ( with the Admin page class )
+        // $this->process_bulk_action(); 
               
         /**
          * Variables
@@ -305,7 +315,7 @@ class FetchTweets_ListTable_ extends WP_List_Table {
             $_iResult = strcmp( $a->get( $_sOrderBy ), $b->get( $_sOrderBy ) ); //Determine sort order
             return 'asc' === $_sOrder 
                 ? $_iResult 
-                : -$_iResult; //Send final sort direction to usort
+                : -$_iResult; // Send final sort direction to usort
             
         }
             private function _getKeyOfOrderBy() {
