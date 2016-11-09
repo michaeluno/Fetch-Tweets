@@ -204,6 +204,21 @@ class TwitterFetchTweetsOAuth {
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
 
+    /* Proxy Support via WP_HTTP_Proxy */
+	$proxy = new WP_HTTP_Proxy();
+
+	if ( $proxy->is_enabled() && $proxy->send_through_proxy( $url ) ) {
+
+		curl_setopt( $ci, CURLOPT_PROXYTYPE, CURLPROXY_HTTP );
+		curl_setopt( $ci, CURLOPT_PROXY, $proxy->host() );
+		curl_setopt( $ci, CURLOPT_PROXYPORT, $proxy->port() );
+
+		if ( $proxy->use_authentication() ) {
+			curl_setopt( $ci, CURLOPT_PROXYAUTH, CURLAUTH_ANY );
+			curl_setopt( $ci, CURLOPT_PROXYUSERPWD, $proxy->authentication() );
+		}
+	}
+
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
