@@ -1,9 +1,21 @@
 # Externals
-# /tool
+/tool/minifier/class/library/
+/tool/beautifier/class/library/
+*/PHP_Beautifier
+
+# Files containing sensitive information
+*/settings.cfg
+*.ini
+*config.neon
 
 # backup files.
 *.old
 *.bak
+
+# Temporary directories.
+*/_del
+*/_old
+*/_bak
 
 # Compiled source #
 ###################
@@ -42,3 +54,6 @@
 .Trashes
 ehthumbs.db
 Thumbs.db 
+
+# Git Files
+*.stackdump
