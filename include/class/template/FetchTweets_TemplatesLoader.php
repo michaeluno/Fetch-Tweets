@@ -124,7 +124,7 @@ class FetchTweets_TemplatesLoader {
                     case 'enqueue_style':
                         wp_register_style( 
                             "fetch-tweets-" . md5( $_aTemplate['sDirPath'] ),
-                            FetchTweets_WPUtilities::getSRCFromPath( $_sFilePath ) 
+                            FetchTweets_WPUtility::getSRCFromPath( $_sFilePath ) 
                         );
                         wp_enqueue_style( "fetch-tweets-" . md5( $_aTemplate['sDirPath'] ) );
                         break;

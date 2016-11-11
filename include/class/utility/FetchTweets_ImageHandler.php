@@ -269,7 +269,7 @@ class FetchTweets_ImageHandler extends IXR_Message {
         
         // Delete the transient so that the event method can check whether it really needs to be renewed or not.
         // foreach( ( array ) $this->vSetURL as $strURL ) {
-            // FetchTweets_WPUtilities::deleteTransient( $this->strRealCacheModTimePrefix . md5( $strURL ) );
+            // FetchTweets_WPUtility::deleteTransient( $this->strRealCacheModTimePrefix . md5( $strURL ) );
         // }
         
         wp_schedule_single_event( time() + $this->numRenewTime, $this->strCacheRenewEventActionName, array( $this->strImageURL ) );

@@ -37,7 +37,7 @@ class FetchTweets_AdminPage_Setting_Callback extends FetchTweets_AdminPage_Tab_B
     private function _handleAuthenticationCallback() { 
                 
         /* If the oauth_token is old redirect to the authentication page. */
-        $_aTemporaryTokens = FetchTweets_WPUtilities::getTransient( FetchTweets_Commons::TransientPrefix . '_oauth' );
+        $_aTemporaryTokens = FetchTweets_WPUtility::getTransient( FetchTweets_Commons::TransientPrefix . '_oauth' );
         if ( false === $_aTemporaryTokens || ! isset( $_aTemporaryTokens['oauth_token'], $_aTemporaryTokens['oauth_token_secret'] )) {
             exit( 
                 wp_redirect( 

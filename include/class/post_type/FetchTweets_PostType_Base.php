@@ -1,12 +1,11 @@
 <?php
 /**
- * Fetches and display tweets.
- *
- * @package     Fetch Tweets
- * @copyright   Copyright (c) 2013-2015, Michael Uno
- * @authorurl   http://michaeluno.jp
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * Fetch Tweets
  * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
 
 /**
@@ -16,15 +15,13 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
     
     public function setUp() {
 
-        $this->oOption = $GLOBALS['oFetchTweets_Option'];
+        $this->oOption = FetchTweets_Option::getInstance();
 
         $_sCapability = FetchTweets_Option::get( array( 'capabilities', 'setting_page_capability' ), 'manage_options' );
         
         $this->setArguments(
             array(            // argument - for the array structure, refer to http://codex.wordpress.org/Function_Reference/register_post_type#Arguments
-                'labels'            => $this->oProp->bIsAdmin 
-                    ? $this->_getPostTypeLabelArguments() 
-                    : array(),
+                'labels'            => $this->_getPostTypeLabelArguments(),
                 'public'            => true,
                 'menu_position'     => 110,
                 'supports'          => array( 'title' ),
@@ -49,7 +46,8 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
                     'edit_post'             => $_sCapability, // 'edit_assignment',
                     'delete_post'           => $_sCapability, // 'delete_assignment',
                     'read_post'             => $_sCapability, // 'read_assignment'
-                ),                
+                ),   
+                'show_submenu_add_new'  => false,   // 2.5.0+ an admin page will be placed instead                
             )        
         );
 
@@ -66,6 +64,7 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
                 'show_in_nav_menus'     => false,
                 'show_table_filter'     => true,    // framework specific key
                 'show_in_sidebar_menus' => true,    // framework specific key
+                'submenu_order'         => 70,      // 2.5.0
             )
         );
         
@@ -78,13 +77,10 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
             
             $this->setAutoSave( false );
             $this->setAuthorTableFilter( true );            
-            add_filter( 'enter_title_here', array( $this, '_replyToChangeTitleMetaBoxFieldLabel' ) );    // add_filter( 'gettext', array( $this, 'changeTitleMetaBoxFieldLabel' ) );
-            add_action( 'edit_form_after_title', array( $this, 'addTextAfterTitle' ) );    
+            add_filter( 'enter_title_here', array( $this, '_replyToChangeTitleMetaBoxFieldLabel' ) );   
             
         }
-        
-        // add_filter( 'the_content', array( $this, '_replyToPreviewTweets' ) );    
-                
+               
     }
    
         private function _getPostTypeLabelArguments() {            
@@ -117,16 +113,7 @@ abstract class FetchTweets_PostType_Base extends FetchTweets_AdminPageFramework_
     public function _replyToChangeTitleMetaBoxFieldLabel( $sText ) {
         return __( 'Set the rule name here.', 'fetch-tweets' );        
     }
-    
-    public function addTextAfterTitle() {
         
-        $oUserAds = isset( $GLOBALS['oFetchTweetsUserAds'] ) ? $GLOBALS['oFetchTweetsUserAds'] : new FetchTweets_UserAds;
-        echo $oUserAds->getTextAd();
-        
-        // Text links will be inserted here.
-    }
-    
-
     /**
      * Displays tweet previews in the front-end.
      * 

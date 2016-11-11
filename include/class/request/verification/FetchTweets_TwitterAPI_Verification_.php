@@ -29,7 +29,7 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
         
         // Return the cached response if available.
         $_sCacheID  = FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret ) ) );
-        $_vData     = FetchTweets_WPUtilities::getTransient( $_sCacheID );
+        $_vData     = FetchTweets_WPUtility::getTransient( $_sCacheID );
         if ( false !== $_vData ) { return $_vData; }
         
         // Perform the requests.
@@ -45,7 +45,7 @@ abstract class FetchTweets_TwitterAPI_Verification_ {
         
         // Set the cache.
         $_aData         = is_array( $_aStatus ) ? $_aUser + $_aStatus : $_aUser;
-        FetchTweets_WPUtilities::setTransient( $_sCacheID, $_aData, 60 );    // stores the cache only for 60 seconds. 
+        FetchTweets_WPUtility::setTransient( $_sCacheID, $_aData, 60 );    // stores the cache only for 60 seconds. 
         
         return $_aData;    
         

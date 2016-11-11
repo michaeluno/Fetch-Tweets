@@ -59,7 +59,7 @@ class FetchTweets_AdminPage_Setting_Redirect extends FetchTweets_AdminPage_Tab_B
         $_aTemporaryTokens = array();
         $_aTemporaryTokens['oauth_token'] = $_aRequestToken['oauth_token'];
         $_aTemporaryTokens['oauth_token_secret'] = $_aRequestToken['oauth_token_secret'];
-        FetchTweets_WPUtilities::setTransient( FetchTweets_Commons::TransientPrefix . '_oauth', $_aTemporaryTokens, 60*10 );    // 10 minutes
+        FetchTweets_WPUtility::setTransient( FetchTweets_Commons::TransientPrefix . '_oauth', $_aTemporaryTokens, 60*10 );    // 10 minutes
         
         /* If last connection failed don't display authorization link. */
         switch ( $_oConnect->http_code ) {

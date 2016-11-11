@@ -306,10 +306,10 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
             $aTemplate['iIndex']            = isset( $aTemplate['iIndex'] ) ? $aTemplate['iIndex'] : $aTemplate['intIndex'];
             
             // Check mandatory files. Consider the possibility that the user may directly delete the template files/folders.
-            if ( ! FetchTweets_WPUtilities::getReadableFilePath( $aTemplate['sDirPath'] . DIRECTORY_SEPARATOR . 'style.css', $aTemplate['sRelativeDirPath'] . DIRECTORY_SEPARATOR . 'style.css' ) ) {
+            if ( ! FetchTweets_WPUtility::getReadableFilePath( $aTemplate['sDirPath'] . DIRECTORY_SEPARATOR . 'style.css', $aTemplate['sRelativeDirPath'] . DIRECTORY_SEPARATOR . 'style.css' ) ) {
                 return false;
             }
-            if ( ! FetchTweets_WPUtilities::getReadableFilePath( $aTemplate['sDirPath'] . DIRECTORY_SEPARATOR . 'template.php', $aTemplate['sRelativeDirPath'] . DIRECTORY_SEPARATOR . 'template.php' ) ) {
+            if ( ! FetchTweets_WPUtility::getReadableFilePath( $aTemplate['sDirPath'] . DIRECTORY_SEPARATOR . 'template.php', $aTemplate['sRelativeDirPath'] . DIRECTORY_SEPARATOR . 'template.php' ) ) {
                 return false;
             }          
             return $aTemplate;

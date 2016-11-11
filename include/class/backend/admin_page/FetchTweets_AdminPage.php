@@ -5,9 +5,12 @@
  * Fetches and displays tweets from twitter.com.
  * 
  * http://en.michaeluno.jp/fetch-tweets/
- * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
 
+/**
+ * 
+ */
 class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
 
     /**
@@ -16,7 +19,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
     public function start() {
                 
         // Set the option property.
-        $this->oOption = $GLOBALS['oFetchTweets_Option'];
+        $this->oOption = FetchTweets_Option::getInstance();
         
         if ( ! $this->oProp->bIsAdmin ) {
             return;
@@ -148,37 +151,37 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
                 array(
                     'title'         => __( 'Add Rule by Screen Name', 'fetch-tweets' ),
                     'href'          => admin_url( "post-new.php?post_type={$_sPostTypeSlug}&tweet_type=screen_name" ),
-                    'order'         => 1,
+                    'order'         => 10,
                 ),
                 array(
                     'title'         => __( 'Add Rule by Timeline', 'fetch-tweets' ),
                     'href'          => admin_url( "post-new.php?post_type={$_sPostTypeSlug}&tweet_type=home_timeline" ),
+                    'order'         => 20,
                 ),            
                 array(
                     'title'         => __( 'Add Rule by Search', 'fetch-tweets' ),
                     'href'          => admin_url( "post-new.php?post_type={$_sPostTypeSlug}&tweet_type=search" ),
+                    'order'         => 30,
                 )
             );                
         
-            new FetchTweets_AdminPage_AddRuleByList(
-                $this,
-                'fetch_tweets_add_rule_by_list',    // page slug
-                __( 'Add Rule by List', 'fetch-tweets' ),   // page title
-                FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
-            );  
+            new FetchTweets__AdminPage__AddRuleByList( $this );  
             
             $this->addSubMenuItems(
                 array(
                     'title'         => __( 'Add Rule by Feed', 'fetch-tweets' ),
                     'href'          => admin_url( "post-new.php?post_type={$_sPostTypeSlug}&tweet_type=feed" ),
+                    'order'         => 50,
                 ),                
                 array(
                     'title'         => __( 'Add Rule by Tweet ID', 'fetch-tweets' ),
                     'href'          => admin_url( "post-new.php?post_type={$_sPostTypeSlug}&tweet_type=tweet_id" ),
+                    'order'         => 60,
                 ),            
                 array(
                     'title'         => __( 'Add Rule by Custom Query', 'fetch-tweets' ),
                     'href'          => admin_url( "post-new.php?post_type={$_sPostTypeSlug}&tweet_type=custom_query" ),
+                    'order'         => 70,
                 )
             );
             new FetchTweets_AdminPage_Setting(
@@ -187,25 +190,25 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
                 __( 'Settings', 'fetch-tweets' ),
                 FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
             );
-            new FetchTweets_AdminPage_Extension(
-                $this,
-                'fetch_tweets_extensions',
-                __( 'Extensions', 'fetch-tweets' ),
-                FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
-            );
             new FetchTweets_AdminPage_Template(
                 $this,
                 'fetch_tweets_templates',
                 __( 'Templates', 'fetch-tweets' ),
                 FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
             );
-
+            new FetchTweets_AdminPage_Extension(
+                $this,
+                'fetch_tweets_extensions',
+                __( 'Extensions', 'fetch-tweets' ),
+                FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
+            );
+            
         }            
     
     /**
      * Gets loaded one of the plugin admin page started loading.
      */
-    public function load_FetchTweets_AdminPage( $oAdminPage ) {
+    public function load() {
         
         $this->_setUpStyles();
          

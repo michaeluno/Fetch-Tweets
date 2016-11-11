@@ -5,7 +5,7 @@
  * Fetches and displays tweets from twitter.com.
  * 
  * http://en.michaeluno.jp/fetch-tweets/
- * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
  
 /**
@@ -37,6 +37,7 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
                 'title'        => __( 'Contact', 'fetch-tweets' ),
                 'page_slug'    => 'fetch_tweets_contact',
                 'screen_icon'  => 'feedback',
+                'order'        => 200,
             )
         );
 
@@ -48,9 +49,9 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
     /**
      * The pre-defined callback method triggered when one of the added pages loads
      */
-    public function load_FetchTweets_AdminPage_Contact( $oAdminPage ) { // load_{instantiated class name}
+    public function load() { 
 
-        /* ( optional ) Determine the page style */
+        // ( optional ) Determine the page style.
         $this->setPageHeadingTabsVisibility( false ); // disables the page heading tabs by passing false.
         $this->setInPageTabTag( 'h2' ); // sets the tag used for in-page tabs     
         $this->setPageTitleVisibility( false, 'fetch_tweets_contact' ); // disable the page title of a specific page.
@@ -59,8 +60,10 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
     
     /**
      * Do page specific settings.
+     * 
+     * @callback        action      load_{page slug}
      */
-    public function load_fetch_tweets_contact() {    // load_ + {page slug}
+    public function load_fetch_tweets_contact() {    
     
         $this->addInPageTabs( 
             'fetch_tweets_contact',  // the target page slug 
@@ -212,7 +215,7 @@ class FetchTweets_AdminPage_Contact extends FetchTweets_AdminPageFramework {
         
     }
         /**
-         * Returns the options array by removing private informatin.
+         * Returns the options array by removing private information.
          * 
          * It is the stored options of the main demo class
          * 

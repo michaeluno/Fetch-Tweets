@@ -29,7 +29,7 @@ abstract class FetchTweets_Extensions_ {
         $strURLID = md5( serialize( $arrURLs ) );
         
         if ( ! isset( $this->arrFeedItems[ $strURLID ] ) && $fCacheRenew == false ) {
-            $this->arrFeedItems[ $strURLID ] = FetchTweets_WPUtilities::getTransient( $this->strTransientPrefix . $strURLID, array() );
+            $this->arrFeedItems[ $strURLID ] = FetchTweets_WPUtility::getTransient( $this->strTransientPrefix . $strURLID, array() );
             unset( $this->arrFeedItems[ $strURLID ][0] );    // casting array causes the 0 key,
         }
             
@@ -58,7 +58,7 @@ abstract class FetchTweets_Extensions_ {
             }
         
             // This life span should be little longer than the feed cache life span, which is 1700.
-            FetchTweets_WPUtilities::setTransient( $this->strTransientPrefix . $strURLID, $this->arrFeedItems[ $strURLID ], 1800 );    // 30 minutes    
+            FetchTweets_WPUtility::setTransient( $this->strTransientPrefix . $strURLID, $this->arrFeedItems[ $strURLID ], 1800 );    // 30 minutes    
             
         }
         

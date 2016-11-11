@@ -88,7 +88,7 @@ class FetchTweets_AdminPage_Setting_TwitterConnect_Authentication extends FetchT
         $aInput = is_array( $aInput ) ? $aInput : array();    
         
         // the transient needs to be removed 
-        FetchTweets_WPUtilities::deleteTransient( 
+        FetchTweets_WPUtility::deleteTransient( 
             FetchTweets_Commons::TransientPrefix . '_' . md5( 
                 serialize( 
                     array(  
@@ -100,7 +100,7 @@ class FetchTweets_AdminPage_Setting_TwitterConnect_Authentication extends FetchT
                 ) 
             )
         );
-        FetchTweets_WPUtilities::deleteTransient(
+        FetchTweets_WPUtility::deleteTransient(
             FetchTweets_Commons::TransientPrefix . '_' . md5( 
                 serialize( 
                     array( 

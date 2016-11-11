@@ -1,13 +1,22 @@
 <?php
 /**
-    A cron task handler class.
-    
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
+ */
+
+/**
+ *  A cron task handler class.
+ *  
  * @package     Fetch Tweets
  * @copyright   Copyright (c) 2013, Michael Uno
  * @authorurl    http://michaeluno.jp
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since        1.3.3.11    
-*/
+ */
 class FetchTweets_Cron  {
         
     /**
@@ -97,7 +106,7 @@ class FetchTweets_Cron  {
     protected function _handleCronTasks( $aActionHooks ) {
 
         $_sTransientName    = md5( get_class() );
-        $_aTasks            = FetchTweets_WPUtilities::getTransient( $_sTransientName );
+        $_aTasks            = FetchTweets_WPUtility::getTransient( $_sTransientName );
         $_nNow              = microtime( true );
         $_nCalledTime       = isset( $_aTasks['called'] ) ? $_aTasks['called'] : 0;
         $_nLockedTime       = isset( $_aTasks['locked'] ) ? $_aTasks['locked'] : 0;
@@ -121,11 +130,11 @@ class FetchTweets_Cron  {
             'locked'    =>    microtime( true ),    // set/renew the locked time
             'called'    =>    $_nCalledTime,        // inherit the called time
         );
-        FetchTweets_WPUtilities::setTransient( $_sTransientName, $aFlagKeys + $_aTasks, $this->getAllowedMaxExecutionTime() ); // lock the process.
+        FetchTweets_WPUtility::setTransient( $_sTransientName, $aFlagKeys + $_aTasks, $this->getAllowedMaxExecutionTime() ); // lock the process.
         $this->_doTasks( $_aTasks );    
 
         // remove tasks but leave the flag element.
-        FetchTweets_WPUtilities::setTransient( $_sTransientName, $aFlagKeys, $this->getAllowedMaxExecutionTime() ); // lock the process.
+        FetchTweets_WPUtility::setTransient( $_sTransientName, $aFlagKeys, $this->getAllowedMaxExecutionTime() ); // lock the process.
         exit;
         
     }
@@ -261,7 +270,7 @@ class FetchTweets_Cron  {
         
             // Retrieve the plugin scheduled tasks array.
             $_sTransientName = md5( get_class() );
-            $_aTasks = FetchTweets_WPUtilities::getTransient( $_sTransientName );
+            $_aTasks = FetchTweets_WPUtility::getTransient( $_sTransientName );
             $_aTasks = $_aTasks ? $_aTasks : array();
             $_nNow = microtime( true );
             
@@ -277,7 +286,7 @@ class FetchTweets_Cron  {
             $_aFlagKeys = array(
                 'called'    =>    $_nNow,
             );
-            FetchTweets_WPUtilities::setTransient( $_sTransientName, $_aFlagKeys + $_aTasks, self::getAllowedMaxExecutionTime() );    // set a locked key so it prevents duplicated function calls due to too many calls caused by simultaneous accesses.
+            FetchTweets_WPUtility::setTransient( $_sTransientName, $_aFlagKeys + $_aTasks, self::getAllowedMaxExecutionTime() );    // set a locked key so it prevents duplicated function calls due to too many calls caused by simultaneous accesses.
             
             // Compose a GET query array
             $_aGet = self::$_aGet;

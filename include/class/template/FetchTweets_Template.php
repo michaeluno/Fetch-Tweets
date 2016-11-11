@@ -121,7 +121,7 @@ class FetchTweets_Template {
      */
     public function getDirPath() {
         $_sRelativeDirPath = $this->getRelativeDirPath();
-        return FetchTweets_WPUtilities::getAbsolutePathFromRelative( untrailingslashit( $_sRelativeDirPath ) );
+        return FetchTweets_WPUtility::getAbsolutePathFromRelative( untrailingslashit( $_sRelativeDirPath ) );
     }
     
     /**
@@ -151,7 +151,7 @@ class FetchTweets_Template {
      */
     public function getURLByFIleName( $sFileName='style.css' ) {
         $_sFilePath = $this->getPathByFileName( $sFileName );
-        return FetchTweets_WPUtilities::getSRCFromPath( $_sFilePath );
+        return FetchTweets_WPUtility::getSRCFromPath( $_sFilePath );
     }
     /**
      * Returns the template related file absolute path by the given file name.
@@ -189,7 +189,7 @@ class FetchTweets_Template {
      * @since       2.3.9
      */
     public function getThumbnailURL()  {
-        return FetchTweets_WPUtilities::getSRCFromPath( $this->getThumbnailPath() );
+        return FetchTweets_WPUtility::getSRCFromPath( $this->getThumbnailPath() );
     }
     /**
      * Returns the thumbnail path.

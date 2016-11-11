@@ -2,10 +2,7 @@
 
 /* Configuration */
 $sTargetBaseDir		= dirname( dirname( dirname( __FILE__ ) ) );
-$sResultFilePath	= $sTargetBaseDir . '/include/fetch-tweets-include-class-file-list-boot.php';
-$sResultFilePath2	= $sTargetBaseDir . '/include/fetch-tweets-include-class-file-list.php';
-$sResultFilePath3	= $sTargetBaseDir . '/include/fetch-tweets-include-class-file-list-admin.php';
-
+$sResultFilePath	= $sTargetBaseDir . '/include/include-list.php';
 
 
 /* If accessed from a browser, exit. */
@@ -33,7 +30,7 @@ echo 'Started...' . $sCarriageReturn;
 // for the boot files
 new PHP_Class_Files_Inclusion_Script_Creator(
 	$sTargetBaseDir,
-	array( $sTargetBaseDir . '/include/class/boot' ), 	// scan directory paths
+	array( $sTargetBaseDir . '/include/class' ), 	// scan directory paths
 	$sResultFilePath, 
 	array(
 		// 'header_class_name'	=>	'TaskScheduler_InclusionScriptHeader',
@@ -50,53 +47,5 @@ new PHP_Class_Files_Inclusion_Script_Creator(
 		),			
 	)
 );
-
-// for the front-end
-new PHP_Class_Files_Inclusion_Script_Creator(
-	$sTargetBaseDir,
-	array( 
-        // $sTargetBaseDir . '/include/library', 
-        $sTargetBaseDir . '/include/class' 
-    ), 	// scan directory paths
-	$sResultFilePath2, 
-	array(
-		// 'header_class_name'	=>	'TaskScheduler_InclusionScriptHeader',
-		'output_buffer'		=>	true,
-		'header_type'		=>	'CONSTANTS',	
-		// 'exclude_classes'	=>	array( 'TaskScheduler_InclusionScriptHeader', 'TaskScheduler_MinifiedVersionHeader' ),
-		'output_var_name'	=>	'$_aClassFiles',		
-		'base_dir_var'  	=>	'FetchTweets_Commons::$sDirPath',
-		'search'			=>	array(
-			'allowed_extensions'	=>	array( 'php' ),	// e.g. array( 'php', 'inc' )
-			'exclude_dir_paths'		=>	array( 
-                $sTargetBaseDir . '/include/class/backend',
-                $sTargetBaseDir . '/include/library',
-            ),
-			'exclude_dir_names'		=>	array(),
-			'is_recursive'			=>	true,
-		),			
-	)
-);
-// for the back-end
-new PHP_Class_Files_Inclusion_Script_Creator(
-	$sTargetBaseDir,
-	array( $sTargetBaseDir . '/include/class/backend' ), 	// scan directory paths
-	$sResultFilePath3, 
-	array(
-		// 'header_class_name'	=>	'TaskScheduler_InclusionScriptHeader',
-		'output_buffer'		=>	true,
-		'header_type'		=>	'CONSTANTS',	
-		// 'exclude_classes'	=>	array( 'TaskScheduler_InclusionScriptHeader', 'TaskScheduler_MinifiedVersionHeader' ),
-		'output_var_name'	=>	'$_aAdminClassFiles',		
-		'base_dir_var'  	=>	'FetchTweets_Commons::$sDirPath',
-		'search'			=>	array(
-			'allowed_extensions'	=>	array( 'php' ),	// e.g. array( 'php', 'inc' )
-			// 'exclude_dir_paths'		=>	array( $sTargetBaseDir . '/include/class/admin' ),
-			'exclude_dir_names'		=>	array(),
-			'is_recursive'			=>	true,
-		),			
-	)
-);
-
 
 echo 'Done!' . $sCarriageReturn;

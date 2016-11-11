@@ -5,7 +5,7 @@
 	Description:    Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.
 	Author:         miunosoft (Michael Uno)
 	Author URI:     http://michaeluno.jp
-	Version:        2.4.9
+	Version:        2.5.0b01
 	Requirements:   PHP 5.2.4 or above, WordPress 3.3 or above.
 */
 
@@ -16,7 +16,7 @@
  */
 class FetchTweets_Commons_Base {
     
-	const VERSION        = '2.4.9';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
+	const VERSION        = '2.5.0b01';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
 	const NAME           = 'Fetch Tweets';
 	const DESCRIPTION    = 'Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.';
 	const URI            = 'http://en.michaeluno.jp/fetch-tweets';
@@ -168,19 +168,60 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	public static function getPluginURL( $sRelativePath='' ) {
 		return plugins_url( $sRelativePath, self::$sPluginPath );
 	}    
+    
+    /**
+     * Requirements.
+     * @since       2.5.0
+     */    
+    static public $aRequirements = array(
+        'php' => array(
+            'version'   => '5.2.4',
+            'error'     => 'The plugin requires the PHP version %1$s or higher.',
+        ),
+        'wordpress'         => array(
+            'version'   => '3.4',
+            'error'     => 'The plugin requires the WordPress version %1$s or higher.',
+        ),
+        'mysql'             => array(
+            'version'   => '5.0',
+            'error'     => 'The plugin requires the MySQL version %1$s or higher.',
+        ),
+        'functions' => array(
+            'curl_version' => 'The plugin requires the cURL library to be installed.',
+        ),
+        // array(
+            // e.g. 'mblang' => 'The plugin requires the mbstring extension.',
+        // ),
+        'classes'           => '', // disabled
+        // array(
+            // e.g. 'DOMDocument' => 'The plugin requires the DOMXML extension.',
+        // ),
+        'constants'         => '', // disabled
+        // array(
+            // e.g. 'THEADDONFILE' => 'The plugin requires the ... addon to be installed.',
+            // e.g. 'APSPATH' => 'The script cannot be loaded directly.',
+        // ),
+        'files'             => '', // disabled
+        // array(
+            // e.g. 'home/my_user_name/my_dir/scripts/my_scripts.php' => 'The required script could not be found.',
+        // ),
+    );
 	
 }
+FetchTweets_Commons::setUp( __FILE__ );
 
 // Do not load if accessed directly. Not exiting here because other scripts will load this main file such as uninstall.php and inclusion list generator 
 // and if it exists their scripts will not complete.
 if ( ! defined( 'ABSPATH' ) ) { 
     return; 
 }
-if ( defined( 'DOING_UNINSTALL' ) ) { 
+if ( defined( 'DOING_UNINSTALL' ) && DOING_UNINSTALL ) { 
     return; 
 }
 
-include( dirname( __FILE__ ). '/include/class/boot/FetchTweets_Bootstrap.php' );
-include( dirname( __FILE__ ). '/include/class/boot/registry/FetchTweets_RegisterClasses.php' );
-include( dirname( __FILE__ ). '/include/function/functions.php' );
-new FetchTweets_Bootstrap( __FILE__ );
+include( dirname( __FILE__ ). '/include/library/apf/admin-page-framework.php' );
+include( dirname( __FILE__ ). '/include/FetchTweets_Bootstrap.php' );
+new FetchTweets_Bootstrap( 
+    __FILE__,       // the plugin main file path
+    'fetch_tweets'  // hook prefix (without underscore)
+);

@@ -10,7 +10,7 @@
  * 
  */
 
-class FetchTweets_PluginUtility extends FetchTweets_WPUtilities {
+class FetchTweets_PluginUtility extends FetchTweets_WPUtility {
     
     /**
      * Returns an array of language list for the Twitter Search API.

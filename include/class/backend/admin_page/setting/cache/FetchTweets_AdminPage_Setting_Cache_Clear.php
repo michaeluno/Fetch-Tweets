@@ -52,7 +52,7 @@ class FetchTweets_AdminPage_Setting_Cache_Clear extends FetchTweets_AdminPage_Se
     public function replyToSubmitField() {
         
         $_aParams = func_get_args();
-        FetchTweets_WPUtilities::clearTransients();
+        FetchTweets_WPUtility::clearTransients();
         
         $_oFactory = $_aParams[ 2 ];
         $_oFactory->setSettingNotice( __( 'The caches have been cleared.', 'fetch-tweets' ) );
