@@ -65,8 +65,21 @@ abstract class FetchTweets__AdminInPageTab__Base extends FetchTweets__AdminEleme
     
     public function replyToDo( $oFactory ) {
         $this->_do( $oFactory );
+        $this->_doDebug( $oFactory );
     }
     
     protected function _do( $oFactory ) {}
+    
+    
+    protected function _doDebug( $oFactory ) {
+        if ( ! $this->isDebugMode() ) {
+            return;
+        }
+        echo "<h3>" . __( 'Saved Options', 'fetch-tweets' ) . "</h3>";
+        echo FetchTweets_AdminPageFramework_Debug::getDetails(
+            $oFactory->oProp->aOptions
+        );
+        
+    }
     
 }

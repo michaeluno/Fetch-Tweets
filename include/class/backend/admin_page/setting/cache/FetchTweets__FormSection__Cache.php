@@ -5,24 +5,31 @@
  * Fetches and displays tweets from twitter.com.
  * 
  * http://en.michaeluno.jp/fetch-tweets/
- * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
 
 /**
- * Defines an in-page tab.
+ * Defines a form section.
  * 
- * @since       2.4.5
- * @since       2.4.8       Changed the class name from `FetchTweets_AdminPage_Setting_General_Cache`
+ * @since       2.5.0   
  */
-class FetchTweets_AdminPage_Setting_Cache_Cache extends FetchTweets_AdminPage_Section_Base {
+class FetchTweets__FormSection__Cache extends FetchTweets__FormSection__Base {
+    
+    /**
+     * @return      array
+     */
+    protected function _getArguments( $oFactory ) {
+        return             array(
+            'section_id'    => 'cache_settings',
+            'title'         => __( 'Cache Settings', 'fetch-tweets' ),
+        );
+    }
 
     /**
-     * Called when adding fields.
-     * @remark      This method should be overridden in each extended class.
+     * @return      array
      */
-    public function addFields( $oFactory, $sSectionID ) {
-
-        $oFactory->addSettingFields(
+    protected function _getFields( $oFactory ) {
+        return array(
             array(
                 'field_id'       => 'cache_for_errors',
                 'title'          => __( 'Cache for Errors', 'fetch-tweets' ),
@@ -41,7 +48,7 @@ class FetchTweets_AdminPage_Setting_Cache_Cache extends FetchTweets_AdminPage_Se
                 'after_label'    => '<br />',
                 'default'        => 'normal',
             ),    
-            array(  // single button
+            array(  
                 'field_id'          => 'submit_cache_settings',
                 'type'              => 'submit',
                 'before_field'      => "<div class='right-button'>",
@@ -51,9 +58,22 @@ class FetchTweets_AdminPage_Setting_Cache_Cache extends FetchTweets_AdminPage_Se
                 'attributes'        => array(
                     'class'    => 'button button-primary',
                 ),
-            )            
-        );     
+                'save'              => false,
+            ),     
+        );
+    }
         
-    }    
+    /**
+     * Validates the submitted form data.
+     * 
+     * @since    2.5.0
+     */
+    protected function _validate( $aInputs, $aOldInput, $oAdminPage, $aSubmitInfo ) {
     
+        $_bVerified = true;
+        $_aErrors   = array();
+        return $aInputs;
+        
+    }
+        
 }

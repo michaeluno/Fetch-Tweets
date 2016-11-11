@@ -77,16 +77,11 @@ class FetchTweets_AdminPage_Setting extends FetchTweets_AdminPage_Page_Base {
                 'order'        => 3,                
             )
         );
-        new FetchTweets_AdminPage_Setting_Cache(
+      
+        new FetchTweets__AdminInPageTab__Cache(
             $oFactory,
-            $this->sPageSlug,    
-            array(
-                'tab_slug'     => 'cache',
-                'title'        => __( 'Cache', 'fetch-tweets' ),
-                'order'        => 4,
-            )
-        );        
-   
+            $this->sPageSlug
+        );
         new FetchTweets__AdminInPageTab__ManageOption(
             $oFactory,
             $this->sPageSlug
