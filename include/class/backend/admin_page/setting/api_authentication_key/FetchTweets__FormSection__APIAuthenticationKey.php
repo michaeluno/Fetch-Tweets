@@ -5,24 +5,32 @@
  * Fetches and displays tweets from twitter.com.
  * 
  * http://en.michaeluno.jp/fetch-tweets/
- * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
 
 /**
- * Defines an in-page tab.
+ * Defines a form section.
  * 
- * @since       2.4.5
- * @action      do      fetch_tweets_action_updated_credentials     Triggered when the Twitter API access credentials are stored.
+ * @since       2.5.0   
  */
-class FetchTweets_AdminPage_Setting_Authentication_Key extends FetchTweets_AdminPage_Section_Base {
+class FetchTweets__FormSection__APIAuthenticationKey extends FetchTweets__FormSection__Base {
+    
+    /**
+     * @return      array
+     */
+    protected function _getArguments( $oFactory ) {
+        return array(
+            'section_id'    => 'authentication_keys',
+            'title'         => __( 'Authentication Keys', 'fetch-tweets' ),
+            'description'   => __( 'These keys are required to process oAuth requests of the twitter API.', 'fetch-tweets' ),
+        );
+    }
 
     /**
-     * Called when adding fields.
-     * @remark      This method should be overridden in each extended class.
+     * @return      array
      */
-    public function addFields( $oFactory, $sSectionID ) {
-
-        $oFactory->addSettingFields(
+    protected function _getFields( $oFactory ) {
+        return array(   
             array(    
                 'field_id'      => 'consumer_key',
                 'title'         => __( 'Consumer Key', 'fetch-tweets' ),
@@ -82,52 +90,42 @@ class FetchTweets_AdminPage_Setting_Authentication_Key extends FetchTweets_Admin
                     'class' => 'button button-primary',
                 ),
             )     
-        );             
+        );
+    }
         
-        add_filter( "validation_{$oFactory->oProp->sClassName}_{$sSectionID}", array( $this, 'replyToValidate' ), 10, 4 );
-                  
-    }    
-
-    /**
-     * Triggered when the manual keys are set and submitted.
-     * 
-     * @since       2
-     * @since       2.4.5       Moved from the admin page class.
-     * @remark      valiudation_{class name}_{section id}
-     */
-    public function replyToValidate( $aInput, $aOldInput, $oFactory, $aSubmitInfo ) {
-
+    protected function _validate( $aInputs, $aOldInputs, $oFactory, $aSubmitInfo ) {
+        
         // Sanitize
-        $aInput['consumer_key']     = trim( $aInput['consumer_key'] );
-        $aInput['consumer_secret']  = trim( $aInput['consumer_secret'] );
-        $aInput['access_token']     = trim( $aInput['access_token'] );
-        $aInput['access_secret']    = trim( $aInput['access_secret'] );
+        $aInputs['consumer_key']     = trim( $aInputs['consumer_key'] );
+        $aInputs['consumer_secret']  = trim( $aInputs['consumer_secret'] );
+        $aInputs['access_token']     = trim( $aInputs['access_token'] );
+        $aInputs['access_secret']    = trim( $aInputs['access_secret'] );
     
         // Check the connection
         $_oConnect = new FetchTweets_TwitterAPI_Verification( 
-            $aInput['consumer_key'],
-            $aInput['consumer_secret'],
-            $aInput['access_token'],
-            $aInput['access_secret']
+            $aInputs['consumer_key'],
+            $aInputs['consumer_secret'],
+            $aInputs['access_token'],
+            $aInputs['access_secret']
         );
         $_aStatus = $_oConnect->getStatus();    
         
         // If it's connected, add the connection status
         if ( isset( $_aStatus['id_str'] ) ) {
             
-            $aInput['user_id']          = $_aStatus['id_str'];
-            $aInput['screen_name']      = $_aStatus['screen_name'];
-            $aInput['is_connected']     = true;
-            $aInput['connect_method']   = 'manual';
+            $aInputs['user_id']          = $_aStatus['id_str'];
+            $aInputs['screen_name']      = $_aStatus['screen_name'];
+            $aInputs['is_connected']     = true;
+            $aInputs['connect_method']   = 'manual';
             
         } else {
-            $aInput['is_connected']     = false;
-            $aInput['connect_method']   = 'manual';
+            $aInputs['is_connected']     = false;
+            $aInputs['connect_method']   = 'manual';
         }
         
-        do_action( 'fetch_tweets_action_updated_credentials', $aInput );
-        return $aInput;
+        do_action( 'fetch_tweets_action_updated_credentials', $aInputs );
+        return $aInputs;        
         
     }
-   
+    
 }

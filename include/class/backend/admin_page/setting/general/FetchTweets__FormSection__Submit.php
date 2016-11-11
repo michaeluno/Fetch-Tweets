@@ -21,7 +21,6 @@ class FetchTweets__FormSection__Submit extends FetchTweets__FormSection__Base {
     protected function _getArguments( $oFactory ) {
         return array(
             'section_id'    => '_submit',
-            // 'title'         => __( 'Search', 'fetch-tweets' ),
             'save'          => false,
         );
     }
