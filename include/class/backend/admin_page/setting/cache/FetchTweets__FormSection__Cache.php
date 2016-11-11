@@ -62,18 +62,5 @@ class FetchTweets__FormSection__Cache extends FetchTweets__FormSection__Base {
             ),     
         );
     }
-        
-    /**
-     * Validates the submitted form data.
-     * 
-     * @since    2.5.0
-     */
-    protected function _validate( $aInputs, $aOldInput, $oAdminPage, $aSubmitInfo ) {
-    
-        $_bVerified = true;
-        $_aErrors   = array();
-        return $aInputs;
-        
-    }
-        
+  
 }

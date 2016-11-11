@@ -67,17 +67,5 @@ class FetchTweets__FormSection__ClearCache extends FetchTweets__FormSection__Bas
             $_oFactory->setSettingNotice( __( 'The caches have been cleared.', 'fetch-tweets' ), 'updated' );
         }
         
-    /**
-     * Validates the submitted form data.
-     * 
-     * @since    2.5.0
-     */
-    protected function _validate( $aInputs, $aOldInput, $oAdminPage, $aSubmitInfo ) {
-    
-        $_bVerified = true;
-        $_aErrors   = array();
-        return $aInputs;
-        
-    }
         
 }

@@ -13,7 +13,7 @@
  * 
  * @since       2.5.0
  */
-class FetchTweets__AdminInPageTab__Cache extends FetchTweets__AdminInPageTab__Base {
+class FetchTweets__AdminInPageTab__Misc extends FetchTweets__AdminInPageTab__Base {
     
     /**
      * @return      array
@@ -21,17 +21,16 @@ class FetchTweets__AdminInPageTab__Cache extends FetchTweets__AdminInPageTab__Ba
      */
     protected function _getArguments( $oFactory ) {
         return array(
-            'tab_slug'     => 'cache',
-            'title'        => __( 'Cache', 'fetch-tweets' ),
-            'order'        => 40,
+            'tab_slug'     => 'misc',
+            'title'        => __( 'Misc', 'fetch-tweets' ),
+            'order'        => 30,
         );
     }
 
     protected function _load( $oFactory ) {
-        new FetchTweets__FormSection__ClearCache( $oFactory, $this->_sPageSlug, $this->_sTabSlug );
-        new FetchTweets__FormSection__Cache( $oFactory, $this->_sPageSlug, $this->_sTabSlug );
+        new FetchTweets__FormSection__Capability( $oFactory, $this->_sPageSlug, $this->_sTabSlug );
     }
     
-    protected function _do( $oFactory ) {}
+
     
 }

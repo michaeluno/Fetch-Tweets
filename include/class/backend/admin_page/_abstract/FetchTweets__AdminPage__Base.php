@@ -14,11 +14,7 @@
  * @since       2.5.0
  */
 abstract class FetchTweets__AdminPage__Base extends FetchTweets__AdminElementBase {
-
-    protected $_oFactory;
-    
-    // protected $_aArguments = array();
-    
+        
     protected $_sPageSlug = '';
     
     /**
@@ -44,8 +40,15 @@ abstract class FetchTweets__AdminPage__Base extends FetchTweets__AdminElementBas
             
             $this->_oFactory->addSubMenuItems( $aArguments );
             add_action( "load_{$sPageSlug}", array( $this, 'replyToLoad' ) );
+            add_action( "do_{$sPageSlug}", array( $this, 'replyToDo' ) );
             
         }
 
+    public function replyToDo( $oFactory ) {
+        $this->_do( $oFactory );
+    }
+    
+    protected function _do( $oFactory ) {}
+    
     
 }

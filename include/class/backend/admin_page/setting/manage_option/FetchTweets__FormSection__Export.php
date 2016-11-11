@@ -36,9 +36,5 @@ class FetchTweets__FormSection__Export extends FetchTweets__FormSection__Base {
             ),
         );
     }
-    
-    protected function _validate( $aInputs, $aOldInputs, $oFactory, $aSubmitInfo ) {
-        return $aInputs;
-    }
-    
+        
 }

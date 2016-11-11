@@ -5,26 +5,34 @@
  * Fetches and displays tweets from twitter.com.
  * 
  * http://en.michaeluno.jp/fetch-tweets/
- * Copyright (c) 2013-2015 Michael Uno; Licensed GPLv2
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
 
 /**
  * Defines an admin page.
  * 
- * @since       2.4.5
+ * @since       2.5.0
  */
-class FetchTweets_AdminPage_Setting extends FetchTweets_AdminPage_Page_Base {
+class FetchTweets__AdminPage__Setting extends FetchTweets__AdminPage__Base {
+
+    protected function _getArguments( $oFactory ) {
+        return array(
+            'page_slug'     => 'fetch_tweets_settings',
+            'title'         => __( 'Settings', 'fetch-tweets' ),
+            'screen_icon'   => FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" ),
+            'order'         => 80,
+        );
+    }
 
     /**
      * Called when the page loads.
-     * 
      */
-    public function replyToLoadPage( $oFactory ) {
+    protected function _load( $oFactory ) {
                 
         // Add in-page-tabs.
         new FetchTweets_AdminPage_Setting_Authentication(
             $oFactory,
-            $this->sPageSlug,
+            $this->_sPageSlug,
             array(
                 'tab_slug'          => 'authentication',    // the manual auth keys input page
                 'title'             => __( 'Authentication', 'fetch-tweets' ),
@@ -34,7 +42,7 @@ class FetchTweets_AdminPage_Setting extends FetchTweets_AdminPage_Page_Base {
         );
         new FetchTweets_AdminPage_Setting_TwitterConnect(
             $oFactory,
-            $this->sPageSlug,        
+            $this->_sPageSlug,        
             array(
                 'tab_slug'     => 'twitter_connect',    // the oAuth connection page
                 'title'        => __( 'Authentication', 'fetch-tweets' ),
@@ -43,7 +51,7 @@ class FetchTweets_AdminPage_Setting extends FetchTweets_AdminPage_Page_Base {
         );
         new FetchTweets_AdminPage_Setting_Redirect(
             $oFactory,
-            $this->sPageSlug,          
+            $this->_sPageSlug,          
             array(
                 'tab_slug'     => 'twitter_redirect',
                 'title'        => __( 'Redirect', 'fetch-tweets' ),
@@ -52,52 +60,21 @@ class FetchTweets_AdminPage_Setting extends FetchTweets_AdminPage_Page_Base {
         );
         new FetchTweets_AdminPage_Setting_Callback(
             $oFactory,
-            $this->sPageSlug,                  
+            $this->_sPageSlug,                  
             array(
                 'tab_slug'     => 'twitter_callback',
                 'title'        => __( 'Callback', 'fetch-tweets' ),
                 'show_in_page_tab'  => false,
             )        
         );
-        new FetchTweets_AdminPage_Setting_General(
-            $oFactory,
-            $this->sPageSlug,     
-            array(
-                'tab_slug'     => 'general',
-                'title'        => __( 'General', 'fetch-tweets' ),
-                'order'        => 2,                
-            )            
-        );
-        new FetchTweets_AdminPage_Setting_MISC(
-            $oFactory,
-            $this->sPageSlug,    
-            array(
-                'tab_slug'     => 'misc',
-                'title'        => __( 'Misc', 'fetch-tweets' ),
-                'order'        => 3,                
-            )
-        );
       
-        new FetchTweets__AdminInPageTab__Cache(
-            $oFactory,
-            $this->sPageSlug
-        );
-        new FetchTweets__AdminInPageTab__ManageOption(
-            $oFactory,
-            $this->sPageSlug
-        );
- 
-        add_action( "do_before_{$this->sPageSlug}", array( $this, 'replyToDoBeforePage' ) );
+        new FetchTweets__AdminInPageTab__General( $oFactory, $this->_sPageSlug );
+        new FetchTweets__AdminInPageTab__Misc( $oFactory, $this->_sPageSlug );
+        new FetchTweets__AdminInPageTab__Cache( $oFactory, $this->_sPageSlug );
+        new FetchTweets__AdminInPageTab__ManageOption( $oFactory, $this->_sPageSlug );
+        
+        $oFactory->setPageTitleVisibility( false );
         
     }
-    
-    /**
-     * Called before the page gets rendered.
-     * 
-     * @remark      do_before_ + page slug
-     */
-    public function replyToDoBeforePage( $oFactory ) {
-        $oFactory->setPageTitleVisibility( false );
-    }
- 
+  
 }

@@ -184,12 +184,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
                     'order'         => 70,
                 )
             );
-            new FetchTweets_AdminPage_Setting(
-                $this,
-                'fetch_tweets_settings',
-                __( 'Settings', 'fetch-tweets' ),
-                FetchTweets_Commons::getPluginURL( "/asset/image/screen_icon_32x32.png" )
-            );
+            new FetchTweets__AdminPage__Setting( $this );
             new FetchTweets_AdminPage_Template(
                 $this,
                 'fetch_tweets_templates',
