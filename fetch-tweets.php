@@ -46,7 +46,7 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
 	static public $sDirPath             = '';       // 2.3.5+
 	public static $sPluginKey           = 'fetch_tweets';          // unknown what this is used for.
 	public static $sAdminKey            = 'fetch_tweets_admin';    // also the below 'AdminOptionKey' constant is being used.
-	public static $sOptionKey           = 'fetch_tweets_option';   // not used at the moment.
+	// public static $sOptionKey           = 'fetch_tweets_option';   // not used at the moment.
 	
 	// The below properties will be assigned automatically
     public static $sPluginPath          = '';

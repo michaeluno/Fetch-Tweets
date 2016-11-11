@@ -33,20 +33,24 @@ if ( file_exists( dirname( __FILE__ ). '/' . $_sMaingPluginFileName ) ) {
    include( $_sMaingPluginFileName );
 }
 
-if ( class_exists( 'FetchTweets_Commons' ) ) :
+if ( ! class_exists( 'FetchTweets_Commons' ) ) {
+    return;
+}
 
-    // Delete the plugin option
-    // delete_option( FetchTweets_Commons::AdminOptionKey );
+// Delete the plugin option
+$_aOptions = get_option( FetchTweets_Commons::$sAdminKey, array() );
+if ( isset( $_aOptions[ 'delete' ][ 'delete_upon_uninstall' ] ) && $_aOptions[ 'delete' ][ 'delete_upon_uninstall' ] ) {
+    delete_option( FetchTweets_Commons::$sAdminKey );
+}
+
+// Delete transients
+$_aPrefixes = array(
+    FetchTweets_Commons::TransientPrefix, // the plugin transients
+    'apf_',      // the admin page framework transients
+);
+foreach( $_aPrefixes as $_sPrefix ) {
+    if ( ! $_sPrefix ) { continue; }
+    $GLOBALS['wpdb']->query( "DELETE FROM `" . $GLOBALS['table_prefix'] . "options` WHERE `option_name` LIKE ( '_transient_%{$_sPrefix}%' )" );
+    $GLOBALS['wpdb']->query( "DELETE FROM `" . $GLOBALS['table_prefix'] . "options` WHERE `option_name` LIKE ( '_transient_timeout_%{$_sPrefix}%' )" );    
+}
     
-    // Delete transients
-    $_aPrefixes = array(
-        FetchTweets_Commons::TransientPrefix, // the plugin transients
-        'apf_',      // the admin page framework transients
-    );
-    foreach( $_aPrefixes as $_sPrefix ) {
-        if ( ! $_sPrefix ) { continue; }
-        $GLOBALS['wpdb']->query( "DELETE FROM `" . $GLOBALS['table_prefix'] . "options` WHERE `option_name` LIKE ( '_transient_%{$_sPrefix}%' )" );
-        $GLOBALS['wpdb']->query( "DELETE FROM `" . $GLOBALS['table_prefix'] . "options` WHERE `option_name` LIKE ( '_transient_timeout_%{$_sPrefix}%' )" );    
-    }
-    
-endif;

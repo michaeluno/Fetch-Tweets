@@ -7,7 +7,7 @@
 abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
     
     protected static $aStructure_Options = array(        
-        'authentication_keys'   => array(
+        'authentication_keys'       => array(
             'consumer_key'      => '',
             'consumer_secret'   => '',
             'access_token'      => '',
@@ -17,7 +17,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
             'is_connected'      => null,    // do not set a default value here as it will be checked if the value is set or not later
             'connect_method'    => 'manual',
         ),
-        'twitter_connect'       => array(
+        'twitter_connect'           => array(
             // do not set 'consumer_key' and the 'consumer_secret' key so that third-party scripts can determine the connection method by checking the existence of the keys.
             'access_token'      => '',
             'access_secret'     => '',
@@ -26,27 +26,32 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
             'is_connected'      => null,    // do not set a default value here as it will be checked if the value is set or not later
             'connect_method'    => 'oauth',
         ),
-        'default_values'        => array(),
-        'capabilities'          => array(),
-        'cache_settings'        => array(
+        'default_values'            => array(),
+        'capabilities'              => array(),
+        'cache_settings'            => array(
             'cache_for_errors'  => false,
             'caching_mode'      =>    'normal',    // 2.1+
         ),
-        'search'                =>    array(
+        'search'                    => array(
             'is_searchable'    => false,
         ),
-        'arrTemplates'          => array(),    // stores template info arrays.
-        'arrDefaultTemplate'    => array(),    // stores the default template info.
+        'arrTemplates'              => array(),    // stores template info arrays.
+        'arrDefaultTemplate'        => array(),    // stores the default template info.
         
         // 2.4.5+
-        'content_security_policy' => array(
+        'content_security_policy'   => array(
             'disable_warnings' => false,
         ),
         
         // 2.4.8+
         'sensitive_material'        => array(
             'possibly_sensitive'            => 'do_nothing', // 'remove', 'replace_media_with_message'          
-        )
+        ),
+        
+        // 2.5.0+
+        'delete'                    => array(
+            'delete_upon_uninstall'    => false,
+        ),
         
     );
     

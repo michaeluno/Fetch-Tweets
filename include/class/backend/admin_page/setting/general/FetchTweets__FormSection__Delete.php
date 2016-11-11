@@ -13,15 +13,15 @@
  * 
  * @since       2.5.0   
  */
-class FetchTweets__FormSection__Search extends FetchTweets__FormSection__Base {
+class FetchTweets__FormSection__Delete extends FetchTweets__FormSection__Base {
     
     /**
      * @return      array
      */
     protected function _getArguments( $oFactory ) {
         return array(
-            'section_id'    => 'search',
-            'title'         => __( 'Search', 'fetch-tweets' ),
+            'section_id'    => 'delete',
+            'title'         => __( 'Delete Settings', 'fetch-tweets' ),
         );
     }
 
@@ -31,11 +31,11 @@ class FetchTweets__FormSection__Search extends FetchTweets__FormSection__Base {
     protected function _getFields( $oFactory ) {
         return array(
             array(
-                'field_id'          => 'is_searchable',
-                'title'             => __( 'Rules', 'fetch-tweets' ),
+                'field_id'          => 'delete_upon_uninstall',
+                'title'             => __( 'Upon Plugin Uninstallation', 'fetch-tweets' ),
                 'type'              => 'checkbox',
-                'label'             => __( 'Make the preview pages of created rules searchable with the WordPress search form.', 'fetch-tweets' ),
-            ),
+                'label'             => __( 'Delete options when the plugin gets uninstalled.', 'fetch-tweets' ),
+            ),        
         );
     }
         
