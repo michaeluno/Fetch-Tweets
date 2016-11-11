@@ -13,10 +13,8 @@
  * 
  * @since       2.5.0   
  */
-abstract class FetchTweets__FormSection__Base extends FetchTweets_PluginUtility {
+abstract class FetchTweets__FormSection__Base extends FetchTweets__AdminElementBase {
 
-    protected $_oFactory;
-    
     protected $_sPageSlug;
     
     protected $_sTabSlug;
@@ -26,10 +24,10 @@ abstract class FetchTweets__FormSection__Base extends FetchTweets_PluginUtility 
     /**
      * Sets up hooks and properties.
      */
-    public function __construct( $oFactory, $sPageSLug='', $sTabSlug='' ) {
+    public function __construct( $oFactory, $sPageSlug='', $sTabSlug='' ) {
         
         $this->_oFactory     = $oFactory;
-        $this->_sPageSlug    = $sPageSLug ? $sPageSLug : $this->_sPageSlug;
+        $this->_sPageSlug    = $sPageSlug ? $sPageSlug : $this->_sPageSlug;
         $this->_sTabSlug     = $sTabSlug ? $sTabSlug : $this->_sTabSlug;
         $this->_aArguments   = $this->_getArguments( $oFactory );
         $this->_sSectionID   = $this->_sSectionID
@@ -52,13 +50,12 @@ abstract class FetchTweets__FormSection__Base extends FetchTweets_PluginUtility 
             // Set the target section id
             $oFactory->addSettingFields( $sSectionID );
             
-            foreach( ( array ) $this->_getFields( $oFactory ) as $_aField ) {
-                $oFactory->addSettingFields( $_aField );
+            // Set field-sets.
+            foreach( ( array ) $this->_getFields( $oFactory ) as $_aFieldset ) {
+                $_aFieldset[ 'tab_slug' ] = $this->getElement( $_aFieldset, 'tab_slug', $this->_sTabSlug );                
+                $oFactory->addSettingFields( $_aFieldset );
             }
             
-            // Call the user method
-            // $this->_addFields( $oFactory, $sSectionID );
-
             add_filter( 
                 'validation_' . $oFactory->oProp->sClassName . '_' . $sSectionID,
                 array( $this, 'replyToValidate' ), 
@@ -67,20 +64,6 @@ abstract class FetchTweets__FormSection__Base extends FetchTweets_PluginUtility 
             );
             
         }
-    
-    protected function _construct( $oFactory ) {
-        
-    }
-        
-    protected function _getArguments( $oFactory ) {
-        return array();
-    }
-
-    /**
-     * Called when adding fields.
-     * @remark      This method should be overridden in each extended class.
-     */
-    protected function _addFields( $oFactory, $sSectionID ) {}
     
     /**
      * @return      array

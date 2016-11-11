@@ -245,6 +245,11 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
+= 2.5.0 =
+- Added the ability to export/import settings.
+- Added the `Manage Options` tab in the setting page.
+- Updated the [Admin Page Framework](http://admin-page-framework/michaeluno.jp/) library.
+
 = 2.4.9 - 04/25/2015 =
 - Fixed a compatibility issue with WordPress 4.2 in the template listing page.
 

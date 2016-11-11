@@ -86,15 +86,11 @@ class FetchTweets_AdminPage_Setting extends FetchTweets_AdminPage_Page_Base {
                 'order'        => 4,
             )
         );        
-        new FetchTweets_AdminPage_Setting_Reset(
+   
+        new FetchTweets__AdminInPageTab__ManageOption(
             $oFactory,
-            $this->sPageSlug,    
-            array(
-                'tab_slug'     => 'reset',
-                'title'        => __( 'Reset', 'fetch-tweets' ),
-                'order'        => 5,                
-            )
-        );        
+            $this->sPageSlug
+        );
  
         add_action( "do_before_{$this->sPageSlug}", array( $this, 'replyToDoBeforePage' ) );
         

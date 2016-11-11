@@ -13,7 +13,7 @@
  * 
  * @since       2.5.0
  */
-abstract class FetchTweets__AdminPage__PageBase extends FetchTweets_PluginUtility {
+abstract class FetchTweets__AdminPage__Base extends FetchTweets__AdminElementBase {
 
     protected $_oFactory;
     
@@ -43,25 +43,9 @@ abstract class FetchTweets__AdminPage__PageBase extends FetchTweets_PluginUtilit
             }
             
             $this->_oFactory->addSubMenuItems( $aArguments );
-            add_action( "load_{$sPageSlug}", array( $this, 'replyToLoadPage' ) );
+            add_action( "load_{$sPageSlug}", array( $this, 'replyToLoad' ) );
             
         }
 
-    /**
-     * Called when the page loads.
-     * 
-     * @remark      This method should be overridden in each extended class.
-     */
-    public function replyToLoadPage( $oFactory ) {
-        $this->_loadPage( $oFactory );
-    }
-    
-    protected function _construct( $oFactory ) {}
-    
-    protected function _getArguments( $oFactory ) { 
-        return array(); 
-    }
-    
-    protected function _loadPage( $oFactory ) {}
     
 }

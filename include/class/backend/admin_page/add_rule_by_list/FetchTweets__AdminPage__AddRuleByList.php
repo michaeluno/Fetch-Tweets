@@ -14,7 +14,7 @@
  * @since       2.4.5
  * @since       2.5.0       Renamed from `FetchTweets_AdminPage_AddRuleByList`.
  */
-class FetchTweets__AdminPage__AddRuleByList extends FetchTweets__AdminPage__PageBase {
+class FetchTweets__AdminPage__AddRuleByList extends FetchTweets__AdminPage__Base {
 
     protected function _getArguments( $oFactory ) {        
         return array(
@@ -29,10 +29,8 @@ class FetchTweets__AdminPage__AddRuleByList extends FetchTweets__AdminPage__Page
      * Called when the page loads.
      * 
      */
-    protected function _loadPage( $oFactory ) {
-                
-        new FetchTweets__FormSection__AddRuleByList( $oFactory, $this->_sPageSlug );
-               
+    protected function _load( $oFactory ) {
+        new FetchTweets__FormSection__AddRuleByList( $oFactory, $this->_sPageSlug );    
     }
     
     
