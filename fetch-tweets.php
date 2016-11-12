@@ -1,13 +1,13 @@
 <?php
-/* 
-	Plugin Name:    Fetch Tweets
-	Plugin URI:     http://en.michaeluno.jp/fetch-tweets
-	Description:    Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.
-	Author:         miunosoft (Michael Uno)
-	Author URI:     http://michaeluno.jp
-	Version:        2.5.0b01
-	Requirements:   PHP 5.2.4 or above, WordPress 3.3 or above.
-*/
+/** 
+ *  Plugin Name:    Fetch Tweets
+ *  Plugin URI:     http://en.michaeluno.jp/fetch-tweets
+ *  Description:    Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.
+ *  Author:         miunosoft (Michael Uno)
+ *  Author URI:     http://michaeluno.jp
+ *  Version:        2.5.0b02
+ *  Requirements:   PHP 5.2.4 or above, WordPress 3.3 or above.
+ */
 
 /**
  * Provides the basic information about the plugin.
@@ -16,7 +16,7 @@
  */
 class FetchTweets_Commons_Base {
     
-	const VERSION        = '2.5.0b01';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
+	const VERSION        = '2.5.0b02';    // <--- DON'T FORGET TO CHANGE THIS AS WELL!!
 	const NAME           = 'Fetch Tweets';
 	const DESCRIPTION    = 'Fetches and displays tweets from twitter.com with the the Twitter REST API v1.1.';
 	const URI            = 'http://en.michaeluno.jp/fetch-tweets';
