@@ -1,10 +1,16 @@
 <?php
 /**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
+ */
+
+/**
  * Provides methods for output templates
  * 
- * @package          Fetch Tweets
- * @subpackage        
- * @copyright        Michael Uno
  * @since            2
  * @filter           fetch_tweets_template_path
  */
