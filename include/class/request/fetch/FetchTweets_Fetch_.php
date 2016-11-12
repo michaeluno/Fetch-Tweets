@@ -1,12 +1,17 @@
 <?php
 /**
- * Fetches and displays tweets.
+ * Fetch Tweets
  * 
- * @package           Fetch Tweets
- * @subpackage        
- * @copyright         Michael Uno
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
-abstract class FetchTweets_Fetch_ extends FetchTweets_Fetch_ByTweetID {
+
+/**
+ * Fetches and displays tweets.
+ */
+class FetchTweets_Fetch extends FetchTweets_Fetch_ByTweetID {
     
     /**
      * Returns the output of tweets by the given arguments.
