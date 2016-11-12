@@ -12,8 +12,7 @@
  * Handles caching of fetched data.
  * 
  * @since            1.3.4
- * 
- * @filter            fetch_tweets_filter_random_credentials
+ * @filter           fetch_tweets_filter_random_credentials
  */
 abstract class FetchTweets_Fetch_Cache {
     
@@ -25,7 +24,7 @@ abstract class FetchTweets_Fetch_Cache {
     public function __construct( $sConsumerKey='', $sConsumerSecret='', $sAccessToken='', $sAccessSecret='' ) {
     
         // Set up the connection.
-        $this->oOption = & $GLOBALS['oFetchTweets_Option'];        
+        $this->oOption = FetchTweets_Option::getInstance();
         
         $this->_aApplicationKeys    = $this->_getApplicationKeys( $sConsumerKey, $sConsumerSecret, $sAccessToken, $sAccessSecret );
         $this->oTwitterOAuth        =  new FetchTweets_TwitterOAuth( 
@@ -324,7 +323,7 @@ abstract class FetchTweets_Fetch_Cache {
     /*
      * Schedules the update cache task.
      * 
-     * This is for the shutdown hook
+     * @callback        action      shutdown
      * */
     public function _replyToUpdateCacheItems() {    
 
