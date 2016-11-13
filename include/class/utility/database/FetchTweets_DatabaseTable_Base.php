@@ -356,4 +356,21 @@ abstract class FetchTweets_DatabaseTable_Base {
         return $_aRows;
     }
         
+    /**
+     * @return      string
+     */
+    public function getTableSize() {
+        $_aResult = $GLOBALS[ 'wpdb' ]->get_results(
+            "SELECT 
+            table_name AS `Table`, 
+            round(((data_length + index_length) / 1024 / 1024), 2) `Size_in_MB` 
+            FROM information_schema.TABLES 
+            WHERE table_schema = (SELECT DATABASE())
+            AND table_name = '{$this->aArguments[ 'table_name' ]}'",
+            'ARRAY_A'
+        ); 
+        return isset( $_aResult[ 0 ][ 'Size_in_MB' ] )
+            ? $_aResult[ 0 ][ 'Size_in_MB' ] . ' MB'
+            : 'n/a';
+    }
 }
