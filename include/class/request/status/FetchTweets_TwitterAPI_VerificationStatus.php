@@ -34,9 +34,8 @@ class FetchTweets_TwitterAPI_VerificationStatus {
      * Prints the verification status table.
      */
     public function render() {
-        
-        FetchTweets_TwitterAPI_Verification::renderStatus( $this->get() );
-        
+        $_oAPIStatus = new FetchTweets_Output_TwitterAPIStatus( $this->get() );
+        $_oAPIStatus->render();
     }
 
     /**
