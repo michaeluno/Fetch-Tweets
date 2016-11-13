@@ -437,9 +437,15 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
      * @since       1.1.0
      */
     private function ___getCacheName( $sString ) {
-        return filter_var( $sString, FILTER_VALIDATE_URL )
+        $_sCacheName = filter_var( $sString, FILTER_VALIDATE_URL )
             ? 'url_type_md5_' . md5( $this->_sRequestType . '_' . $sString )
             : $sString;
+        return apply_filters(
+            'fetch_tweets_filter_http_response_cache_name',
+            $_sCacheName,
+            $sString,
+            $this->_sRequestType
+        );
     }
     
     /**
