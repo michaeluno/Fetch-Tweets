@@ -1,6 +1,6 @@
 <?php
 /**
- * Amazon Auto Links
+ * Fetch Tweets
  * 
  * http://en.michaeluno.jp/amazon-auto-links/
  * Copyright (c) 2013-2016 Michael Uno
@@ -10,7 +10,7 @@
 /**
  * Renews HTTP request caches in the background.
  * 
- * @since        2.5.0
+ * @since       2.5.0
  * @action      add             fetch_tweets_filter_http_response_cache
  * @action      schedule|add    fetch_tweets_action_http_cache_renewal
  */
@@ -90,19 +90,18 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
          */
         private function ___scheduleBackgroundCacheRenewal( $sURL, $iCacheDuration, $aArguments, $sType ) {
             
-            $_sActionName = $this->_sActionName;
             $_aArguments  = array(
                 $sURL,
                 $iCacheDuration,
                 $aArguments,
                 $sType
             );
-            if ( wp_next_scheduled( $_sActionName, $_aArguments ) ) {
+            if ( wp_next_scheduled( $this->_sActionName, $_aArguments ) ) {
                 return false; 
             }
             $_bCancelled = wp_schedule_single_event( 
                 time(), // now
-                $_sActionName, // the FetchTweets_Event class will check this action hook and executes it with WP Cron.
+                $this->_sActionName, // the FetchTweets_Event class will check this action hook and executes it with WP Cron.
                 $_aArguments // must be enclosed in an array.
             );          
             return false === $_bCancelled
