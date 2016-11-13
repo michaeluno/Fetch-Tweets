@@ -32,19 +32,20 @@ class FetchTweets__FormSection__TableSizes extends FetchTweets__FormSection__Bas
     protected function _getFields( $oFactory ) {
                 
         $_oHTTPRequestTable = new FetchTweets_DatabaseTable_ft_http_requests;                
+        $_oTweetsTable      = new FetchTweets_DatabaseTable_ft_tweets;                
         return array(         
             array(
                 'field_id'          => 'http_requests',
                 'title'             => __( 'HTTP Requests', 'fetch-tweets' ),
                 'content'           => "<p>"
-                        . print_r( $_oHTTPRequestTable->getTableSize(), true )
+                        . $_oHTTPRequestTable->getTableSize()
                     . "</p>",
             ),
             array(
                 'field_id'          => 'tweets',
                 'title'             => __( 'Tweets', 'fetch-tweets' ),
                 'content'           => "<p>"
-                        . __( 'Coming soon...', 'fetch-tweets' ) 
+                        . $_oTweetsTable->getTableSize()
                     . "</p>",              
             )                   
         );
