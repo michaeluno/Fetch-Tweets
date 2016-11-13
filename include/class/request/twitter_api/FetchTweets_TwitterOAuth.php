@@ -122,7 +122,12 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
                 );
                 break;
         }
-        return $_oHTTP->get();
+        $_sResponse = $_oHTTP->get();
+        
+        // Must update the properties.
+        $this->http_code = $_oHTTP->getStatusCode();
+        $this->url = $sURL;        
+        return $_sResponse;
         
     }
     
