@@ -99,7 +99,7 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
                     $sURL,
                     $this->iCacheDuration,
                     array(
-                        'body'  => $sPostFields,
+                        'body'  => $sPostFields,    // encoded string 
                     ) + $this->aHTTPArguments
                 );
                 break;
@@ -124,9 +124,10 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
         }
         $_sResponse = $_oHTTP->get();
         
-        // Must update the properties.
+        // Must update the properties. The status code is referred when redirected back from twitter.com in the API authentication process.
         $this->http_code = $_oHTTP->getStatusCode();
-        $this->url = $sURL;        
+        $this->url = $sURL; 
+        
         return $_sResponse;
         
     }
