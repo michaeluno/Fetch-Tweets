@@ -221,25 +221,28 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
      */
     static public $aDatabaseTables = array(
         'ft_tweets'        => array(
-            'name'              => 'ft_tweets',
+            'name'              => 'ft_tweets', // serves as the table name suffix
             'version'           => '0.0.1',
             'across_network'    => true,
+            'class_name'        => 'FetchTweets_DatabaseTable_ft_tweets',
         ),
         'ft_http_requests' => array(
-            'name'              => 'ft_http_requests',
+            'name'              => 'ft_http_requests',  // serves as the table name suffix
             'version'           => '0.0.2',
             'across_network'    => true,
+            'class_name'        => 'FetchTweets_DatabaseTable_ft_http_requests',
         ),
     );
     
     /**
      * Stores the database table versions.
      * @since       3
+     * @deprecated
      */
-    static public $aDatabaseTableVersions = array(
-        'product'       => '1.0.0',
-        'request_cache' => '1.0.0',
-    );    
+    // static public $aDatabaseTableVersions = array(
+        // 'product'       => '1.0.0',
+        // 'request_cache' => '1.0.0',
+    // );    
     
 }
 FetchTweets_Commons::setUp( __FILE__ );
@@ -247,9 +250,6 @@ FetchTweets_Commons::setUp( __FILE__ );
 // Do not load if accessed directly. Not exiting here because other scripts will load this main file such as uninstall.php and inclusion list generator 
 // and if it exists their scripts will not complete.
 if ( ! defined( 'ABSPATH' ) ) { 
-    return; 
-}
-if ( defined( 'DOING_UNINSTALL' ) && DOING_UNINSTALL ) { 
     return; 
 }
 

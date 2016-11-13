@@ -62,18 +62,15 @@ abstract class FetchTweets_DatabaseTable_Base {
      * @since       1.1.0
      */
     public function upgrade() {
+                            
+        $_sExistingVersion = get_option( 
+            $this->aArguments[ 'name' ]  . '_version',
+            $this->aArguments[ 'version' ]  // default
+        );
         
-        if ( $this->___hasTable() ) {
-                    
-            $_sExistingVersion = get_option( 
-                $this->aArguments[ 'name' ]  . '_version',
-                $this->aArguments[ 'version' ]  // default
-            );
-            // If the existent version is above or equal to the set version in the argument, do not upgrade.
-            if ( version_compare( $_sExistingVersion, $this->aArguments[ 'version' ], '>=' ) ) {
-                return array();
-            }
-            
+        // If the existent version is above or equal to the set version in the argument, do not upgrade.
+        if ( version_compare( $_sExistingVersion, $this->aArguments[ 'version' ], '>=' ) ) {
+            return array();
         }
 
         return $this->install( true );

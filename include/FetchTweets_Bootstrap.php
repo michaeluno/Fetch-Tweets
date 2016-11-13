@@ -84,7 +84,7 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
          */
         private function _checkRequirements() {
                 
-            $_oRequirementCheck = new FetchTweets_Requirement(
+            $_oRequirementCheck = new FetchTweets_AdminPageFramework_Requirement(
                 FetchTweets_Commons::$aRequirements,
                 FetchTweets_Commons::NAME
             );        
@@ -146,37 +146,51 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
         // 1. Libraries and required files.
         $this->_include();
         
-        // 2. Option Object - the instantiation will handle the initial set-up
+        // 2. Custom database tables.
+        $this->___handleCustomDatabaseTables();
+        
+        // 3. Option Object - the instantiation will handle the initial set-up
         FetchTweets_Option::getInstance();
 
-        // 3. Load active templates - this must be done after loading the option class as it stores active templates.
+        // 4. Load active templates - this must be done after loading the option class as it stores active templates.
         new FetchTweets_TemplatesLoader;
         
-        // 4. Admin pages
+        // 5. Admin pages
         if ( $this->bIsAdmin ) {
             new FetchTweets_AdminPage( FetchTweets_Commons::$sAdminKey, $this->sFilePath );
             new FetchTweets_AdminPage_Contact( '', $this->sFilePath );
         }
         
-        // 5. Post Type - no need to check is_admin() because posts of custom post type can be accessed from the front-end.
+        // 6. Post Type - no need to check is_admin() because posts of custom post type can be accessed from the front-end.
         new FetchTweets_PostType( FetchTweets_Commons::PostTypeSlug, null, $this->sFilePath );     // post type slug
         
-        // 6. Meta-boxes
+        // 7. Meta-boxes
         if ( $this->bIsAdmin ) {
             $this->_registerMetaBoxes();
         }
                         
-        // 7. Shortcode - enables the shortcode. e.g. [fetch_tweets id="143"]
+        // 8. Shortcode - enables the shortcode. e.g. [fetch_tweets id="143"]
         new FetchTweets_Shortcode( 'fetch_tweets' );    
             
-        // 8. Widgets
+        // 9. Widgets
         add_action( 'widgets_init', 'FetchTweets_WidgetByID::registerWidget' );
         add_action( 'widgets_init', 'FetchTweets_WidgetByTag::registerWidget' );
                 
-        // 9. Events - handles background processes.
+        // 10. Events - handles background processes.
         new FetchTweets_Event;        
 
     }
+        /**
+         * Installs/upgrades database tables.
+         * Since the activation hook is not triggered when the plugin updates,
+         * The table versions must be checked in every page load.
+         */
+        private function ___handleCustomDatabaseTables() {
+            $_oTable  = new FetchTweets_DatabaseTable_ft_http_requests;
+            $_oTable->upgrade();        
+            $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
+            $_oTable->upgrade();                          
+        }
     
         /**
          * Include files.

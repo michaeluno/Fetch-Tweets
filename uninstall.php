@@ -38,9 +38,13 @@ if ( ! class_exists( 'FetchTweets_Commons' ) ) {
 }
 
 // Delete the plugin option
-$_aOptions = get_option( FetchTweets_Commons::$sAdminKey, array() );
-if ( isset( $_aOptions[ 'delete' ][ 'delete_upon_uninstall' ] ) && $_aOptions[ 'delete' ][ 'delete_upon_uninstall' ] ) {
-    delete_option( FetchTweets_Commons::$sAdminKey );
+$_oOption  = FetchTweets_Option::getInstance();
+if ( $_oOption->get( 'delete', 'delete_upon_uninstall' ) ) {
+    $_oOption->delete();
+    $_oTable  = new FetchTweets_DatabaseTable_ft_http_requests;
+    $_oTable->uninstall();        
+    $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
+    $_oTable->uninstall();            
 }
 
 // Delete transients
