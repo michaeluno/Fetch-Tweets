@@ -28,6 +28,7 @@ class FetchTweets__AdminInPageTab__Test extends FetchTweets__AdminInPageTab__Bas
     }
 
     protected function _load( $oFactory ) {
+        new FetchTweets__FormSection__TableSizes( $oFactory, $this->_sPageSlug, $this->_sTabSlug );
         new FetchTweets__FormSection__InstallTables( $oFactory, $this->_sPageSlug, $this->_sTabSlug );
         new FetchTweets__FormSection__UninstallTables( $oFactory, $this->_sPageSlug, $this->_sTabSlug );
         new FetchTweets__FormSection__TestHTTPRequest( $oFactory, $this->_sPageSlug, $this->_sTabSlug );

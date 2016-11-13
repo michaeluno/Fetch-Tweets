@@ -30,6 +30,7 @@ class FetchTweets__FormSection__InstallTables extends FetchTweets__FormSection__
      * @return      array
      */
     protected function _getFields( $oFactory ) {
+                
         return array(         
             array(
                 'field_id'          => 'http_requests',
