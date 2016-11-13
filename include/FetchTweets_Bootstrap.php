@@ -104,7 +104,7 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
      * @return      void
      */
     public function replyToPluginDeactivation() {
-        $this->_oUtil->clearTransients();
+        FetchTweets_WPUtility::clearTransients();
     }    
       
     
