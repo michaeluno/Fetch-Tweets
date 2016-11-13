@@ -71,6 +71,8 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
      */
     private $___oCacheTable;
     
+    private $___iStatusCode;
+    
     /**
      * Stores the site character set.
      * @remark      The value will be automatically set in the constructor.
@@ -124,8 +126,14 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
             return $aArguments;
             
         }
-        
-            
+    
+    /**
+     * Returns the HTTP status code of the last request.
+     * @return      string      
+     */
+    public function getStatusCode() {
+        return $this->___iStatusCode;
+    }
     /**
      * Returns HTTP body(s).
      * 
@@ -137,6 +145,7 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
         $_aHTTPBodies = array();
         $_aResponses  = $this->___getHTTPResponseWithCache( $this->___aURLs, $this->_aArguments, $this->___iCacheDuration );
         foreach( $_aResponses as $_sURL => $_aoResponse ) {
+            $this->___iStatusCode   = wp_remote_retrieve_response_code( $_aoResponse );
             $_aHTTPBodies[ $_sURL ] = $this->___getHTTPBody( $_aoResponse );
             $_sLastIndex = $_sURL;
         }
