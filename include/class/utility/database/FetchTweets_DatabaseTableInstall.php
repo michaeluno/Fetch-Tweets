@@ -11,6 +11,7 @@
  * Creates custom database tables for the plugin.
  * 
  * @since       2.5.0
+ * @deprecated
  */
 class FetchTweets_DatabaseTableInstall extends FetchTweets_PluginUtility {
 
@@ -18,7 +19,7 @@ class FetchTweets_DatabaseTableInstall extends FetchTweets_PluginUtility {
     /**
      * Installs or uninstalls plugin database tables.
      */
-    public function __construct( $aDatabaseTables, $bInstallOrUninstall, $sDatabaseClassPrefix='FetchTweets_DatabaseTable_' ) {
+    public function __construct( $aDatabaseTables, $bInstallOrUninstall ) {
 
         $_sMethodName = $bInstallOrUninstall
             ? 'install'
@@ -31,10 +32,12 @@ class FetchTweets_DatabaseTableInstall extends FetchTweets_PluginUtility {
                 continue;
             }
             $_sVersion   = $this->getElement( $_aTable, 'version', '' );
-            $_sClassName = $sDatabaseClassPrefix . $_sTableName;
             
-            $_oTable     = new $_sClassName;
-            $_oTable->$_sMethodName();
+            $_sClassName = $this->getElement( $_aTable, 'class_name', '' )
+            if ( class_exists( $_sClassName ) ) {                
+                $_oTable     = new $_sClassName;
+                $_oTable->$_sMethodName();
+            }
             
         }
  
