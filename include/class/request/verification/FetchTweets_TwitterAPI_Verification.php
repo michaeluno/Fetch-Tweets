@@ -51,6 +51,7 @@ class FetchTweets_TwitterAPI_Verification {
         
         // Perform the requests.
         $_oConnect  =  new FetchTweets_TwitterOAuth( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret );
+        $_oConnect->setCacheDuration( 120 );    // 2 minutes
         $_aUser     = $_oConnect->get( 'account/verify_credentials' );
         
         // If the user id could not be retrieved, it means it failed.

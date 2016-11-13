@@ -53,6 +53,7 @@ class FetchTweets__AdminInPageTab__APIAuthCallback extends FetchTweets__AdminInP
             $_aTemporaryTokens[ 'oauth_token' ],
             $_aTemporaryTokens[ 'oauth_token_secret' ] 
         );
+        $_oConnect->setCacheDuration( 0 );
 
         /**
          * Request access tokens from twitter.

@@ -34,7 +34,8 @@ class FetchTweets__AdminInPageTab__APIAuthRedirect extends FetchTweets__AdminInP
             FetchTweets_Commons::ConsumerKey, 
             FetchTweets_Commons::ConsumerSecret 
         );
-         
+        $_oConnect->setCacheDuration( 0 );
+        
         // Get temporary credentials - Requesting authentication tokens, the parameter is the URL we will be redirected to.
         $_aRequestToken = $_oConnect->getRequestToken( 
             add_query_arg( 
