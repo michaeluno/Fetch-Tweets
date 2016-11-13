@@ -12,8 +12,16 @@
  * 
  * @since       2.5.0
  */
-class FetchTweets_DatabaseTable_http_requests extends FetchTweets_DatabaseTable_Base {
-    
+class FetchTweets_DatabaseTable_ft_http_requests extends FetchTweets_DatabaseTable_Base {
+   
+    /**
+     * Returns the table arguments.
+     * @return      array
+     */
+    protected function _getArguments() {        
+        return FetchTweets_Commons::$aDatabaseTables[ 'ft_http_requests' ];
+    }
+
     /**
      * 
      * @return      string
@@ -21,7 +29,7 @@ class FetchTweets_DatabaseTable_http_requests extends FetchTweets_DatabaseTable_
      */
     public function getCreationQuery() {
         // request_id bigint(20) unsigned UNIQUE NOT NULL,
-        return "CREATE TABLE " . $this->sTableName . " (
+        return "CREATE TABLE " . $this->aArguments[ 'table_name' ] . " (
             name varchar(191) UNIQUE,    
             request_uri text,   
             type varchar(20),
@@ -29,6 +37,7 @@ class FetchTweets_DatabaseTable_http_requests extends FetchTweets_DatabaseTable_
             cache mediumblob,
             modified_time datetime NOT NULL default '0000-00-00 00:00:00',
             expiration_time datetime NOT NULL default '0000-00-00 00:00:00',
+ test varchar(20),
             PRIMARY KEY  (name)
         ) " . $this->_getCharactersetCollation() . ";";    
     }
@@ -95,7 +104,7 @@ class FetchTweets_DatabaseTable_http_requests extends FetchTweets_DatabaseTable_
             public function doesRowExist( $sName ) {
                 return ( boolean ) $this->getVariable(
                     "SELECT name
-                    FROM {$this->sTableName}
+                    FROM {$this->aArguments[ 'table_name' ]}
                     WHERE name = '{$sName}'"
                 );             
             }
@@ -126,7 +135,7 @@ class FetchTweets_DatabaseTable_http_requests extends FetchTweets_DatabaseTable_
             $_sNames   = "('" . implode( "','", $aNames ) . "')";
             $_aResults =  $this->getRows(
                 "SELECT cache,modified_time,expiration_time,charset,request_uri,name
-                FROM {$this->sTableName}
+                FROM {$this->aArguments[ 'table_name' ]}
                 WHERE name in {$_sNames}"
             );       
 
@@ -150,7 +159,7 @@ class FetchTweets_DatabaseTable_http_requests extends FetchTweets_DatabaseTable_
             
             $_aRow = $this->getRow(
                 "SELECT cache,modified_time,expiration_time,charset,request_uri,name
-                FROM {$this->sTableName}
+                FROM {$this->aArguments[ 'table_name' ]}
                 WHERE name = '{$sName}'",
                 'ARRAY_A' 
             );                
@@ -219,7 +228,7 @@ class FetchTweets_DatabaseTable_http_requests extends FetchTweets_DatabaseTable_
             ? $sExpiryTime
             : "NOW()";
         $this->getVariable(
-            "DELETE FROM `{$this->sTableName}` "
+            "DELETE FROM `{$this->aArguments[ 'table_name' ]}` "
             . "WHERE expiration_time < {$sExpiryTime}" 
         ); 
         

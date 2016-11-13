@@ -11,76 +11,149 @@
  * Provides shared methods for the plugin database table classes.
  * 
  * @since       2.5.0
- * @version     1.0.0
+ * @version     1.1.0
  */
 abstract class FetchTweets_DatabaseTable_Base {
     
-    /**
-     * Stores the subject table name.
-     * 
-     * @access      public      Let it access from outside.
-     */
-    public $sTableName = '';
-    
-    /**
-     * Stores the table suffix. 
-     * This also serves as the option key name.
-     */
-    public $sTableSuffix = '';
-    
-    /**
-     * Stores the table version.
-     */
-    public $sVersion = '';
+    public $aArguments = array(
+        'name'              => '',      // the table name suffix
+        'version'           => '1.0.0',
+        'across_network'    => true,    // whether to share the table in across the multi-site network.
+        
+        // Arguments automatically set 
+        'table_name'        => '',      // determined in the formatting method
+    );
     
     /**
      * Sets up properties.
-     * @since   2.5.0
+     * @since   1.1.0
      */
-    public function __construct( $sTableNameSuffix, $sVersion='', $bAcrossNetwork=true ) {
-        $this->sTableNameSuffix = $sTableNameSuffix;
-        $this->sTableName       = $bAcrossNetwork
-            ? $GLOBALS[ 'wpdb' ]->base_prefix . $sTableNameSuffix
-            : $GLOBALS[ 'wpdb' ]->prefix . $sTableNameSuffix;
-        $this->sVersion   = $sVersion;
+    public function __construct() {  
+        $this->aArguments       = $this->_getArgumentsFormatted( $this->_getArguments() );
+    }
+        /**
+         * Returns the class arguments.
+         * @remark      This should be overridden in the extended class.
+         * @since       1.1.0
+         * @return      array
+         */
+        protected function _getArguments() {
+            return $this->aArguments;
+        }
+        /**
+         * Formats the arguments.
+         * @since       1.1.0
+         * @return      array
+         */
+        protected function _getArgumentsFormatted( array $aArguments ) {
+            
+            $aArguments[ 'table_name' ] = $aArguments[ 'across_network' ]
+                ? $GLOBALS[ 'wpdb' ]->base_prefix . $aArguments[ 'name' ]
+                : $GLOBALS[ 'wpdb' ]->prefix . $aArguments[ 'name' ];
+            return $aArguments + array(
+                'name' => __CLASS__,
+            );
+            
+        }
+        
+    /**
+     * Upgrade the table.
+     * @return      array       Strings containing the results of the various update queries.
+     * @since       1.1.0
+     */
+    public function upgrade() {
+        
+        if ( $this->___hasTable() ) {
+                    
+            $_sExistingVersion = get_option( 
+                $this->aArguments[ 'name' ]  . '_version',
+                $this->aArguments[ 'version' ]  // default
+            );
+            // If the existent version is above or equal to the set version in the argument, do not upgrade.
+            if ( version_compare( $_sExistingVersion, $this->aArguments[ 'version' ], '>=' ) ) {
+                return array();
+            }
+            
+        }
+
+        return $this->install( true );
+        
     }
     
     /**
      * Installs a table. 
      * 
-     * @todo        Add a force option to override an existing table.
-     * @since       2.5.0
+     * @since       1.1.0
+     * @return      array       Strings containing the results of the various update queries.
      */
-    public function install() {
+    public function install( $bForce=false ) {
         
         // If already exists, return.
-        if ( $GLOBALS[ 'wpdb' ]->get_var( "SHOW TABLES LIKE '" .  $this->sTableName . "'" ) == $this->sTableName ) { 
-            return;
+        if ( ! $bForce && $this->___hasTable() ) {            
+            return array();
         }
+        return $this->___install();
         
-        // The method should be overridden in the extended clasz.
-        $_sSQLQuery = $this->getCreationQuery();
-        if ( ! $_sSQLQuery ) {
-            return;
-        }
-        
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-        dbDelta( $_sSQLQuery );
-        
-        if ( $this->sVersion ) {
-            update_option(
-                $this->sTableNameSuffix  . '_version',  // key 
-                $this->sVersion     // data
+    }
+        /**
+         * Checks whether the table exists or not.
+         * @return      boolean
+         * @since       1.1.0
+         */
+        private function ___hasTable() {
+            $_sExistingTableName = $GLOBALS[ 'wpdb' ]->get_var( 
+                "SHOW TABLES LIKE '"  
+                .  $this->aArguments[ 'table_name' ] 
+                . "'" 
             );
+            return $_sExistingTableName === $this->aArguments[ 'table_name' ];
+        }
+        /**
+         * Installs the database table.
+         * @return      array       Strings containing the results of the various update queries.
+         * @since       1.1.0
+         */
+        private function ___install() {
+            
+            // The method should be overridden in the extended class.
+            $_sSQLQuery = $this->getCreationQuery();
+            if ( ! $_sSQLQuery ) {
+                return;
+            }
+            
+            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+            $_aResult = dbDelta( $_sSQLQuery );
+            
+            if ( $this->aArguments[ 'version' ] ) {
+                update_option(
+                    $this->aArguments[ 'name' ]  . '_version',  // key 
+                    $this->aArguments[ 'version' ]     // data
+                );
+            }
+            return $_aResult;
+        
         }
         
+    /**
+     * Drops a table.
+     * @since   1.1.0
+     */
+    public function uninstall() {
+
+        if ( $this->aArguments[ 'version' ] ) {
+            delete_option( $this->aArguments[ 'name' ]  . '_version' );
+        }    
+        
+        $GLOBALS[ 'wpdb' ]->query( 
+            "DROP  TABLE IF EXISTS " . $this->aArguments[ 'table_name' ]
+        );
     }
     
     /**
      * Override this method in the extended class.
      * 
      * @return      string
-     * @since       2.5.0
+     * @since       1.1.0
      */
     public function getCreationQuery() {
         return '';
@@ -88,7 +161,7 @@ abstract class FetchTweets_DatabaseTable_Base {
     
     /**
      * @return      string
-     * @since       2.5.0
+     * @since       1.1.0
      */
     protected function _getCharactersetCollation() {
                 
@@ -119,11 +192,11 @@ abstract class FetchTweets_DatabaseTable_Base {
      *  );
      * `
      * @see     https://codex.wordpress.org/Class_Reference/wpdb#INSERT_rows
-     * @since   2.5.0
+     * @since   1.1.0
      */
     public function insert( $aRow, $asFormat=null ) {        
         return $GLOBALS[ 'wpdb' ]->insert( 
-            $this->sTableName, 
+            $this->aArguments[ 'table_name' ], 
             $aRow,
             null === $asFormat  // row format
                 ? $this->_getPlaceHolders( $aRow )
@@ -140,35 +213,36 @@ abstract class FetchTweets_DatabaseTable_Base {
      * If empty, it attempts to delete all rows.
      * @param       array|string    $asFormat
      * @return      void
-     * @since       2.5.0
+     * @since       1.1.0
      */
     public function delete( $aWhere=array(), $asFormat=null ) {
         
         if ( empty( $aWhere ) ) {
             $GLOBALS[ 'wpdb' ]->query( 
-                "TRUNCATE TABLE `{$this->sTableName}`" 
+                "TRUNCATE TABLE `{$this->aArguments[ 'table_name' ]}`" 
             );            
             return;
         }
         
         $GLOBALS[ 'wpdb' ]->delete( 
-            $this->sTableName, 
+            $this->aArguments[ 'table_name' ], 
             $aWhere,
             null === $asFormat  // row format
                 ? $this->_getPlaceHolders( $aWhere )
                 : $asFormat
         );
+        
     }
     
     /**
      * 
      * @see     https://codex.wordpress.org/Class_Reference/wpdb#REPLACE_row
-     * @since   2.5.0
+     * @since   1.1.0
      */
     public function replace( $aRow, $asFormat=null ) {        
         $aRow = $this->_getSanitizedRow( $aRow );
         return $GLOBALS[ 'wpdb' ]->replace( 
-            $this->sTableName, 
+            $this->aArguments[ 'table_name' ], 
             $aRow,
             null === $asFormat  // row format
                 ? $this->_getPlaceHolders( $aRow )
@@ -179,12 +253,12 @@ abstract class FetchTweets_DatabaseTable_Base {
     /**
      * 
      * @see     https://codex.wordpress.org/Class_Reference/wpdb#REPLACE_row
-     * @since   2.5.0
+     * @since   1.1.0
      */
     public function update( $aRow, $aWhere=array(), $asFormat=null, $asWhereFormat=null ) {
         $aRow = $this->_getSanitizedRow( $aRow );
         return $GLOBALS[ 'wpdb' ]->update( 
-            $this->sTableName, 
+            $this->aArguments[ 'table_name' ], 
             $aRow, // the new data to update
             $aWhere, // e.g. array( 'id' => ... ) which updates the row whose id is ...
             null === $asFormat  // row format
@@ -197,7 +271,7 @@ abstract class FetchTweets_DatabaseTable_Base {
     }           
         /**
          * @return      array
-         * @since       2.5.0
+         * @since       1.1.0
          */
         private function _getSanitizedRow( array $aRow ) {
             foreach( $aRow as $_sColumnName => $_mValue ) {
@@ -209,7 +283,7 @@ abstract class FetchTweets_DatabaseTable_Base {
         /**
          * @return      array       The placefolders such as %s, %d, %f for the format parameter of the above methods.
          * @see         https://codex.wordpress.org/Class_Reference/wpdb#Placeholders
-         * @since       2.5.0
+         * @since       1.1.0
          */
         private function _getPlaceHolders( $aRow ) {
             $_aPlaceHolders = array();
@@ -235,7 +309,7 @@ abstract class FetchTweets_DatabaseTable_Base {
     /**
      * Retrieves a value.
      * @remark      Returns `null` if no item is found.
-     * @since       2.5.0
+     * @since       1.1.0
      */
     public function getVariable( $sSQLQuery, $iColumnOffset=0, $iRowOffset=0 ) {
         $_mResult = $GLOBALS[ 'wpdb' ]->get_var( 
@@ -247,7 +321,7 @@ abstract class FetchTweets_DatabaseTable_Base {
     }
     /**
      * Selects a single row.
-     * @since   2.5.0
+     * @since   1.1.0
      */
     public function getRow( $sSQLQuery, $sFormat='ARRAY_A', $iRowOffset=0 ) {
         $_aRow = $GLOBALS[ 'wpdb' ]->get_row(
@@ -267,7 +341,7 @@ abstract class FetchTweets_DatabaseTable_Base {
     }
     /**
      * Selects multiple rows.
-     * @since   2.5.0
+     * @since   1.1.0
      */
     public function getRows( $sSQLQuery, $sFormat='ARRAY_A' ) {
         $_aRows = $GLOBALS[ 'wpdb' ]->get_results(
@@ -281,15 +355,5 @@ abstract class FetchTweets_DatabaseTable_Base {
         }
         return $_aRows;
     }
-    
-    /**
-     * Drops a table.
-     * @since   2.5.0
-     */
-    public function uninstall() {
-        $GLOBALS[ 'wpdb' ]->query( 
-            "DROP  TABLE IF EXISTS " . $this->sTableName
-        );
-    }
-    
+        
 }

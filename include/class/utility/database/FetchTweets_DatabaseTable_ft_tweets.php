@@ -12,7 +12,7 @@
  * 
  * @since       2.5.0
  */
-class FetchTweets_DatabaseTable_tweets extends FetchTweets_DatabaseTable_Base {
+class FetchTweets_DatabaseTable_ft_tweets extends FetchTweets_DatabaseTable_Base {
     /**
      * Represents the structure of a row of the table.
      * 
@@ -51,13 +51,17 @@ class FetchTweets_DatabaseTable_tweets extends FetchTweets_DatabaseTable_Base {
         'number_of_reviews'             => null,   // (integer) number of customer reviews.
     );
    
+    protected function _getArguments() {        
+        return FetchTweets_Commons::$aDatabaseTables[ 'ft_tweets' ];
+    }   
+   
     /**
      * 
      * @return      string
      * @since       2.5.0
      */
     public function getCreationQuery() {
-        return "CREATE TABLE " . $this->sTableName . " (
+        return "CREATE TABLE " . $this->aArguments[ 'table_name' ] . " (
             object_id bigint(20) unsigned NOT NULL auto_increment,
             asin_locale varchar(13) UNIQUE NOT NULL,
             locale varchar(4),            
@@ -142,7 +146,7 @@ class FetchTweets_DatabaseTable_tweets extends FetchTweets_DatabaseTable_Base {
     public function getIDByASINLocale( $sASINLocale ) {
         return $this->getVariable(
             "SELECT object_id
-            FROM {$this->sTableName}
+            FROM {$this->aArguments[ 'table_name' ]}
             WHERE asin_locale = '{$sASINLocale}'"
         );
     }
@@ -165,7 +169,7 @@ class FetchTweets_DatabaseTable_tweets extends FetchTweets_DatabaseTable_Base {
             ? $sExpiryTime
             : "NOW()";
         $this->getVariable(
-            "DELETE FROM `{$this->sTableName}` "
+            "DELETE FROM `{$this->aArguments[ 'table_name' ]}` "
             . "WHERE expiration_time < {$sExpiryTime}" 
         ); 
         

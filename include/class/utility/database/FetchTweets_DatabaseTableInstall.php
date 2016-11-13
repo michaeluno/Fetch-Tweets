@@ -24,16 +24,16 @@ class FetchTweets_DatabaseTableInstall extends FetchTweets_PluginUtility {
             ? 'install'
             : 'uninstall';
             
-        foreach( $aDatabaseTables as $_sKey => $_aTable ) {
+        foreach( $aDatabaseTables as $_aTable ) {
             
             $_sTableName = $this->getElement( $_aTable, 'name', '' );
             if ( ! $_sTableName ) {
                 continue;
             }
             $_sVersion   = $this->getElement( $_aTable, 'version', '' );
-            $_sClassName = $sDatabaseClassPrefix . $_sKey;
+            $_sClassName = $sDatabaseClassPrefix . $_sTableName;
             
-            $_oTable     = new $_sClassName( $_sTableName, $_sVersion );
+            $_oTable     = new $_sClassName;
             $_oTable->$_sMethodName();
             
         }
