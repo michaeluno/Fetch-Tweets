@@ -388,6 +388,8 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
             
     /**
      * Deletes the cache of the provided URL.
+     * 
+     * @access      public      Accessed publicly.
      */
     public function deleteCache() {
         
