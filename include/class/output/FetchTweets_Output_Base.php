@@ -1,0 +1,46 @@
+<?php
+/**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
+ */
+
+/**
+ * Handles rendering outputs.
+ * 
+ * @since             2.5.0
+ */
+class FetchTweets_Output_Base extends FetchTweets_PluginUtility {
+   
+    protected $_aArguments = array();
+    
+    /**
+     * Sets up properties.
+     */
+    public function __construct( $aArguments ) {
+        $this->_aArguments = $this->_getArguments( $aArguments );
+        
+    }
+    
+    protected function _getArguments( $aArguments ) {
+        return $aArguments + $this->_aArguments;
+    }
+    
+    /**
+     * @return      void
+     */
+    public function render() {
+        echo $this->get();
+    }
+        
+    /**
+     * @return      string
+     */
+    public function get() {
+        return '';
+    }
+
+}
