@@ -8,6 +8,9 @@
  * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
 
+/**
+ * Handles plugin options.
+ */
 class FetchTweets_Option extends FetchTweets_Option_Format {
     
     /**
