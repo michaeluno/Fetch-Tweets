@@ -22,7 +22,7 @@ class FetchTweets__Action_Base extends FetchTweets_PluginUtility {
     
     protected $_iPriority   = 10;
     
-    protected $_iArguments  = 1,
+    protected $_iArguments  = 1;
     
     /**
      * Sets up hooks.
@@ -36,7 +36,7 @@ class FetchTweets__Action_Base extends FetchTweets_PluginUtility {
     
         add_action(
             $this->_sActionName, // action hook name
-            array( $this, 'repyToDoAction' )
+            array( $this, 'repyToDoAction' ),
             $this->_iPriority,
             $this->_iArguments
         );

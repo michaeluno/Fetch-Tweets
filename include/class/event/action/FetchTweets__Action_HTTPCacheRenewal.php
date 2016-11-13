@@ -18,7 +18,7 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
     
     protected $_sActionName = 'fetch_tweets_action_http_cache_renewal';
     
-    protected $_iArguments  = 4,
+    protected $_iArguments  = 4;
 
     protected function _construct() {
         
