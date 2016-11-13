@@ -264,4 +264,13 @@ class FetchTweets_Option extends FetchTweets_Option_Format {
         
     }
     
+    /**
+     * Deletes the option.
+     * 
+     * @remark      Accessed from `uninstall.php`.
+     */
+    public function delete() {
+        delete_option( $this->sOptionKey );
+    }
+    
 }
