@@ -20,7 +20,7 @@ class FetchTweets__Action_oEmbedUpdate extends FetchTweets__Action_Base {
 
     private $__oBase64;
     
-    protected _construct() {
+    protected function _construct() {
         $this->___oBase64 = new FetchTweets_Base64;
     }
     
