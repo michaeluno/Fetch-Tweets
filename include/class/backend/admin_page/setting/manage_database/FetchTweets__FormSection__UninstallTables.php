@@ -37,18 +37,13 @@ class FetchTweets__FormSection__UninstallTables extends FetchTweets__FormSection
         }
         
         protected function _handleTable_http_requests() {
-            new FetchTweets_DatabaseTableInstall(
-                array(
-                    'http_requests' => array(
-                        'version'   => '0.0.1',
-                        'name'      => 'ft_http_requests',
-                    ),                
-                ),
-                false       // uninstall
-            );            
+            $_oTable  = new FetchTweets_DatabaseTable_ft_http_requests;
+            $_oTable->uninstall();        
             return true;
         }
         protected function _handleTable_tweets() {
+            $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
+            $_oTable->uninstall();            
             return true;
         }        
        
