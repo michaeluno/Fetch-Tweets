@@ -24,7 +24,7 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
         
         add_filter( 
             'fetch_tweets_filter_http_response_cache',  // filter hook name
-            array( $this, 'replyToModifyCacheRmainedTime' ), // callback
+            array( $this, 'replyToModifyCacheRemainedTime' ), // callback
             10, // priority
             4 // number of parameters
         );            
@@ -63,7 +63,13 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
      * 
      * @callback        filter      fetch_tweets_filter_http_response_cache
      */
-    public function replyToModifyCacheRmainedTime( $aCache, $iCacheDuration, $aArguments, $sType='wp_remote_get' ) {
+    public function replyToModifyCacheRemainedTime( $aCache, $iCacheDuration, $aArguments, $sType='wp_remote_get' ) {
+        
+        // If the cache duration is explicitly set to `0`, do not schedule a background renewal task.
+        if ( 0 === $iCacheDuration ) {
+            $aCache[ 'remained_time' ] = 0;
+            return $aCache;
+        }
         
         // Check if it is expired.
         if ( 0 >= $aCache[ 'remained_time' ] ) {
