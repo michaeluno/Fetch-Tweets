@@ -15,11 +15,11 @@
  */
 final class FetchTweets_Event extends FetchTweets_PluginUtility {
     
+    /**
+     * Handles events in the background.
+     */
     public function __construct() {
-        
-        // Objects
-        $this->oBase64 = new FetchTweets_Base64;
-        
+ 
         $_aEventActionClassNames = array(
             'FetchTweets__Action_HTTPCacheRenewal',
             'FetchTweets__Action_TransientRenewal',

@@ -18,6 +18,12 @@ class FetchTweets__Action_oEmbedUpdate extends FetchTweets__Action_Base {
     
     protected $_sActionName = 'fetch_tweets_action_transient_add_oembed_elements';
 
+    private $__oBase64;
+    
+    protected _construct() {
+        $this->___oBase64 = new FetchTweets_Base64;
+    }
+    
     /**
      * Performs the cache renewal.
      */
@@ -44,7 +50,7 @@ class FetchTweets__Action_oEmbedUpdate extends FetchTweets__Action_Base {
         // Perform oEmbed caching - no API request will be performed
         $_oFetch = new FetchTweets_Fetch;
         
-        // structure: array( 'mod' => time(), 'data' => $this->oBase64->encode( $vData ) ), 
+        // structure: array( 'mod' => time(), 'data' => $this->___oBase64->encode( $vData ) ), 
         $_aTransient = $_oFetch->getTransient( $_sTransientKey );            
     
         // If the mandatory keys are not set, it's broken.
@@ -53,7 +59,7 @@ class FetchTweets__Action_oEmbedUpdate extends FetchTweets__Action_Base {
             return;
         }
         
-        $_aTweets = ( array ) $this->oBase64->decode( $_aTransient['data'] );        
+        $_aTweets = ( array ) $this->___oBase64->decode( $_aTransient['data'] );        
         $_oFetch->addEmbeddableMediaElements( $_aTweets );        // the array is passed as reference.
         
         // Re-save the cache.
