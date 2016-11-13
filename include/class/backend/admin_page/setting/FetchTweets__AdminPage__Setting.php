@@ -38,6 +38,10 @@ class FetchTweets__AdminPage__Setting extends FetchTweets__AdminPage__Base {
         new FetchTweets__AdminInPageTab__Cache( $oFactory, $this->_sPageSlug );
         new FetchTweets__AdminInPageTab__ManageOption( $oFactory, $this->_sPageSlug );
         
+        if ( $this->isDebugMode() ) {
+            new FetchTweets__AdminInPageTab__Test( $oFactory, $this->_sPageSlug );
+        }
+        
         $oFactory->setPageTitleVisibility( false );
         
     }
