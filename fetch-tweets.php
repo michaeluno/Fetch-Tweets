@@ -207,6 +207,38 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
         // ),
     );
 	
+    /**
+     * Stores custom database table names.
+     * @remark      The below is the structure
+     * array(
+     *      'slug (part of class file name)' => array(
+     *          'version'   => '0.1',
+     *          'name'      => 'table_name'
+     *      ),
+     *      ...
+     * )
+     * @since       2.5.0
+     */
+    static public $aDatabaseTables = array(
+        'tweets'        => array(
+            'version'   => '0.0.1',
+            'name'      => 'ft_tweets',
+        ),
+        'http_requests' => array(
+            'version'   => '0.0.1',
+            'name'      => 'ft_http_requests',
+        ),
+    );
+    
+    /**
+     * Stores the database table versions.
+     * @since       3
+     */
+    static public $aDatabaseTableVersions = array(
+        'product'       => '1.0.0',
+        'request_cache' => '1.0.0',
+    );    
+    
 }
 FetchTweets_Commons::setUp( __FILE__ );
 
