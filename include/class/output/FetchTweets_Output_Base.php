@@ -13,18 +13,24 @@
  * 
  * @since             2.5.0
  */
-class FetchTweets_Output_Base extends FetchTweets_PluginUtility {
+abstract class FetchTweets_Output_Base extends FetchTweets_PluginUtility {
    
     protected $_aArguments = array();
     
     /**
      * Sets up properties.
+     * @since       2.5.0
      */
     public function __construct( $aArguments ) {
         $this->_aArguments = $this->_getArguments( $aArguments );
-        
     }
     
+    /**
+     * Returns the arguments.
+     * 
+     * Handle formatting here.
+     * @return      array
+     */
     protected function _getArguments( $aArguments ) {
         return $aArguments + $this->_aArguments;
     }
