@@ -11,15 +11,12 @@
 /**
  * Handles Twitter API verification
  * 
- * @package           Fetch Tweets
- * @subpackage        
- * @copyright         Michael Uno
- * @since             2
- * 
- * @filter            apply            fetch_tweets_filter_request_rate_limit_status_keys            [2.3.0+] Applies to the request query that specifies the retrieving status keys. Default: statuses, search, lists.
- * @filter            apply            fetch_tweets_filter_rate_limit_status_translation            [2.3.0+] Applies to the translation array for the rate limit status labels.
+ * @since           2
+ * @since           2.5.0            Extends `FetchTweets_PluginUtility`.
+ * @filter          apply            fetch_tweets_filter_request_rate_limit_status_keys            [2.3.0+] Applies to the request query that specifies the retrieving status keys. Default: statuses, search, lists.
+ * @filter          apply            fetch_tweets_filter_rate_limit_status_translation            [2.3.0+] Applies to the translation array for the rate limit status labels.
  */
-class FetchTweets_TwitterAPI_Verification {
+class FetchTweets_TwitterAPI_Verification extends FetchTweets_PluginUtility {
     
     public $sConsumerKey;
     public $sConsumerSecret;
@@ -44,18 +41,22 @@ class FetchTweets_TwitterAPI_Verification {
      */
     public function getStatus() {
         
+        $_iCacheDuration = 60; // 1 minutes
+        
         // Return the cached response if available.
         $_sCacheID  = FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret ) ) );
-        $_vData     = FetchTweets_WPUtility::getTransient( $_sCacheID );
+        $_vData     = $this->getTransient( $_sCacheID );
         if ( false !== $_vData ) { return $_vData; }
         
         // Perform the requests.
         $_oConnect  =  new FetchTweets_TwitterOAuth( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret );
-        $_oConnect->setCacheDuration( 120 );    // 2 minutes
+        $_oConnect->setCacheDuration( $_iCacheDuration );    
         $_aUser     = $_oConnect->get( 'account/verify_credentials' );
         
         // If the user id could not be retrieved, it means it failed.
-        if ( ! isset( $_aUser['id'] ) || ! $_aUser['id'] ) return array();
+        if ( ! isset( $_aUser['id'] ) || ! $_aUser['id'] ) {
+            return array();
+        }
             
         // Otherwise, it is okay. Retrieve the current status.
         $_aStatusKeys   = apply_filters( 'fetch_tweets_filter_request_rate_limit_status_keys', array( 'statuses', 'search', 'lists' ) );    // keys can be added such as 'help', 'users' etc
@@ -63,7 +64,7 @@ class FetchTweets_TwitterAPI_Verification {
         
         // Set the cache.
         $_aData         = is_array( $_aStatus ) ? $_aUser + $_aStatus : $_aUser;
-        FetchTweets_WPUtility::setTransient( $_sCacheID, $_aData, 60 );    // stores the cache only for 60 seconds. 
+        $this->setTransient( $_sCacheID, $_aData, $_iCacheDuration );    // stores the cache only for 60 seconds. 
         
         return $_aData;    
         
@@ -73,38 +74,21 @@ class FetchTweets_TwitterAPI_Verification {
      * Returns the number of remaining requests from the given key.
      * 
      * @since       2.3.5
+     * @return      integer     The remaining allowed number of requests. -1 for undetected.
      */
-    public function getRemaining( array $aDimensionalKeys ) {
+    public function getRemaining( array $aDimensionalPath ) {
         
-        $aDimensionalKeys[] = 'remaining';
-        $_aStatuses         = $this->getStatus();
-        $_aResources        = isset( $_aStatuses['resources'] ) 
-            ? $_aStatuses['resources'] 
-            : array();
-        return $this->_getDimensionalElement( 
-            $_aResources, 
-            $aDimensionalKeys 
+        array_unshift( $aDimensionalPath , 'resources' ); // prepend an item.
+        $aDimensionalPath[] = 'remaining';  // append an item.
+        
+        // Extract the value.
+        return $this->getElement( 
+            $this->getStatus(), // subject array
+            $aDimensionalPath,  // dimensional path
+            -1  // default
         );
-        
+  
     }
-        private function _getDimensionalElement( $aSubject, array $aDimensionalKeys ) {
-                        
-            if ( ! is_array( $aSubject ) ) {
-                return $aSubject;
-            }
-                        
-            if ( ! isset( $aDimensionalKeys[ 0 ] ) ) {
-                return -1;
-            }
-            if ( ! isset( $aSubject[ $aDimensionalKeys[ 0 ] ] ) ) {
-                 return -1;
-            } 
-            $aSubject = $aSubject[ $aDimensionalKeys[ 0 ] ];
-            unset( $aDimensionalKeys[ 0 ] );
-            $aDimensionalKeys = array_values( $aDimensionalKeys );
-            return $this->_getDimensionalElement( $aSubject, $aDimensionalKeys );
-            
-        }
         
     /**
      * Renders the output of status table.
