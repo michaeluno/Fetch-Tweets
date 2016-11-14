@@ -256,20 +256,22 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
             
             // Retrieve available caches.
             $_aValidCaches   = $this->___getCaches( $aURLs, $aArguments, $iCacheDuration );
-            
+
             // Check if caches exist one by one and if not, get the response and set a cache.
             $_aHTTPResponses = array();
             foreach( $aURLs as $_sURL ) {
                 
-                // If a cache is avilable, use it.
-                if ( isset( $_aValidCaches[ $_sURL ] ) ) {
-                    $_aHTTPResponses[ $_sURL ] = $_aValidCaches[ $_sURL ];
+                $_sCacheName = $this->___getCacheName( $_sURL );
+                
+                // If a cache is available, use it.
+                if ( isset( $_aValidCaches[ $_sCacheName ] ) ) {
+                    $_aHTTPResponses[ $_sURL ] = $_aValidCaches[ $_sCacheName ];
                     continue;
                 }
                                 
                 // Otherwise, perform an HTTP request and cache the result.
                 $_aHTTPResponses[ $_sURL ] = $this->_getHTTPResponse( $_sURL, $aArguments );
-                $this->___setCache( $_sURL, $_aHTTPResponses[ $_sURL ], $iCacheDuration );
+                $this->___setCache( $_sURL, $_sCacheName, $_aHTTPResponses[ $_sURL ], $iCacheDuration );
                 
             }
             return $_aHTTPResponses;
@@ -304,7 +306,8 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
                     // Set a valid item.
                     if ( $_aCache[ 'remained_time' ] && $_aCache[ 'data' ] ) {
                         $this->___sLastCharSet = $_aCache[ 'charset' ];
-                        $_aValidCaches[ $_aCache[ 'request_uri' ] ] = $_aCache[ 'data' ];
+                        $_sCacheName = $this->___getCacheName( $_aCache[ 'request_uri' ] );
+                        $_aValidCaches[ $_sCacheName ] = $_aCache[ 'data' ];
                     }
                     
                 }
@@ -345,12 +348,12 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
              * @param       WP_ERROR|array      $aoResponse
              * @param       integer             $iCacheDuration     The cache duration in seconds. Pass `0` to renew the cache.
              */
-            private function ___setCache( $sURL, $aoResponse, $iCacheDuration=86400 ) {
+            private function ___setCache( $sURL, $sCacheName, $aoResponse, $iCacheDuration=86400 ) {
                 
                 $_sCharSet    = $this->___getCharacterSet( $aoResponse );            
 
                 $_bResult     = $this->___oCacheTable->setCache( 
-                    $this->___getCacheName( $sURL ), // name
+                    $sCacheName, // name
                     $aoResponse,
                     $iCacheDuration // when 0 is passed, use a default value of 86400 (one day). So pass 0 to renew the cache.
                         ? ( integer ) $iCacheDuration
