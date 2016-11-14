@@ -41,7 +41,7 @@ class FetchTweets__AdminInPageTab__APIAuthenticationKey extends FetchTweets__Adm
      */
     public function replyToDoForm( $oFactory ) {
         
-        $_oAPIVerificationStatus = new FetchTweets_TwitterAPI_VerificationStatus( FetchTweets_Option::getInstance() );
+        $_oAPIVerificationStatus = new FetchTweets_TwitterAPI_VerificationStatus();
         $_oAPIVerificationStatus->render();
         
     }    

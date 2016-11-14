@@ -43,7 +43,7 @@ class FetchTweets_AdminPage_Setting_TwitterConnect extends FetchTweets_AdminPage
      */
     public function replyToDoForm( $oFactory ) {
         
-        $_oAPIVerificationStatus = new FetchTweets_TwitterAPI_VerificationStatus( $GLOBALS['oFetchTweets_Option'] );
+        $_oAPIVerificationStatus = new FetchTweets_TwitterAPI_VerificationStatus();
         $_oAPIVerificationStatus->render();
         
     }
