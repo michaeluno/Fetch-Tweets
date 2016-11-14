@@ -49,9 +49,10 @@ class FetchTweets__Action_Base extends FetchTweets_PluginUtility {
          * @callback        filter      
          */
         public function repyToDoAction() {
+            $_aParameters = func_get_args();
             call_user_func_array(
                 array( $this, '_doAction' ),
-                func_get_args()
+                $_aParameters
             );
         }
     
