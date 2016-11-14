@@ -144,7 +144,7 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
     public function setUp() {
                 
         // 1. Libraries and required files.
-        $this->_include();
+        $this->___include();
         
         // 2. Custom database tables.
         $this->___handleCustomDatabaseTables();
@@ -169,9 +169,9 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
             $this->_registerMetaBoxes();
         }
                         
-        // 8. Shortcode - enables the shortcode. e.g. [fetch_tweets id="143"]
-        new FetchTweets_Shortcode( 'fetch_tweets' );    
-            
+        // 8. Shortcodes e.g. [fetch_tweets id="143"]
+        $this->___loadShortcodes();
+                    
         // 9. Widgets
         add_action( 'widgets_init', 'FetchTweets_WidgetByID::registerWidget' );
         add_action( 'widgets_init', 'FetchTweets_WidgetByTag::registerWidget' );
@@ -196,13 +196,23 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
          * Include files.
          * @return      void
          */
-        public function _include() {
+        private function ___include() {
             
             $_sPluginDir = dirname( $this->sFilePath );
             include( $_sPluginDir . '/include/function/functions.php' );            
             require( $_sPluginDir . '/include/library/TwitterOAuth/twitteroauth.php' );
                                     
         }    
+        
+        /**
+         * @since       2.5.0
+         */
+        private function ___loadShortcodes() {            
+            new FetchTweets_Shortcode_Main;    
+            if ( $this->_oUtil->isDebugMode() ) {            
+                new FetchTweets_Shortcode_Debug;    
+            }
+        }
 
     /**
      * Registers plugin specific meta boxes.
