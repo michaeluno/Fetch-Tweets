@@ -133,9 +133,10 @@ class FetchTweets_Utility extends FetchTweets_AdminPageFramework_FrameworkUtilit
          * @deprecated      2.5.0       Use `getStringIntoArray()`.
          */
         static public function convertStringToArray() {
+            $_aParams = func_get_args();
             return call_user_func_array(
                 array( __CLASS__, 'getStringIntoArray' ),
-                func_get_args()
+                $_aParams
             );
         }    
 
