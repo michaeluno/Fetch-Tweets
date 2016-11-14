@@ -25,7 +25,7 @@ abstract class FetchTweets_Fetch_ByScreenName extends FetchTweets_Fetch_ByList {
     protected function getTweetsByScreenNames( $sUsers, $iCount, $bIncludeRetweets=false, $bExcludeReplies=false, $iCacheDuration=1200 ) {
 
         $_aTweets      = array();
-        foreach( FetchTweets_Utilities::convertStringToArray( $sUsers, ',' ) as $_sScreenName ) {
+        foreach( FetchTweets_Utility::convertStringToArray( $sUsers, ',' ) as $_sScreenName ) {
             $_aTweets  = array_merge( 
                 $this->_getTweetsByScreenName( 
                     $_sScreenName, 
