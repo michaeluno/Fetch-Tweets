@@ -11,7 +11,7 @@
 /**
  * Handles the shortcode.
  */
-class FetchTweets_Shortcode {
+class FetchTweets_Shortcode_Main {
     
     private $___sShortcode = 'fetch_tweets'
     
