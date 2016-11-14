@@ -77,45 +77,67 @@ class FetchTweets_Utility extends FetchTweets_AdminPageFramework_FrameworkUtilit
     
     /**
      * Converts the given string with delimiters to a multi-dimensional array.
+
+     * `
+     * $aArray = getStringIntoArray( 'a-1,b-2,c,d|e,f,g', "|", ',', '-' );
+     * `
+     * @params      string      $sInput         the subject string
+     * @params      string      $sDelimiter*    Delimiters
      * 
-     * Parameters: 
-     * 1: haystack string
-     * 2, 3, 4...: delimiter
-     * e.g. $arr = convertStringToArray( 'a-1,b-2,c,d|e,f,g', "|", ',', '-' );
-     * 
-     * @since            1.3.3
      */
-    static public function convertStringToArray() {
+    static public function getStringIntoArray( /* $_sInput, $sDelimiter1, $sDelimiter2, $sDelimiter3 ... */ ) {
+     
+        $_aArguments = func_get_args();
+        $_sInput     = $_aArguments[ 0 ];            
+        $_sDelimiter = $_aArguments[ 1 ];
         
-        $intArgs = func_num_args();
-        $arrArgs = func_get_args();
-        $strInput = $arrArgs[ 0 ];            
-        $strDelimiter = $arrArgs[ 1 ];
+        if ( ! is_string( $_sDelimiter ) || '' === $_sDelimiter ) {
+            return $_sInput;
+        }
+        if ( is_array( $_sInput ) ) {
+            return $_sInput;    // note that is_string( 1 ) yields false.
+        }
+            
+        $_aElements = preg_split( "/[{$_sDelimiter}]\s*/", trim( $_sInput ), 0, PREG_SPLIT_NO_EMPTY );
+        if ( ! is_array( $_aElements ) ) {
+            return array();
+        }
         
-        if ( ! is_string( $strDelimiter ) || $strDelimiter == '' ) return $strInput;
-        if ( is_array( $strInput ) ) return $strInput;    // note that is_string( 1 ) yields false.
+        foreach( $_aElements as &$_sElement ) {
             
-        $arrElems = preg_split( "/[{$strDelimiter}]\s*/", trim( $strInput ), 0, PREG_SPLIT_NO_EMPTY );
-        if ( ! is_array( $arrElems ) ) return array();
-        
-        foreach( $arrElems as &$strElem ) {
+            $_aParameters      = $_aArguments;
+            $_aParameters[ 0 ] = $_sElement;
+            unset( $_aParameters[ 1 ] );    // remove the used delimiter.
             
-            $arrParams = $arrArgs;
-            $arrParams[0] = $strElem;
-            unset( $arrParams[ 1 ] );    // remove the used delimiter.
-            // now $strElem becomes an array.
-            if ( count( $arrParams ) > 1 ) // if the delimiters are gone, 
-                $strElem = call_user_func_array( 'FetchTweets_Utilities::convertStringToArray', $arrParams );
-            
+            // now $_sElement becomes an array.
+            // if the delimiters are gone, 
+            if ( count( $_aParameters ) > 1 ) {
+                $_sElement = call_user_func_array( 
+                    array( __CLASS__, 'getStringIntoArray' ),
+                    $_aParameters 
+                );            
+            }
             // Added this because the function was not trimming the elements sometimes... not fully tested with multi-dimensional arrays. 
-            if ( is_string( $strElem ) )
-                $strElem = trim( $strElem );
+            if ( is_string( $_sElement ) ) {                
+                $_sElement = trim( $_sElement );
+            }
             
         }
 
-        return $arrElems;
-
+        return $_aElements;
+     
     }    
+        /**
+         * An alias of `getStringIntoArray()`.
+         * @since           1.3.3
+         * @deprecated      2.5.0       Use `getStringIntoArray()`.
+         */
+        static public function convertStringToArray() {
+            return call_user_func_array(
+                array( __CLASS__, 'getStringIntoArray' ),
+                func_get_args()
+            );
+        }    
 
     /**
      * Calculates the relative path from the given path.
