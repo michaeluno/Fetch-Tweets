@@ -1,16 +1,31 @@
 <?php
+/**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
+ */
+
 if ( ! class_exists( 'TwitterFetchTweetsOAuth' ) ) {    
     require_once( dirname( FetchTweets_Commons::$sPluginPath ) . '/include/library/TwitterOAuth/twitteroauth.php' );
 }
 
+/**
+ * A Twitter API hander class wrapper.
+ */
 class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
     
     public $host = "https://api.twitter.com/1.1/";
 
     public $iCacheDuration = 86400;
-    public $aHTTPArguments = array(
-    );
+    public $aHTTPArguments = array();
     
+    /**
+     * Sets a cache duration.
+     * Use this method before performing the `get()` method.
+     */
     public function setCacheDuration( $iCacheDuration ) {
         $this->iCacheDuration = $iCacheDuration;
     }
@@ -88,14 +103,14 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
 
         add_filter( 
             'fetch_tweets_filter_http_response_cache_name', 
-            array( $this, 'replyToGetCacheNameSanitized' ), 
+            array( __CLASS__, 'replyToGetCacheNameSanitized' ), 
             10, 
             3 
         );
     
         switch ( $sMethod ) {
             case 'POST':
-                $_oHTTP     = new FetchTweets_HTTP_Delete( 
+                $_oHTTP     = new FetchTweets_HTTP_Post( 
                     $sURL,
                     $this->iCacheDuration,
                     array(
@@ -131,8 +146,13 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
         return $_sResponse;
         
     }
-    
-        public function replyToGetCacheNameSanitized( $sCacheName, $sOriginalName, $sRequestType ) {
+        
+        /**
+         * @todo    Examine whether the static scope helps to avoid multiple calls of callbacks.
+         * @callback    filter      fetch_tweets_filter_http_response_cache_name
+         * @return      string
+         */
+        static public function replyToGetCacheNameSanitized( $sCacheName, $sOriginalName, $sRequestType ) {
             $_sURL = remove_query_arg(
                 array(
                     'oauth_nonce',
