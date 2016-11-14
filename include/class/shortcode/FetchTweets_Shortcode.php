@@ -13,11 +13,13 @@
  */
 class FetchTweets_Shortcode {
     
+    private $___sShortcode = 'fetch_tweets'
+    
     /**
      * Registers the shortcode.
      */
-    public function __construct( $sShortCode ) {
-        add_shortcode( $sShortCode, array( $this, '_replyToGetOutput' ) );
+    public function __construct() {
+        add_shortcode( $this->___sShortCode, array( $this, '_replyToGetOutput' ) );
     }
     
     /**
