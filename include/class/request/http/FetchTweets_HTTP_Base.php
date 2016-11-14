@@ -134,6 +134,14 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
     public function getStatusCode() {
         return $this->___iStatusCode;
     }
+    
+    /**
+     * Retrieves the data only from caches.
+     */
+    public function getCache() {
+        return $this->___get( true );
+    }
+    
     /**
      * Returns HTTP body(s).
      * 
@@ -141,19 +149,32 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
      * @return      string|array
      */
     public function get() {
-        
-        $_aHTTPBodies = array();
-        $_aResponses  = $this->___getHTTPResponseWithCache( $this->___aURLs, $this->_aArguments, $this->___iCacheDuration );
-        foreach( $_aResponses as $_sURL => $_aoResponse ) {
-            $this->___iStatusCode   = wp_remote_retrieve_response_code( $_aoResponse );
-            $_aHTTPBodies[ $_sURL ] = $this->___getHTTPBody( $_aoResponse );
-            $_sLastIndex = $_sURL;
-        }
-        return 1 === count( $_aHTTPBodies ) // is single ?
-            ? $_aHTTPBodies[ $_sLastIndex ]     // (string)
-            : $_aHTTPBodies;              // (array)
-        
+        return $this->___get( false );
     }
+        /**
+         * @return      string|array
+         */
+        private function ___get( $bOnlyCache=false ) {
+        
+            $_aMethods = array(
+                0 => '___getHTTPResponseWithCache',
+                1 => '___getOnlyCachedHTTPResponse',
+            );
+            $_sMethod  = $_aMethods[ ( integer ) $bOnlyCache ];
+        
+            $_aHTTPBodies = array();
+            $_aResponses  = $this->$_sMethod( $this->___aURLs, $this->_aArguments, $this->___iCacheDuration );
+            foreach( $_aResponses as $_sURL => $_aoResponse ) {
+                $this->___iStatusCode   = wp_remote_retrieve_response_code( $_aoResponse );
+                $_aHTTPBodies[ $_sURL ] = $this->___getHTTPBody( $_aoResponse );
+                $_sLastIndex = $_sURL;
+            }
+            return 1 === count( $_aHTTPBodies ) // is single ?
+                ? $_aHTTPBodies[ $_sLastIndex ] // (string)
+                : $_aHTTPBodies;                // (array)
+        
+        }
+    
         /**
          * @since       1.1.0
          * @return      string
@@ -247,28 +268,36 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
                     );
                     
                 }    
-                
         /**
-         * Returns raw HTTP responses.
+         * 
+         */
+        private function ___getOnlyCachedHTTPResponse( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {
+            return $this->___getCaches( $aURLs, $aArguments, $iCacheDuration, false );
+        }
+        
+        /**
+         * Returns HTTP responses and performs HTTP requests if a cache is not avaiable.
          * @return      array        Response array.
          */
         private function ___getHTTPResponseWithCache( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {
             
-            // Retrieve available caches.
+            // Retrieve available caches. Note that the array is indexed with cache names (not urls).
             $_aValidCaches   = $this->___getCaches( $aURLs, $aArguments, $iCacheDuration );
 
             // Check if caches exist one by one and if not, get the response and set a cache.
             $_aHTTPResponses = array();
             foreach( $aURLs as $_sURL ) {
                 
+                // The cache array is indexed with cache name. This is to allow omit complex URL query string values such as nonce and timestamps which are too unique to cache.
                 $_sCacheName = $this->___getCacheName( $_sURL );
                 
                 // If a cache is available, use it.
                 if ( isset( $_aValidCaches[ $_sCacheName ] ) ) {
                     $_aHTTPResponses[ $_sURL ] = $_aValidCaches[ $_sCacheName ];
+var_dump( 'cache set: ' . $_sURL );     
                     continue;
                 }
-                                
+var_dump( 'cache not set: ' . $_sURL );                                     
                 // Otherwise, perform an HTTP request and cache the result.
                 $_aHTTPResponses[ $_sURL ] = $this->_getHTTPResponse( $_sURL, $aArguments );
                 $this->___setCache( $_sURL, $_sCacheName, $_aHTTPResponses[ $_sURL ], $iCacheDuration );
@@ -278,9 +307,13 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
             
         }    
             /**
+             * @param       array   $aURLs
+             * @param       array   $aArguments         HTTP request arguments
+             * @param       integer $iCacheDuration     A cache lifespan
+             * @param       boolean $bIndexByCacheName  Whether to index the result array with cache names or urls. True for cache name and false for urls.
              * @return      array
              */
-            private function ___getCaches( $aURLs, $aArguments, $iCacheDuration ) {
+            private function ___getCaches( $aURLs, $aArguments, $iCacheDuration, $bIndexByCacheName=true ) {
                                 
                 $_aValidCaches   = array();
                 foreach( $this->___getCachesFromDatabase( $aURLs, $iCacheDuration ) as $_aCache ) {
@@ -306,8 +339,10 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
                     // Set a valid item.
                     if ( $_aCache[ 'remained_time' ] && $_aCache[ 'data' ] ) {
                         $this->___sLastCharSet = $_aCache[ 'charset' ];
-                        $_sCacheName = $this->___getCacheName( $_aCache[ 'request_uri' ] );
-                        $_aValidCaches[ $_sCacheName ] = $_aCache[ 'data' ];
+                        $_sIndex = $bIndexByCacheName 
+                            ? $this->___getCacheName( $_aCache[ 'request_uri' ] )
+                            : $_aCache[ 'request_uri' ];
+                        $_aValidCaches[ $_sIndex ] = $_aCache[ 'data' ];
                     }
                     
                 }
