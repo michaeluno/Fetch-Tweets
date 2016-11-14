@@ -243,7 +243,6 @@ class FetchTweets_Option extends FetchTweets_Option_Format {
                 : $_oOption->aOptions;
         }
 
-        // Now either the section ID or field ID is given. 
         return FetchTweets_AdminPageFramework_WPUtility::getArrayValueByArrayKeys( 
             $_oOption->aOptions, 
             array_values( FetchTweets_AdminPageFramework_WPUtility::getAsArray( $asKey ) ), 
