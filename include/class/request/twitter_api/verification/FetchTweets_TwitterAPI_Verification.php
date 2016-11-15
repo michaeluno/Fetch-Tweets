@@ -46,7 +46,9 @@ class FetchTweets_TwitterAPI_Verification extends FetchTweets_PluginUtility {
         // Return the cached response if available.
         $_sCacheID  = FetchTweets_Commons::TransientPrefix . '_' . md5( serialize( array( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret ) ) );
         $_vData     = $this->getTransient( $_sCacheID );
-        if ( false !== $_vData ) { return $_vData; }
+        if ( false !== $_vData ) { 
+            return $_vData; 
+        }
         
         // Perform the requests.
         $_oConnect  =  new FetchTweets_TwitterOAuth( $this->sConsumerKey, $this->sConsumerSecret, $this->sAccessToken, $this->sAccessSecret );
@@ -54,7 +56,7 @@ class FetchTweets_TwitterAPI_Verification extends FetchTweets_PluginUtility {
         $_aUser     = $_oConnect->get( 'account/verify_credentials' );
         
         // If the user id could not be retrieved, it means it failed.
-        if ( ! isset( $_aUser['id'] ) || ! $_aUser['id'] ) {
+        if ( ! isset( $_aUser[ 'id' ] ) || ! $_aUser[ 'id' ] ) {
             return array();
         }
             
