@@ -13,14 +13,14 @@
  * 
  * @since       2.5.0       
  */
-class FetchTweets_HTTP_Delete extends FetchTweets_HTTP_Base {
+class FetchTweets_HTTP_Request extends FetchTweets_HTTP_Base {
 
     /**
      * Stores the request type.
      * 
      * Change this property to mark a cache item in the database.
      */
-    protected $_sRequestType = 'wp_remote_delete';
+    protected $_sRequestType = 'wp_remote_request';
  
     /**
      * Performs HTTP request.
@@ -28,7 +28,6 @@ class FetchTweets_HTTP_Delete extends FetchTweets_HTTP_Base {
      * @since       1.0.0
      */    
     protected function _getHTTPResponse( $sURL, array $aArguments ) {
-        $aArguments[ 'method' ] = 'DELETE';
         return function_exists( 'wp_safe_remote_request' )
             ? wp_safe_remote_request( $sURL, $aArguments )
             : wp_remote_request( $sURL, $aArguments );
