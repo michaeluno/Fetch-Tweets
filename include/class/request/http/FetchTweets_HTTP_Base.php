@@ -172,11 +172,17 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
     /**
      * Retrieves HTTP responses by using caches.
      * 
+     * @param       integer     $iCachingMode       Caching mode.
+     * - 0. get caches/responses + set caches ( get caches if available other wise perform a request, used for normal requests )
+     * - 1. get caches ( get only caches, used to check caches )
+     * - 2. get responses + set caches ( called in the background to update the cache )
+     * - 3. get responses ( do not set caches, used for sensitive queries such as getting credentials )
      * @remark      Handles character encoding conversion.
      * @return      string|array        HTTP body(s).
      */
-    public function get() {
-        return $this->___get( 0 );
+    public function get( /* $iCachingMode=0 */ ) {
+        $_aParams = func_get_args() + array( 0 => 0 );
+        return $this->___get( $_aParams[ 0 ] );
     }
     
         /**
@@ -208,6 +214,7 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
             foreach( $_aResponses as $_sURL => $_aoResponse ) {
                 if ( 1 !== $iCachingMode ) {                    
                     $this->___iStatusCode   = wp_remote_retrieve_response_code( $_aoResponse );
+                    $this->___sLastCharSet  = $this->___getCharacterSet( $_aoResponse );
                 }
                 $_aHTTPBodies[ $_sURL ] = $this->___getHTTPBody( $_aoResponse );
                 $_sLastIndex = $_sURL;
@@ -422,7 +429,6 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
                     }
                     
                     // Set a valid item.
-                    $this->___sLastCharSet = $_aCache[ 'charset' ];
                     $_sIndex = $this->___getCacheName( $_aCache[ 'request_uri' ] );
                     $_aValidCaches[ $_sIndex ] = $_aCache[ 'data' ];
                     
@@ -466,8 +472,7 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
              */
             private function ___setCache( $sURL, $sCacheName, $aoResponse, $iCacheDuration=86400 ) {
                 
-                $_sCharSet    = $this->___getCharacterSet( $aoResponse );            
-
+                $_sCharSet    = $this->___getCharacterSet( $aoResponse );
                 $_bResult     = $this->___oCacheTable->setCache( 
                     $sCacheName, // name
                     $aoResponse,
@@ -480,7 +485,6 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
                         'charset'     => $_sCharSet,
                     )
                 );        
-                $this->___sLastCharSet = $_sCharSet;
                 return $_bResult;
                 
             }
