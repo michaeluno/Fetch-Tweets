@@ -19,6 +19,8 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
     
     public $host = "https://api.twitter.com/1.1/";
 
+    /* This extended class specific properties. */
+    public $iCachingMode   = 3; // do not set caches 
     public $iCacheDuration = 86400;
     public $aHTTPArguments = array();
     
@@ -28,6 +30,15 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
      */
     public function setCacheDuration( $iCacheDuration ) {
         $this->iCacheDuration = $iCacheDuration;
+    }
+    /**
+     * - 0. get caches/responses + set caches ( get caches if available other wise perform a request, used for normal requests )
+     * - 1. get caches ( get only caches, used to check caches )
+     * - 2. get responses + set caches ( called in the background to update the cache )
+     * - 3. get responses ( do not set caches, used for sensitive queries such as getting credentials )
+     */
+    public function setCachingMode( $iMode ) {
+        $this->iCachingMode = $iMode;
     }
     public function setHTTPArguments( $aArguments ) {
         $this->aHTTPArguments = ( array ) $aArguments;
@@ -137,7 +148,7 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
                 );
                 break;
         }
-        $_sResponse = $_oHTTP->get();
+        $_sResponse = $_oHTTP->get( $this->iCachingMode );
         
         // Must update the properties. The status code is referred when redirected back from twitter.com in the API authentication process.
         $this->http_code = $_oHTTP->getStatusCode();
