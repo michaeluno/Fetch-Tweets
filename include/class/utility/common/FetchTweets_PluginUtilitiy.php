@@ -13,6 +13,20 @@
 class FetchTweets_PluginUtility extends FetchTweets_WPUtility {
     
     /**
+     * @return      string
+     */
+    static public function getCurrentURL( /* $aQueries=array() */ ) {
+        $_aParams = func_get_args() + array( array() );
+        $aQueries = $_aParams[ 0 ];
+        return home_url( 
+            add_query_arg( 
+                $aQueries, 
+                $GLOBALS[ 'wp' ]->request 
+            )
+        );
+    }
+    
+    /**
      * Returns an array of language list for the Twitter Search API.
      * @since       2.4.7
      * @see         https://dev.twitter.com/rest/reference/get/search/tweets
