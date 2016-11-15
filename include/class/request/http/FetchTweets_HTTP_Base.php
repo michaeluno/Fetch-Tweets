@@ -10,7 +10,8 @@
 /**
  * Performs HTTP request.
  * 
- * 
+ * Supports automatic caching responses.
+ *  
  * @since       2.5.0       
  * @filter      apply       fetch_tweets_filter_http_response_cache
  * @version     1.1.0
@@ -136,42 +137,84 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
     }
     
     /**
-     * Retrieves the data only from caches.
+     * Retrieves HTTP responses only from caches.
+     * 
+     * Used to check caches.
+     * 
+     * @return      string|array        HTTP body(s).
      */
-    public function getCache() {
-        return $this->___get( true );
+    public function getCaches() {
+        return $this->___get( 1 );
     }
     
     /**
-     * Returns HTTP body(s).
+     * Retrieves direct HTTP responses without setting caches.
+     * 
+     * Used to perform sensitive HTTP requests such as API requests validating credentials.
+     * 
+     * @return      string|array        HTTP body(s).
+     */
+    public function getResponses() {
+        return $this->___get( 3 );
+    }
+
+    /**
+     * Retrieves direct HTTP responses and set their caches. 
+     * 
+     * This does not use caches even they are available. This is used to perform background cache renewal.
+     * 
+     * @return      string|array        HTTP body(s).
+     */
+    public function getResponsesBySettingCaches() {
+        return $this->___get( 2 );
+    }
+    
+    /**
+     * Retrieves HTTP responses by using caches.
      * 
      * @remark      Handles character encoding conversion.
-     * @return      string|array
+     * @return      string|array        HTTP body(s).
      */
     public function get() {
-        return $this->___get( false );
+        return $this->___get( 0 );
     }
+    
         /**
+         * HTTP request method names by caching mode.
+         */
+        static private $___sMethodNamesByCachingMode = array(
+            0 => '___getHTTPResponsesByUsingCaches',
+            1 => '___getOnlyCachedHTTPResponses',
+            2 => '___getDirectHTTPResponsesBySettingCaches',
+            3 => '___getDirectHTTPResponsesWihoutSettingCaches',        
+        );
+        /**
+         * Retrieves HTTP response data.
+         * 
+         * @param       integer     $iCachingMode      Caching mode.
+         * Cases: 
+         * - 0. get caches/responses + set caches ( get caches if available other wise perform a request, used for normal requests )
+         * - 1. get caches ( get only caches, used to check caches )
+         * - 2. get responses + set caches ( called in the background to update the cache )
+         * - 3. get responses ( do not set caches, used for sensitive queries such as getting credentials )
+         * 
          * @return      string|array
          */
-        private function ___get( $bOnlyCache=false ) {
-        
-            $_aMethods = array(
-                0 => '___getHTTPResponseWithCache',
-                1 => '___getOnlyCachedHTTPResponse',
-            );
-            $_sMethod  = $_aMethods[ ( integer ) $bOnlyCache ];
+        private function ___get( $iCachingMode=0 ) {
         
             $_aHTTPBodies = array();
+            $_sMethod     = self::$___sMethodNamesByCachingMode[ ( integer ) $iCachingMode ];
             $_aResponses  = $this->$_sMethod( $this->___aURLs, $this->_aArguments, $this->___iCacheDuration );
             foreach( $_aResponses as $_sURL => $_aoResponse ) {
-                $this->___iStatusCode   = wp_remote_retrieve_response_code( $_aoResponse );
+                if ( 1 !== $iCachingMode ) {                    
+                    $this->___iStatusCode   = wp_remote_retrieve_response_code( $_aoResponse );
+                }
                 $_aHTTPBodies[ $_sURL ] = $this->___getHTTPBody( $_aoResponse );
                 $_sLastIndex = $_sURL;
             }
-            return 1 === count( $_aHTTPBodies ) // is single ?
-                ? $_aHTTPBodies[ $_sLastIndex ] // (string)
-                : $_aHTTPBodies;                // (array)
+            return 1 === count( $this->___aURLs ) // is single ?
+                ? $_aHTTPBodies[ $_sLastIndex ]   // (string)
+                : $_aHTTPBodies;                  // (array)
         
         }
     
@@ -215,9 +258,7 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
                     return $sText;
                 }
                 
-                $sCharSetTo = $sCharSetTo
-                    ? $sCharSetTo
-                    : self::$___sSiteCharSet;
+                $sCharSetTo = $sCharSetTo ? $sCharSetTo : self::$___sSiteCharSet;
                 
                 $_bsDetectedEncoding = $bsCharSetFrom && is_string( $bsCharSetFrom )
                     ? $bsCharSetFrom
@@ -268,36 +309,74 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
                     );
                     
                 }    
-        /**
-         * 
+    
+        /**'
+         * Retrieves direct HTTP responses without setting caches.
+         * @return      array
          */
-        private function ___getOnlyCachedHTTPResponse( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {
-            return $this->___getCaches( $aURLs, $aArguments, $iCacheDuration, false );
+        private function ___getDirectHTTPResponsesBySettingCaches( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {
+            return $this->___getDirectHTTPResponses( $aURLs, $aArguments, $iCacheDuration, true );
+        }                
+        /**'
+         * Retrieves direct HTTP responses without setting caches.
+         * @return      array
+         */
+        private function ___getDirectHTTPResponsesWihoutSettingCaches( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {            
+            return $this->___getDirectHTTPResponses( $aURLs, $aArguments, $iCacheDuration, false );
         }
-        
+            /**'
+             * Retrieves direct HTTP responses.
+             * @return      array
+             */
+            private function ___getDirectHTTPResponses( array $aURLs, array $aArguments=array(), $iCacheDuration=86400, $bSetCache=true ) {
+                $_aHTTPResponses = array();
+                foreach( $aURLs as $_sCacheName => $_sURL ) {
+                    $_aHTTPResponses[ $_sURL ] = $this->_getHTTPResponse( $_sURL, $aArguments );
+                    if ( $bSetCache ) {                    
+                        $this->___setCache( $_sURL, $_sCacheName, $_aHTTPResponses[ $_sURL ], $iCacheDuration );
+                    }
+                }
+                return $_aHTTPResponses;            
+            } 
+        /**
+         * Retrieves cached HTTP responses.
+         * @return      array
+         * @since       1.1.0
+         */
+        private function ___getOnlyCachedHTTPResponses( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {
+            $_aCaches   = array();
+            foreach( $this->___getCachesFromDatabase( $aURLs, $iCacheDuration ) as $_aCache ) {
+                $_aCache = $this->__getCacheFormatted( $_aCache );
+                if ( ! isset( $_aCache[ 'data' ] ) ) {
+                    continue;
+                }
+                if ( 0 >= $_aCache[ 'remained_time' ] ) {
+                    continue;
+                }
+                $_aCaches[ $_aCache[ 'request_uri' ] ] = $_aCache[ 'data' ];                    
+                
+            }
+            return $_aCaches;
+        }
         /**
          * Returns HTTP responses and performs HTTP requests if a cache is not avaiable.
-         * @return      array        Response array.
+         * @return      array        A response array.
          */
-        private function ___getHTTPResponseWithCache( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {
+        private function ___getHTTPResponsesByUsingCaches( array $aURLs, array $aArguments=array(), $iCacheDuration=86400 ) {
             
             // Retrieve available caches. Note that the array is indexed with cache names (not urls).
-            $_aValidCaches   = $this->___getCaches( $aURLs, $aArguments, $iCacheDuration );
+            $_aValidCaches   = $this->___getFilteredCaches( $aURLs, $aArguments, $iCacheDuration );
 
             // Check if caches exist one by one and if not, get the response and set a cache.
             $_aHTTPResponses = array();
-            foreach( $aURLs as $_sURL ) {
-                
-                // The cache array is indexed with cache name. This is to allow omit complex URL query string values such as nonce and timestamps which are too unique to cache.
-                $_sCacheName = $this->___getCacheName( $_sURL );
+            foreach( $aURLs as $_sCacheName => $_sURL ) {
                 
                 // If a cache is available, use it.
                 if ( isset( $_aValidCaches[ $_sCacheName ] ) ) {
                     $_aHTTPResponses[ $_sURL ] = $_aValidCaches[ $_sCacheName ];
-var_dump( 'cache set: ' . $_sURL );     
                     continue;
                 }
-var_dump( 'cache not set: ' . $_sURL );                                     
+
                 // Otherwise, perform an HTTP request and cache the result.
                 $_aHTTPResponses[ $_sURL ] = $this->_getHTTPResponse( $_sURL, $aArguments );
                 $this->___setCache( $_sURL, $_sCacheName, $_aHTTPResponses[ $_sURL ], $iCacheDuration );
@@ -307,13 +386,14 @@ var_dump( 'cache not set: ' . $_sURL );
             
         }    
             /**
+             * Get filtered caches. 
+             * It applies filters so that a third-party modify its data or the remained time to perform background cache renewal.
              * @param       array   $aURLs
              * @param       array   $aArguments         HTTP request arguments
              * @param       integer $iCacheDuration     A cache lifespan
-             * @param       boolean $bIndexByCacheName  Whether to index the result array with cache names or urls. True for cache name and false for urls.
              * @return      array
              */
-            private function ___getCaches( $aURLs, $aArguments, $iCacheDuration, $bIndexByCacheName=true ) {
+            private function ___getFilteredCaches( $aURLs, $aArguments, $iCacheDuration ) {
                                 
                 $_aValidCaches   = array();
                 foreach( $this->___getCachesFromDatabase( $aURLs, $iCacheDuration ) as $_aCache ) {
@@ -336,14 +416,15 @@ var_dump( 'cache not set: ' . $_sURL );
                         $this->_sRequestType
                     );
                     
-                    // Set a valid item.
-                    if ( $_aCache[ 'remained_time' ] && $_aCache[ 'data' ] ) {
-                        $this->___sLastCharSet = $_aCache[ 'charset' ];
-                        $_sIndex = $bIndexByCacheName 
-                            ? $this->___getCacheName( $_aCache[ 'request_uri' ] )
-                            : $_aCache[ 'request_uri' ];
-                        $_aValidCaches[ $_sIndex ] = $_aCache[ 'data' ];
+                    // if ( $_aCache[ 'remained_time' ] && $_aCache[ 'data' ] ) {
+                    if ( 0 >= $_aCache[ 'remained_time' ] ) {
+                        continue;
                     }
+                    
+                    // Set a valid item.
+                    $this->___sLastCharSet = $_aCache[ 'charset' ];
+                    $_sIndex = $this->___getCacheName( $_aCache[ 'request_uri' ] );
+                    $_aValidCaches[ $_sIndex ] = $_aCache[ 'data' ];
                     
                 }
                 return $_aValidCaches;
@@ -356,7 +437,7 @@ var_dump( 'cache not set: ' . $_sURL );
                     return 0 === $iCacheDuration
                         ? array()
                         : $this->___oCacheTable->getCache(  
-                            array_keys( $aURLs ), // multiple names - the url array is indexed with cache names
+                            array_keys( $aURLs ), // multiple names - the url array is indexed with cache names set in `___getURLsFormatted()`.
                             $iCacheDuration
                         );                      
                 }                    
@@ -537,9 +618,7 @@ var_dump( 'cache not set: ' . $_sURL );
                 $_sContentType, // haystack
                 $_aMatches
             );
-            return isset( $_aMatches[ 1 ] )
-                ? $_aMatches[ 1 ]
-                : '';
+            return isset( $_aMatches[ 1 ] ) ? $_aMatches[ 1 ] : '';
                 
         }
     
