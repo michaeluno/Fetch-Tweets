@@ -11,19 +11,19 @@
  * Renews HTTP request caches in the background.
  * 
  * @since       2.5.0
- * @action      add             fetch_tweets_filter_http_response_cache
- * @action      schedule|add    fetch_tweets_action_http_cache_renewal
+ * @action      add             fetch_tweets_filter_twitter_api_response_cache
+ * @action      schedule|add    fetch_tweets_action_twitter_api_response_cache_renewal
  */
-class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
+class FetchTweets__Action_TwitterAPIResponseCacheRenewal extends FetchTweets__Action_Base {
     
-    protected $_sActionName = 'fetch_tweets_action_http_cache_renewal';
+    protected $_sActionName = 'fetch_tweets_action_twitter_api_response_cache_renewal';
     
     protected $_iArguments  = 4;
 
     protected function _construct() {
         
         add_filter( 
-            'fetch_tweets_filter_http_response_cache',  // filter hook name
+            'fetch_tweets_filter_twitter_api_response_cache',  // filter hook name
             array( $this, 'replyToModifyCacheRemainedTime' ), // callback
             10, // priority
             4 // number of parameters
@@ -40,66 +40,33 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
         $_iCacheDuration = $_aParams[ 1 ];
         $_aArguments     = $_aParams[ 2 ];
         $_sType          = $_aParams[ 3 ];
-        
-        $_aClass         = array(
-            'wp_remote_get'     => 'FetchTweets_HTTP_Get',
-            'wp_remote_post'    => 'FetchTweets_HTTP_Post',
-            'wp_remote_request' => 'FetchTweets_HTTP_Request',
-            'wp_remote_delete'  => 'FetchTweets_HTTP_Delete',
-        );
-        $_sClassName = isset( $_aClass[ $_sType ] ) 
-            ? $_aClass[ $_sType ]
-            : $_aClass[ 'wp_remote_get' ];
-        
-        $_aURLs = $this->___getAPIRequestsDropped( $_asURL );
-        if ( empty( $_aURLs ) ) {
-            return;
-        }
-        
-        $_oHTTP          = new $_sClassName(
-            $_aURLs, 
-            $_iCacheDuration, 
-            $_aArguments
-        );
-        $_oHTTP->deleteCache();
-        $_oHTTP->get();
 
-    }
-        /**
-         * @return      array
-         */
-        private function ___getAPIRequestsDropped( $asURL ) {
+        foreach( $this->getAsArray( $_asURL ) as $_sURL ) {
             
-            $_aNew = array();
-            foreach ( $this->getAsArray( $asURL ) as $_sURL ) {
-                if ( $this->___isTwitterAPIRequest( $_sURL ) ) {
-                    continue;
-                }
-                $_aNew[] = $_sURL;
-            }
-            return $_aNew;
-            
+            $_aArguments = array(
+                'custom_query'  => $_sURL,
+                'cache'         => $_iCacheDuration,
+                'force_caching' => true,
+            );
+// @todo when the main function, `FetchTweets()`, changes the internal method to use the `FetchTweets_Output_Tweet` class, use the function.
+$_oTwitterAPI = new FetchTweets_Output_Tweet( $_aArguments );
+$_aData = $_oTwitterAPI->get();
+                
         }
-            /**
-             * Checks if the given URI is for Twitter API.
-             * 
-             * @since            2.1
-             */
-            private function ___isTwitterAPIRequest( $sURL ) {
-                return 'api.twitter.com' === parse_url( $sURL,  PHP_URL_HOST );
-            }
+        
+    }
+    
     
     /**
      * 
-     * @callback        filter      fetch_tweets_filter_http_response_cache
+     * @callback        filter      fetch_tweets_filter_twitter_api_response_cache
      */
     public function replyToModifyCacheRemainedTime( $aCache, $iCacheDuration, $aArguments, $sType='wp_remote_get' ) {
 
-        // Do nothing for API requests.
-        if ( $this->___isTwitterAPIRequest( $aCache[ 'request_uri' ] ) ) {
+        if ( ! isset( $aCache[ 'request_uri' ] ) ) {
             return $aCache;
         }
-      
+
         // If the cache duration is explicitly set to `0`, do not schedule a background renewal task.
         if ( 0 === $iCacheDuration ) {
             $aCache[ 'remained_time' ] = 0;
@@ -116,7 +83,11 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
                 $aArguments,
                 $sType
             );
-
+            
+            if ( $_bScheduled ) {
+                new FetchTweets_Event__BackgroundPageload;
+            }
+ 
             // Tell the plugin it is not expired. 
             $aCache[ 'remained_time' ] = time();
             
@@ -130,7 +101,7 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
          * @return      boolean
          */
         private function ___scheduleBackgroundCacheRenewal( $sURL, $iCacheDuration, $aArguments, $sType ) {
-                
+                  
             $_aArguments  = array(
                 $sURL,
                 $iCacheDuration,
@@ -150,5 +121,6 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
                 : true;
             
         }
-
+        
+        
 }

@@ -22,6 +22,7 @@ final class FetchTweets_Event extends FetchTweets_PluginUtility {
  
         $_aEventActionClassNames = array(
             'FetchTweets__Action_HTTPCacheRenewal',
+            'FetchTweets__Action_TwitterAPIResponseCacheRenewal',
             'FetchTweets__Action_TransientRenewal',
             'FetchTweets__Action_SimplePieCacheRenewal',
             'FetchTweets__Action_oEmbedUpdate',
@@ -41,6 +42,7 @@ final class FetchTweets_Event extends FetchTweets_PluginUtility {
                         'fetch_tweets_action_transient_add_oembed_elements',
                         'fetch_tweets_action_simplepie_renew_cache',
                         'fetch_tweets_action_http_cache_renewal',
+                        'fetch_tweets_action_twitter_api_response_cache_renewal',
                     )
                 )
             );    
