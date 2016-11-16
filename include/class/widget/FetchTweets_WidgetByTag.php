@@ -20,11 +20,11 @@ class FetchTweets_WidgetByTag extends FetchTweets_Widget_Base {
                 
         $this->_aStructure_FormElements = $this->_aStructure_FormElements + array(
             'selected_tag_slugs' => array(),
-            'operator' => 'AND',        
+            'operator'           => 'AND',        
         );
                 
         parent::__construct(
-             'fetch_tweets_widget_by_tag', // base ID
+            'fetch_tweets_widget_by_tag', // base ID
             'Fetch Tweets by Tag',     // widget name
             array( 'description' => __( 'A widget that fetches tweets by tag.', 'fetch-tweets' ), ) 
         );
@@ -44,19 +44,19 @@ class FetchTweets_WidgetByTag extends FetchTweets_Widget_Base {
 
         fetchTweets( 
             array(     
-                'tag_field_type'        =>    'slug',
-                'tags'                    =>    $aInstance['selected_tag_slugs'],
-                'count'                    =>    $aInstance['count'],
-                'operator'                =>    $aInstance['operator'],
-                'twitter_media'            =>    $aInstance['twitter_media'],
-                'external_media'        =>    $aInstance['external_media'],
+                'tag_field_type'        => 'slug',
+                'tags'                  => $aInstance['selected_tag_slugs'],
+                'count'                 => $aInstance['count'],
+                'operator'              => $aInstance['operator'],
+                'twitter_media'         => $aInstance['twitter_media'],
+                'external_media'        => $aInstance['external_media'],
                 // Template Options
-                'template'                =>    $aInstance['template'],
-                'avatar_size'            =>    $aInstance['avatar_size'],
-                'height'                =>    $aInstance['height'],
-                'height_unit'            =>    $aInstance['height_unit'],
-                'width'                    =>    $aInstance['width'],
-                'width_unit'            =>    $aInstance['width_unit'],                        
+                'template'              => $aInstance['template'],
+                'avatar_size'           => $aInstance['avatar_size'],
+                'height'                => $aInstance['height'],
+                'height_unit'           => $aInstance['height_unit'],
+                'width'                 => $aInstance['width'],
+                'width_unit'            => $aInstance['width_unit'],                        
             ) 
         );    
         
@@ -208,8 +208,8 @@ class FetchTweets_WidgetByTag extends FetchTweets_Widget_Base {
         
         $aNewInstance['count']       = $this->fixNumber( $aNewInstance['count'], 20, 0 );
         $aNewInstance['avatar_size'] = $this->fixNumber( $aNewInstance['avatar_size'], 48, 0 );
-
         return $aNewInstance;
+        
     }
     
     
@@ -228,6 +228,7 @@ class FetchTweets_WidgetByTag extends FetchTweets_Widget_Base {
             $_aTagSlugs[ $_oTerm->slug ] = $_oTerm->name;        
         }
         return $_aTagSlugs;
+        
     }
     
 }
