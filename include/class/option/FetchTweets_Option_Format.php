@@ -87,6 +87,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
             'size' => '',
             'unit' => 'mi',
         ),
+        'custom_query'          => null,    // 2.5.0+
         
         // 1.2.0+
         'list_id'               => null,    
@@ -101,6 +102,10 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         
         // 2.4.8
         'apply_template_on_no_result'   => true,
+        
+        // 2.5.0+
+        'force_caching'          => false,   // (boolean) whether to force updating the cache. Used in the background cache renewal processes.
+        
         
     );
     public $aStructure_DefaultTemplateOptions = array(

@@ -80,7 +80,8 @@ class FetchTweets_Option extends FetchTweets_Option_Format {
      * 
      * The account ID does not refer to the Twitter user ID. It is just a post ID stored in the WordPress database.
      * 
-     * @since            2
+     * @since           2
+     * @return          array
      */
     public function getCredentialsByID( $iAccountID ) {
 
@@ -104,7 +105,8 @@ class FetchTweets_Option extends FetchTweets_Option_Format {
     /**
      * Returns the credentials array.
      * 
-     * @since            2
+     * @since           2
+     * @return          array
      */
     public function getCredentials() {
         

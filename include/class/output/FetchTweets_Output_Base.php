@@ -15,6 +15,8 @@
  */
 abstract class FetchTweets_Output_Base extends FetchTweets_PluginUtility {
    
+    protected $_oOptioun;
+   
     protected $_aArguments = array();
     
     /**
@@ -22,6 +24,7 @@ abstract class FetchTweets_Output_Base extends FetchTweets_PluginUtility {
      * @since       2.5.0
      */
     public function __construct( $aArguments ) {
+        $this->_oOption    = FetchTweets_Option::getInstance();
         $this->_aArguments = $this->_getArguments( $aArguments );
     }
     

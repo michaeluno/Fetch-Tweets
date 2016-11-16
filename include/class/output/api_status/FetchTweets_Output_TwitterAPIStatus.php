@@ -14,16 +14,7 @@
  * @since             2.5.0
  */
 class FetchTweets_Output_TwitterAPIStatus extends FetchTweets_Output_Base {
-   
-    protected $_aArguments = array();
-    
-    /**
-     * @return      void
-     */
-    public function render() {
-        echo $this->get();
-    }
-        
+
     /**
      * @return      string
      */
