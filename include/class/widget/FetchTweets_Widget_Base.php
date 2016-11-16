@@ -1,5 +1,15 @@
 <?php
+/**
+ * Amazon Auto Links
+ * 
+ * http://en.michaeluno.jp/amazon-auto-links/
+ * Copyright (c) 2013-2016 Michael Uno
+ * 
+ */
 
+/**
+ * A base class for plugin widgets.
+ */
 abstract class FetchTweets_Widget_Base extends WP_Widget {
     
     /**
@@ -7,21 +17,20 @@ abstract class FetchTweets_Widget_Base extends WP_Widget {
      * 
      */
     protected $_aStructure_FormElements = array(
-        'title'                =>    null,
-        'selected_ids'        =>    array(),
-        'count'                =>    20,            // default
-        'twitter_media'        =>    1,            // [2.3.3+] 1 or 0
-        'external_media'    =>    1,            // [2.3.3+] 1 or 0        
-        // template options
-        'template'            =>    null,
-        'avatar_size'        =>    48,
-        'width'                =>    100,
-        'width_unit'        =>    '%',     
-        'height'            =>    400,
-        'height_unit'        =>    'px',
+        'title'               => null,
+        'selected_ids'        => array(),
+        'count'               => 20,            // default
+        'twitter_media'       => 1,            // [2.3.3+] 1 or 0
+        'external_media'      => 1,            // [2.3.3+] 1 or 0        
+        // template options      
+        'template'            => null,
+        'avatar_size'         => 48,
+        'width'               => 100,
+        'width_unit'          => '%',     
+        'height'              => 400,
+        'height_unit'         => 'px',
     );
 
-    
     public static function registerWidget() {
         return register_widget( 'Put_The_Extended_Class_Name_Here' );    // the class name - get_class( self ) does not work.
     }    
