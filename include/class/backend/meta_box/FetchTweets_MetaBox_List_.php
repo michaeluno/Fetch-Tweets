@@ -39,12 +39,12 @@ class FetchTweets_MetaBox_List_ extends FetchTweets_AdminPageFramework_MetaBox {
                 'field_id'        => 'item_count',
                 'title'            => __( 'Item Count', 'fetch-tweets' ),
                 'description'    => __( 'Set how many items should be fetched.', 'fetch-tweets' ) . ' ' 
-                    . __( 'Max', 'fetch-tweets' ) . ': 100 '
+                    . __( 'Max', 'fetch-tweets' ) . ': 200 '
                     . __( 'Default', 'fetch-tweets' ) . ': 20',
                 'type'            => 'number',
                 'default'            => 20,
                 'attributes'    =>    array(
-                    'max'    =>    100,
+                    'max'    =>    200,
                 ),                
             ),                
             array(
