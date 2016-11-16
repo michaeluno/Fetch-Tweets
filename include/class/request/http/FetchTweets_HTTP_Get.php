@@ -32,6 +32,5 @@ class FetchTweets_HTTP_Get extends FetchTweets_HTTP_Base {
             ? wp_safe_remote_get( $sURL, $aArguments )
             : wp_remote_get( $sURL, $aArguments );
     }    
-    
-    
+
 }
