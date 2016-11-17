@@ -211,48 +211,17 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
      */
     public function get() {   
 
-        $_aTweets   = $this->getTweets();
-        $_sError    = $this->___getErrorMessage( $_aTweets, $this->_aArguments );
-        if ( $_sError ) {
-            return $_sError;
+        $_asTweets   = $this->getTweets();  
+        if ( is_string( $_asTweets ) ) {
+            return $_asTweets;  // error
         }
-    
+
         // Output the tweets by applying the template 
+        $_aTweets = $_asTweets;
         $_oTemplate = new FetchTweets_Output_Tweet___Template( $_aTweets, $this->_aArguments );
         return $_oTemplate->get();  
         
     }
-        /**
-         * Generates error message from the tweets array.
-         * 
-         * @since       2.4.7
-         * @since       2.4.8       Changed the scope to public to let some extension plugins access this method.
-         * @return      string      the error message. An empty string on no error.
-         */
-        private function ___getErrorMessage( array $_aTweets ) {
-                    
-            if ( empty( $_aTweets ) ) {
-                return $this->getElement( $this->_aArguments, 'show_error_on_no_result' )
-                    ? __( 'No result could be fetched.', 'fetch-tweets' )
-                    : '';
-            }
-            
-            $_aError = $this->getElement( $_aTweets, array( 'errors', 0, ) );
-            if ( isset( $_aError[ 'message' ], $_aError[ 'code' ] ) ) {
-                return '<strong>' . FetchTweets_Commons::NAME . '</strong>: ' 
-                    . $_aError[ 'message' ] . ' ' 
-                    . __( 'Code', 'fetch-tweets' ) . ':' . $_aError[ 'code' ];
-            }
-            
-            $_sError = $this->getElement( $_aTweets, 'error', '' );
-            if ( $_sError && is_string( $_aTweets[ 'error' ] ) ) {
-                return '<strong>' . FetchTweets_Commons::NAME . '</strong>: ' 
-                    . $_aTweets[ 'error' ];    
-            }       
-            
-            return '';
-            
-        }
   
     /**
      * Fetches tweets based on the argument.
@@ -281,6 +250,11 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
             $_oRequest     = new $_sClassName( $_aArguments );
             $_aTweets      = array_merge( $_oRequest->get(), $_aTweets );
         }
+
+        $_sError    = $this->___getErrorMessage( $_aTweets );
+        if ( $_sError ) {
+            return $_sError;
+        }
         
         // Format tweets
         $_oFormatter   = new FetchTweets_Output_Tweet___Format( 
@@ -290,6 +264,38 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
         return $_oFormatter->get();
         
     }
+    
+        /**
+         * Generates error message from the tweets array.
+         * 
+         * @since       2.4.7
+         * @since       2.4.8       Changed the scope to public to let some extension plugins access this method.
+         * @return      string      the error message. An empty string on no error.
+         */
+        private function ___getErrorMessage( array $_aTweets ) {
+                    
+            if ( empty( $_aTweets ) ) {
+                return $this->getElement( $this->_aArguments, 'show_error_on_no_result' )
+                    ? __( 'No result could be fetched.', 'fetch-tweets' )
+                    : '';
+            }
+            
+            $_aError = $this->getElement( $_aTweets, array( 'errors', 0, ) ); 
+            if ( isset( $_aError[ 'message' ], $_aError[ 'code' ] ) ) {
+                return '<strong>' . FetchTweets_Commons::NAME . '</strong>: ' 
+                    . $_aError[ 'message' ] . ' ' 
+                    . __( 'Code', 'fetch-tweets' ) . ':' . $_aError[ 'code' ];
+            }
+            
+            $_sError = $this->getElement( $_aTweets, 'error', '' );
+            if ( $_sError && is_string( $_aTweets[ 'error' ] ) ) {
+                return '<strong>' . FetchTweets_Commons::NAME . '</strong>: ' 
+                    . $_aTweets[ 'error' ];    
+            }       
+            
+            return '';
+            
+        }
             
         /**
          * Populates arguments by each request.
