@@ -9,12 +9,9 @@ require_once( ABSPATH . WPINC . '/class-oembed.php' );
  */ 
 class FetchTweets_oEmbed extends WP_oEmbed {
 
-    function __construct() {
+    public function __construct() {
         
         parent::__construct();
-        
-        // This should be done by the bootstrap script but just in case.
-        if ( ! isset( $GLOBALS['arrFetchTweets_oEmbed'] ) ) $GLOBALS['arrFetchTweets_oEmbed'] = array();
         
         // Apply a fix for recent Instagram's image url format change.
         add_filter( 'oembed_result', array( $this, 'sanitizeOEmbedResult' ), 10, 3 );
@@ -34,17 +31,18 @@ class FetchTweets_oEmbed extends WP_oEmbed {
      */
     public function get_html( $strURL, $arrArgs=array() ) {
         
-        if ( isset( $GLOBALS['arrFetchTweets_oEmbed'][ $strURL ] ) )
-            return $GLOBALS['arrFetchTweets_oEmbed'][ $strURL ];
+        if ( isset( self::$___aCachedURLs[ $strURL ] ) )
+            return self::$___aCachedURLs[ $strURL ];
             
         $strHTML = parent::get_html( $strURL, $arrArgs );
         
-        // Store the result in the global array.
-        $GLOBALS['arrFetchTweets_oEmbed'][ $strURL ] = $strHTML;
+        // Store the cache.
+        self::$___aCachedURLs[ $strURL ] = $strHTML;
         
         return $strHTML;
         
     }
+        static private $___aCachedURLs = array();
 
     /**
      * Attempts to find oEmbed provider discovery <link> tags at the given URL.
