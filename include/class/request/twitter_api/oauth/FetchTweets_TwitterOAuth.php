@@ -111,7 +111,8 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
      * @param       string      $sPostFields    formatted POST body fields
      */
     public function http( $sURL, $sMethod, $sPostFields=NULL) {
-
+        
+        $sURL = apply_filters( 'fetch_tweets_filter_formatted_api_request_uri', $sURL );
         add_filter( 
             'fetch_tweets_filter_http_response_cache_name', 
             array( __CLASS__, 'replyToGetCacheNameSanitized' ), 

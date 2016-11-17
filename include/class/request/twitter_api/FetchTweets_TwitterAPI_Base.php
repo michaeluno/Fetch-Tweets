@@ -113,6 +113,14 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
          * @return      array
          */
         protected function _getTweetsExtracted( $aResponse ) {
+            
+            // If the target element path is not set, enclose the response in an array.
+            // This is used by tweet ids. In this case, the entire tweet array is returned by the response.
+            if ( ! isset( $this->_aTargetElementPath ) ) {
+                return array( $this->getAsArray( $aResponse ) );
+            }
+            
+            // Otherwise, fetch tweets reside in the target path.
             return empty( $this->_aTargetElementPath )
                 ? $this->getAsArray( $aResponse )
                 : $this->getElementAsArray( $aResponse, $this->_aTargetElementPath );            
@@ -159,13 +167,17 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
             
             $_iCacheDuration = ( integer ) $this->getElement( $this->_aArguments, array( 'cache' ), 1200 );
             
+            // Let third party modify the request uri.
+            // This differs from the `fetch_tweets_filter_formatted_api_request_uri` filter as it is done after formatting and includes some sensitive values such as api keys and nonce values.
+            $_sRequestURI    = apply_filters( 'fetch_tweets_filter_api_request_uri', $_sRequestURI );
+            
             // Check a cache and use it if available.      
             if ( ! $this->getElement( $this->_aArguments, array( 'force_caching' ), false ) ) {
-                $_aCache = $this->___oCache->get( $sRequestURI, $_iCacheDuration );
+                $_aCache = $this->___oCache->get( $_sRequestURI, $_iCacheDuration );
                 if ( ! empty( $_aCache ) ) {
                     
-var_dump( 'using cache: ' . $sRequestURI );
-FetchTweets_Debug::log( 'using cache: ' . $sRequestURI );
+var_dump( 'using cache: ' . $_sRequestURI );
+FetchTweets_Debug::log( 'using cache: ' . $_sRequestURI );
         
                     return $_aCache;
                 }
@@ -176,15 +188,20 @@ FetchTweets_Debug::log( 'using cache: ' . $sRequestURI );
             $_aResponse = $this->getAsArray( $_aResponse );
 
             // Set cache
-            $this->___oCache->set( $sRequestURI, $_aResponse, $_iCacheDuration );
-var_dump( 'setting cache: ' . $sRequestURI );
-FetchTweets_Debug::log( 'setting cache: ' . $sRequestURI );
+            $this->___oCache->set( $_sRequestURI, $_aResponse, $_iCacheDuration );
+var_dump( 'setting cache: ' . $_sRequestURI );
+FetchTweets_Debug::log( 'setting cache: ' . $_sRequestURI );
             return $_aResponse;
 
         }    
         
             private function ___getRequestURISanitized( $sRequestURI ) {
-                return trim( $sRequestURI );    
+                return add_query_arg(
+                    array(
+                        'tweet_mode' => 'extended', // preventes truncated tweets.
+                    ),
+                    trim( $sRequestURI )
+                );
             }    
            
             /**

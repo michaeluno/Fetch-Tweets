@@ -14,6 +14,11 @@
 class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
     
     /**
+     * Stores the direct set arguments.
+     */
+    private $___aDirectArguments = array();
+    
+    /**
      * Retrieves the arguments.
      * 
      * @param            array            $aArguments 
@@ -46,42 +51,54 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
      */    
     protected function _getArguments( $aArguments ) {
         $aArguments = $this->getAsArray( $aArguments );
-        $aArguments = $aArguments + $this->_aArguments;
-        return $this->___getArgumentsFormatted( $aArguments );
+        $this->___aDirectArguments = $this->___getDirectArgumentsFormatted( $aArguments ) + $this->_aArguments;
+        return $this->___getArgumentsFormatted( $this->___aDirectArguments );
     }
     
         /**
-         * Formats the argument array.
-         * @return      array
-         * @since       2.5.0
-         */
-        private function ___getArgumentsFormatted( $aArguments ) {
-            
-            $_aArguments         = $this->uniteArrays( 
+         * Merges given arguments with default values.
+         */        
+        private function ___getArgumentsFormatted( array $aArguments ) {
+            return $this->uniteArrays( 
                 $aArguments,         // passed arguments for the API request
                 $this->_oOption->aOptions[ 'default_values' ]  // user saved options
                 + $this->_oOption->aStructure_DefaultParams  // class0defined option structure
                 + $this->_oOption->aStructure_DefaultTemplateOptions // class-defined template option structure
-            );
-            $_aArguments[ 'id' ] = $this->___getUnitIDs( $_aArguments );
+            );            
+        }
+        
+        /**
+         * Formats the direct argument array. 
+         * 
+         * Here not merging with the default values. It is assumed this arguments are directly set by the user via shortocde, widget, or the PHP function.
+         * 
+         * @return      array
+         * @since       2.5.0
+         */
+        private function ___getDirectArgumentsFormatted( $aArguments ) {
             
-            return $_aArguments;
+            if ( $this->getElement( $aArguments, 'get', false ) ) {
+                $aArguments = $_GET + $aArguments;
+            }
+           
+            $aArguments[ 'id' ] = $this->___getRuleIDs( $aArguments );
+            return $aArguments;
             
         }    
             /**
              * @return      array
              */
-            private function ___getUnitIDs( $_aArguments ) {
+            private function ___getRuleIDs( $_aArguments ) {
                 
-                $_aTags    = $this->___getTags( $_aArguments );
+                $_aTags    = $this->___getTags( $_aArguments );   
                 if ( ! empty( $_aTags ) ) {
-                    return $this->___getUnitIDsByTag( $_aTags, $_aArguments );
+                    return $this->___getRuleIDsByTag( $_aTags, $_aArguments );
                 }
                 
                 $_asIDs    = $this->getElement( 
                     $_aArguments, 
-                    array( 'ids' ), 
-                    $this->getElement( $_aArguments, array( 'id' ), '' )  // default - backward compatibility
+                    array( 'id' ), 
+                    $this->getElement( $_aArguments, array( 'ids' ), '' )  // default - backward compatibility
                 );
                 $_aIDs     = is_array( $_asIDs ) 
                     ? $_asIDs 
@@ -95,10 +112,10 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
                 private function ___getTags( $aArguments ) {
                     $_sTags    = $this->getElement( 
                         $aArguments, 
-                        array( 'tags' ), 
+                        array( 'tag' ), 
                         $this->getElement( 
                             $aArguments, 
-                            array( 'tag' ), // backward compatibility
+                            array( 'tags' ), // backward compatibility
                             '' 
                         ) 
                     );
@@ -109,7 +126,8 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
                  * Retrieves Unit (post) IDs from specified taxonomy terms.
                  * @return      array
                  */
-                private function ___getUnitIDsByTag( $aTags, $aArguments ) {                    
+                private function ___getRuleIDsByTag( $aTags, $aArguments ) {                    
+
                     return isset( $aArguments[ 'tag_field_type' ] ) && in_array( strtolower( $aArguments[ 'tag_field_type' ] ), array( 'id', 'slug' ) )
                         ? $this->___getPostIDsByTag( 
                             $aTags, 
@@ -177,11 +195,11 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
                             switch( strtoupper( trim( $sOperator ) ) ) {
                                 case 'NOT IN':
                                     return 'NOT IN';
-                                case 'IN':
-                                    return 'IN';
-                                default:
                                 case 'AND':
                                     return 'AND';
+                                default:
+                                case 'IN':
+                                    return 'IN';                                
                             }
                         }
         
@@ -239,75 +257,94 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
     /**
      * Fetches tweets based on the argument.
      * 
-     * @remark      The scope is public as the feed extension uses it.
+     * When tags are set, multiple requests are performed. So be careful about the handling of each arguments per request.
+     * 
+     * @remark      The `$_aArguments` property will be updated.
      * @since       2.5.0
      * @return      array
      */
     public function getTweets() {    
         
-        $_aTweets          = array();
-        $_aArgumentsByType = $this->___getArgumentsByRequestTypes( $this->_aArguments );
-        foreach( $_aArgumentsByType as $_sRequestType => $_aArguments ) {            
-            $_sClassName   = 'FetchTweets_TwitterAPI_' . $_sRequestType;
+        $_aTweets             = array();
+        $_aArgumentsByRequest = $this->___getArgumentSetsByRequests( $this->___aDirectArguments );
+
+        // Update the overall arguments with the first parsing argument set.
+        foreach ( $_aArgumentsByRequest as $_aArguments ) {
+            $this->_aArguments = $this->___aDirectArguments + $_aArguments + $this->_aArguments;
+            break;
+        }        
+        
+        // Retrieve tweets.
+        foreach( $_aArgumentsByRequest as $_aArguments ) {
+            $_aArguments   = $_aArguments + $this->_aArguments;
+            $_sClassName   = 'FetchTweets_TwitterAPI_' . $_aArguments[ 'tweet_type' ];
             $_oRequest     = new $_sClassName( $_aArguments );
             $_aTweets      = array_merge( $_oRequest->get(), $_aTweets );
         }
+        
+        // Format tweets
         $_oFormatter   = new FetchTweets_Output_Tweet___Format( 
             $_aTweets, 
-            $this->_aArguments
+            $this->_aArguments  // overall arguments
         );
         return $_oFormatter->get();
         
     }
-    
+            
         /**
-         * Determines the request types.
+         * Populates arguments by each request.
          * 
-         * Usually, only one type is returned per argument but if multiple unit IDs are passed, the request types will be multiple.
+         * Usually, only one set of argument is returned 
+         * but if multiple unit IDs are passed, the multiple sets of arguments will be returned.
          * 
+         * @remark      Each argument set is not formatted so there could be missing arguments.
          * @return      array
          */
-        private function ___getArgumentsByRequestTypes( array $aArguments ) {
-            
-            $_sType = $this->___getRequestTypeFromArguments( $aArguments );
+        private function ___getArgumentSetsByRequests( array $aDirectArguments ) {
+                        
+            // If the user sets direct arguments and the request type is determined, format the arguments with the direct arguments.
+            $_sType           = $this->___getRequestTypeFromDirectArguments( $aDirectArguments );
             if ( '' !== $_sType ) {
-                return array( $_sType => $aArguments, );
+                $aDirectArguments[ 'tweet_type' ] = $_sType;
+                return array( $aDirectArguments );
             }
-            return $this->___getArgumentsFromUnitIDs( $aArguments[ 'id' ], $aArguments );
+            
+            // Otherwise, the rule ID is specified so construct arguments with the rule arguments.
+            return $this->___getArgumentsFromRuleIDs( $aDirectArguments[ 'id' ], $aDirectArguments );
                         
         }
             /**
              * @return      string
              */
-            private function ___getRequestTypeFromArguments( $aArguments ) {
+            private function ___getRequestTypeFromDirectArguments( $aDirectArguments ) {
                             
                 // Custom query URIs.
-                if ( isset( $aArguments[ 'custom_query' ] ) ) {
+                if ( isset( $aDirectArguments[ 'custom_query' ] ) ) {
                     return 'custom_query';
                 }
                 
                 // Search keywords.
-                if ( isset( $aArguments[ 'q' ] ) ) {   
+                if ( isset( $aDirectArguments[ 'q' ] ) ) {   
                     return 'search';
                 }
                 
                 // Screen names.
-                if ( isset( $aArguments[ 'screen_name' ] ) ) {
+                if ( isset( $aDirectArguments[ 'screen_name' ] ) ) {
                     return 'screen_name';
                 }
                 
                 // Lists
-                if ( isset( $aArguments[ 'list_id' ] ) ) {
+                if ( isset( $aDirectArguments[ 'list_id' ] ) ) {
                     return 'list';
                 }
                 
                 // Tweet ID
-                if ( isset( $aArguments[ 'tweet_id' ] ) ) {
+                if ( isset( $aDirectArguments[ 'tweet_id' ] ) ) {
                     return 'tweet_id';
                 }            
                 
                 // Time line by registered account. Be careful that private lists also use `account_id`.
-                if ( isset( $aArguments[ 'account_id' ] ) ) {
+                if ( isset( $aDirectArguments[ 'account_id' ] ) ) {
                     return 'home_timeline';
                 }
                 
@@ -319,24 +356,26 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
              * @remark      Each unit has its own request type (tweet type).
              * @return      array       arguments by request type
              */
-            private function ___getArgumentsFromUnitIDs( array $aUnitIDs, $aDiretArguments ) {
-                
-                $_aArgumentsByType = array();
-                foreach( $aUnitIDs as $_iPostID ) {
+            private function ___getArgumentsFromRuleIDs( array $aRuleIDs, $aDirectArguments ) {
+
+                $_aArgumentSets = array();
+                foreach( $aRuleIDs as $_iPostID ) {
                     
-                    $_aArguments = array();
-                    $_aArguments[ 'tweet_type' ]  = get_post_meta( $_iPostID, 'tweet_type', true );
-                    $_aArguments[ 'count' ]       = get_post_meta( $_iPostID, 'item_count', true );
-                    $_aArguments[ 'include_rts' ] = get_post_meta( $_iPostID, 'include_rts', true );
-                    $_aArguments[ 'cache' ]       = get_post_meta( $_iPostID, 'cache', true );
-                    $_aArguments = $this->uniteArrays( 
-                        $aDiretArguments,
-                        $_aArguments + $this->___getArguments_{$_aArguments[ 'tweet_type' ]}( $_iPostID )
+                    // Rule arguments here refers to the arguments set in the rule.
+                    $_aRuleArguments = array();
+                    $_aRuleArguments[ 'tweet_type' ]  = get_post_meta( $_iPostID, 'tweet_type', true );
+                    $_aRuleArguments[ 'count' ]       = get_post_meta( $_iPostID, 'item_count', true );                  
+                    $_aRuleArguments[ 'include_rts' ] = get_post_meta( $_iPostID, 'include_rts', true );
+                    $_aRuleArguments[ 'cache' ]       = get_post_meta( $_iPostID, 'cache', true );
+                    $_sMethodName                 = "___getArguments_{$_aRuleArguments[ 'tweet_type' ]}";
+                    $_aRuleArguments = $this->uniteArrays( 
+                        $aDirectArguments,
+                        $_aRuleArguments + $this->$_sMethodName( $_iPostID )
                     );
-                    $_aArgumentsByType[ $_aArguments[ 'tweet_type' ] ] = $_aArguments;
+                    $_aArgumentSets[ $_iPostID ] = $_aRuleArguments;
                     
-                }
-                return $_aArgumentsByType;
+                }             
+                return $_aArgumentSets;
                 
             }
                 /**

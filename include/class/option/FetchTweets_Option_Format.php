@@ -64,8 +64,8 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         'tags'                  => null,    // deprecated as of 1.0.0.4 - but extension plugins may use it
         'count'                 => 20,
         // 'avatar_size'        => 48,
-        'operator'              => 'AND',
-        'tag_field_type'        => 'slug',                // used internally. slug or id.
+        'operator'              => 'IN',    // 2.5.0 Changed the default value from `AND`
+        'tag_field_type'        => null,    // 2.5.0 Changed the default value from `slug`. used internally. slug or id.
         'sort'                  => 'descending',        //  ascending, descending, or random 
         // 'template'           => null,    // the template slug
         

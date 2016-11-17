@@ -85,7 +85,7 @@ In order to set multiple tags, pass them with commas as the delimiter. e.g.
 
 `<?php fetchTweets( array( 'tag' => 'WordPress, developer' ) ); ?>`
 
-* **operator** - the database query operator that is performed with the *tag* parameters. Either **AND**, **NOT IN**, or **IN** can be used. If this parameter is not set, AND will be used as the default value. For more information about this operator, refer to the [Taxonomy Parameter](http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters) section of Codex. e.g.
+* **operator** - the database query operator that is performed with the *tag* parameters. Either **AND**, **NOT IN**, or **IN** can be used. If this parameter is not set, `IN` will be used as the default value. For more information about this operator, refer to the [Taxonomy Parameter](http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters) section of Codex. e.g.
 
 `[fetch_tweets tag="WordPress, PHP, JavaScript" operator="IN" ]`
 
@@ -249,6 +249,11 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 - Added an option for deleting settings upon plugin uninstallation.
 - Added the ability to export/import settings.
 - Added the `Manage Options` tab in the setting page.
+- Fixed a bug that multiple media were not displayed.
+- Fixed an issue that some tweets were truncated.
+- Fixed a bug that retweet media were not displayed.
+- Changed the default value of the `operator` argument to `IN` from `AND` used when fetching tweets with tags.
+- Refined the caching mechanism.
 - Updated the [Admin Page Framework](http://admin-page-framework/michaeluno.jp/) library.
 
 = 2.4.9 - 04/25/2015 =

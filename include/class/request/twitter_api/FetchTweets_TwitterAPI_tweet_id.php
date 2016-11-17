@@ -17,7 +17,10 @@ class FetchTweets_TwitterAPI_tweet_id extends FetchTweets_TwitterAPI_screen_name
     
     protected $_aRateLimitPath = array( 'statuses', '/statuses/show/:id' );
     
-    protected $_aTargetElementPath = array();
+    /**
+     * Do not set a path to enclose the response in an array.
+     */
+    protected $_aTargetElementPath = null;
     
     /**
      * @remark      The `tweet_id` argument supports multiple screen names to be passed.
@@ -27,6 +30,7 @@ class FetchTweets_TwitterAPI_tweet_id extends FetchTweets_TwitterAPI_screen_name
     public function get() {
         return $this->_getMultipleSetsByArgument( 'tweet_id' );
     }
+  
     
     /**
      * 
