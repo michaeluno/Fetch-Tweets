@@ -35,7 +35,7 @@ class FetchTweets__Action_TwitterAPIResponseCacheRenewal extends FetchTweets__Ac
      */
     protected function _doAction( /* $_asURL, $_iCacheDuration, $_aArguments, $_sType */ ) {
         
-        $_aParams        = func_get_args();
+        $_aParams        = func_get_args() + array( '', 0, array(), '' );
         $_asURL          = $_aParams[ 0 ];
         $_iCacheDuration = $_aParams[ 1 ];
         $_aArguments     = $_aParams[ 2 ];
@@ -48,10 +48,8 @@ class FetchTweets__Action_TwitterAPIResponseCacheRenewal extends FetchTweets__Ac
                 'cache'         => $_iCacheDuration,
                 'force_caching' => true,
             );
-// @todo when the main function, `FetchTweets()`, changes the internal method to use the `FetchTweets_Output_Tweet` class, use the function.
-$_oTwitterAPI = new FetchTweets_Output_Tweet( $_aArguments );
-$_aData = $_oTwitterAPI->get();
-                
+            $_sOutput = fetchTweets( $_aArguments, false );
+
         }
         
     }
@@ -121,6 +119,5 @@ $_aData = $_oTwitterAPI->get();
                 : true;
             
         }
-        
         
 }

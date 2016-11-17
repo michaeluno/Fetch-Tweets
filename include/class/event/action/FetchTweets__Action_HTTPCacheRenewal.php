@@ -35,7 +35,7 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
      */
     protected function _doAction( /* $_asURL, $_iCacheDuration, $_aArguments, $_sType */ ) {
         
-        $_aParams        = func_get_args();
+        $_aParams        = func_get_args() + array( '', 0, array(), '' );
         $_asURL          = $_aParams[ 0 ];
         $_iCacheDuration = $_aParams[ 1 ];
         $_aArguments     = $_aParams[ 2 ];
