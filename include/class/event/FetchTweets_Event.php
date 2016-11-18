@@ -22,6 +22,7 @@ final class FetchTweets_Event extends FetchTweets_PluginUtility {
  
         $_aEventActionClassNames = array(
             'FetchTweets__Action_HTTPCacheRenewal',
+            'FetchTweets__Action_HTTPCacheRemoval',
             'FetchTweets__Action_TwitterAPIResponseCacheRenewal',
             'FetchTweets__Action_oEmbedAPIRequestCacheModification',
             'FetchTweets__Action_SimplePieCacheRenewal',
@@ -42,6 +43,7 @@ final class FetchTweets_Event extends FetchTweets_PluginUtility {
                     'fetch_tweets_filter_plugin_cron_actions',
                     array(
                         'fetch_tweets_action_transient_renewal',
+                        'fetch_tweets_action_http_cache_removal',
                         'fetch_tweets_action_transient_add_oembed_elements',
                         'fetch_tweets_action_simplepie_renew_cache',
                         'fetch_tweets_action_http_cache_renewal',
@@ -55,13 +57,16 @@ final class FetchTweets_Event extends FetchTweets_PluginUtility {
                 exit;
             }
         }
-                
+
+        
+        /* Theme can be deprecated. */
+        
         // Redirects
         if ( $this->getElement( $_GET, 'fetch_tweets_link' ) ) {
             $_oRedirect = new FetchTweets_Redirects;
             $_oRedirect->go( $_GET['fetch_tweets_link'] );    // will exit there.
         }
-            
+        
         // Draw the cached image.
         if ( $this->getElement( $_GET, 'fetch_tweets_image' ) && is_user_logged_in() ) {            
             $_oImageLoader = new FetchTweets_ImageHandler( 'FTWS' );

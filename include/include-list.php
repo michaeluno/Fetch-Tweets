@@ -77,6 +77,7 @@ $_aClassFiles = array(
 	"FetchTweets_Event"	=>	FetchTweets_Commons::$sDirPath . "/include/class/event/FetchTweets_Event.php", 
 	"FetchTweets_Event__BackgroundPageload"	=>	FetchTweets_Commons::$sDirPath . "/include/class/event/FetchTweets_Event__BackgroundPageload.php", 
 	"FetchTweets__Action_Base"	=>	FetchTweets_Commons::$sDirPath . "/include/class/event/action/FetchTweets__Action_Base.php", 
+	"FetchTweets__Action_HTTPCacheRemoval"	=>	FetchTweets_Commons::$sDirPath . "/include/class/event/action/FetchTweets__Action_HTTPCacheRemoval.php", 
 	"FetchTweets__Action_HTTPCacheRenewal"	=>	FetchTweets_Commons::$sDirPath . "/include/class/event/action/FetchTweets__Action_HTTPCacheRenewal.php", 
 	"FetchTweets__Action_TwitterAPIResponseCacheRenewal"	=>	FetchTweets_Commons::$sDirPath . "/include/class/event/action/FetchTweets__Action_TwitterAPIResponseCacheRenewal.php", 
 	"FetchTweets__Action_oEmbedAPIRequestCacheModification"	=>	FetchTweets_Commons::$sDirPath . "/include/class/event/action/FetchTweets__Action_oEmbedAPIRequestCacheModification.php", 
