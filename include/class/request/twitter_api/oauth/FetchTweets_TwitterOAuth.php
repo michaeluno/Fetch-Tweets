@@ -99,11 +99,27 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
         }
         return $response;
     }
+
+    /**
+    * Format and sign an FetchTweetsOAuth / API request
+    * @remark       Overriding this method to add a WordPress filter to the processing url.
+    */
+    public function oAuthRequest( $sURL, $method, $parameters) {
+        
+        /**
+         * Applies to the API request url before constructing a signature generated from the set query parameters.
+         * If the signature is incorrect Twitter API server will not authenticate the request.
+         * So any modifications to the URL query parameters have to be done at this point.
+         */
+        $sURL = apply_filters( 'fetch_tweets_filter_formatting_api_request_uri', $sURL );
+        return parent::oAuthRequest( $sURL, $method, $parameters );
+        
+    }    
     
     /**
      * Make an HTTP request.
      *
-     * @remark      Overriding the parent method.
+     * @remark      Overriding the parent method to use a custom HTTP client.
      * @return      API results
      * @since       2.5.0
      * @param       string      $sURL
@@ -112,7 +128,6 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
      */
     public function http( $sURL, $sMethod, $sPostFields=NULL) {
         
-        $sURL = apply_filters( 'fetch_tweets_filter_formatted_api_request_uri', $sURL );
         add_filter( 
             'fetch_tweets_filter_http_response_cache_name', 
             array( __CLASS__, 'replyToGetCacheNameSanitized' ), 
