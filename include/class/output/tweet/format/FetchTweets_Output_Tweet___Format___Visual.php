@@ -54,7 +54,7 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_TweetFormat
             
             // For JSON feeds, still the 'full_text' element is not set but uses 'text'.
             if ( isset( $aTweet[ 'text' ] ) && ! isset( $aTweet[ 'full_text' ] ) ) {
-                 $aTweet[ 'full_text' ] = $aTweet[ 'text' ];
+                $aTweet[ 'full_text' ] = $aTweet[ 'text' ];
             }
             
             // If it is a retweet.

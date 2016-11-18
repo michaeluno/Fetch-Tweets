@@ -73,7 +73,7 @@ class FetchTweets_Output_Tweet___Format extends FetchTweets_PluginUtility {
                 $_aProcessedTweetIDs[] = $_aTweet[ 'id_str' ];
                                             
                 // Check if it is a retweet. If a retweet is not allowed, drop it.
-                if ( isset( $_aTweet[ 'retweeted_status' ][ 'full_text' ] ) ) {
+                if ( $this->___isRetweet( $_aTweet ) ) {
                     if ( isset( $this->___aArguments[ 'include_rts' ] ) && ! $this->___aArguments[ 'include_rts' ] ) {
                         unset( $aTweets[ $_iIndex ] );
                         continue;
@@ -86,7 +86,21 @@ class FetchTweets_Output_Tweet___Format extends FetchTweets_PluginUtility {
             }
             return $aTweets;
             
-        }     
+        }    
+            /**
+             * @return      boolean
+             */
+            private function ___isRetweet( $aTweet ) {
+                
+                if ( isset( $aTweet[ 'retweeted_status' ][ 'full_text' ] )  ) {
+                    return true;
+                }
+                if ( isset( $aTweet[ 'retweeted_status' ][ 'text' ] )  ) {
+                    return true;
+                }
+                return false;
+                
+            }
 
         
         /**
@@ -115,17 +129,17 @@ class FetchTweets_Output_Tweet___Format extends FetchTweets_PluginUtility {
                     break;    
             }
         }    
-            private function ___sortByTimeDescending( $a, $b ) {    // callback for the uasort() method.
-                if ( isset( $a['created_at'], $b['created_at'] ) ) {
-                    return ( int ) $b['created_at'] - ( int ) $a['created_at'];
-                }
-                return 0;
+            /**
+             * @callback        function        uasort()
+             */
+            private function ___sortByTimeDescending( $a, $b ) {
+                return ( int ) $b[ '_created_at_timestamp' ] - ( int ) $a[ '_created_at_timestamp' ];               
             }            
+            /**
+             * @callback        function        uasort()
+             */
             private function ___sortByTimeAscending( $a, $b ) {    // callback for the uasort() method.
-                if ( isset( $a['created_at'], $b['created_at'] ) ) {
-                    return ( int ) $a['created_at'] - ( int ) $b['created_at'];
-                }
-                return 0;            
+                return ( int ) $a[' _created_at_timestamp' ] - ( int ) $b[ '_created_at_timestamp' ];
             }  
             
         /**
@@ -168,12 +182,19 @@ class FetchTweets_Output_Tweet___Format extends FetchTweets_PluginUtility {
         private function ___getTweetFormatted( $aTweet, $iProfileImageSize=48 ) {
             
             // Convert the 'created_at' value to be numeric time.
-            if ( isset( $aTweet[ 'created_at' ] ) ) {
-                $aTweet[ 'created_at' ] = strtotime( $aTweet[ 'created_at' ] );        
-            }
+            // if ( isset( $aTweet[ 'created_at' ] ) ) {
+                // $aTweet[ 'created_at' ]            = strtotime( $aTweet[ 'created_at' ] );        
+            // }
+            $aTweet[ '_created_at_timestamp' ] = isset( $aTweet[ 'created_at' ] )
+                ? strtotime( $aTweet[ 'created_at' ] )
+                : time();
 
             return $aTweet + array(
                 'possibly_sensitive' => null,
+                
+                // backward compatibility - some extensions still access the `text` element 
+                'text'               => $this->getElement( $aTweet, 'full_text' ),  
+                'full_text'          => $this->getElement( $aTweet, 'text' ),
             );
             
         }            

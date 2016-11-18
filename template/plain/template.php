@@ -99,7 +99,7 @@ $sPaddingLeft       = empty( $aArgs['padding_left'] ) ? 0 : $aArgs['padding_left
 $sMargins           = ( $sMarginTop ? "margin-top: {$sMarginTop}; " : "" ) . ( $sMarginRight ? "margin-right: {$sMarginRight}; " : "" ) . ( $sMarginBottom ? "margin-bottom: {$sMarginBottom}; " : "" ) . ( $sMarginLeft ? "margin-left: {$sMarginLeft}; " : "" );
 $sPaddings          = ( $sPaddingTop ? "padding-top: {$sPaddingTop}; " : "" ) . ( $sPaddingRight ? "padding-right: {$sPaddingRight}; " : "" ) . ( $sPaddingBottom ? "padding-bottom: {$sPaddingBottom}; " : "" ) . ( $sPaddingLeft ? "padding-left: {$sPaddingLeft}; " : "" );
 $sMarginForImage    = $aArgs['visibilities']['avatar'] ? ( ( $aArgs['avatar_position'] == 'left' ? "margin-left: " : "margin-right: " ) . ( ( int ) $aArgs['avatar_size'] ) . "px" ) : "";
-$sGMTOffset         = ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+$iGMTOffset         = ( integer ) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 $bIsSSL             = is_ssl();
 $sURLReplyuButton   = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ) );
 $sURLRetweetButton  = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/retweet_48x16.png' ) );
@@ -170,7 +170,7 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
                 <?php if ( $aArgs['visibilities']['time'] ) : ?>
                 <span class='fetch-tweets-tweet-created-at'>
                     <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'] . "/status/" . $aTweet['id_str'] ); ?>' target='_blank'>
-                        <?php echo human_time_diff( $aTweet['created_at'], current_time('timestamp') - $sGMTOffset ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
+                        <?php echo human_time_diff( strtotime( $aTweet[ 'created_at' ] ), current_time('timestamp') - $iGMTOffset ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
                     </a>            
                 </span>
                 <?php endif; ?>
