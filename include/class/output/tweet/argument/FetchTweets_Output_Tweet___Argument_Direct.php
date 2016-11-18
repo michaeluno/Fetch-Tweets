@@ -71,7 +71,7 @@ class FetchTweets_Output_Tweet___Argument_Direct extends FetchTweets_Output_Twee
                  * @return      array
                  */
                 private function ___getTags( $aArguments ) {
-                    $_sTags    = $this->getElement( 
+                    $_asTags    = $this->getElement( 
                         $aArguments, 
                         array( 'tag' ), 
                         $this->getElement( 
@@ -79,8 +79,11 @@ class FetchTweets_Output_Tweet___Argument_Direct extends FetchTweets_Output_Twee
                             array( 'tags' ), // backward compatibility
                             '' 
                         ) 
-                    );
-                    return $this->getStringIntoArray( ( string ) $_sTags, ',' );
+                    );        
+                    // For widgets, the value is already an array.
+                    return is_array( $_asTags )
+                        ? $_asTags    
+                        : $this->getStringIntoArray( ( string ) $_asTags, ',' );
                 }
                 
                 /**
@@ -88,7 +91,6 @@ class FetchTweets_Output_Tweet___Argument_Direct extends FetchTweets_Output_Twee
                  * @return      array
                  */
                 private function ___getRuleIDsByTag( $aTags, $aArguments ) {                    
-
                     return isset( $aArguments[ 'tag_field_type' ] ) && in_array( strtolower( $aArguments[ 'tag_field_type' ] ), array( 'id', 'slug' ) )
                         ? $this->___getPostIDsByTag( 
                             $aTags, 
@@ -99,6 +101,7 @@ class FetchTweets_Output_Tweet___Argument_Direct extends FetchTweets_Output_Twee
                             $aTags,
                             trim( $aArguments[ 'operator' ] ) 
                         );
+                        
                 }
                     private function ___getPostIDsByTagName( array $aTermNames, $sOperator='AND' ) {
                         
