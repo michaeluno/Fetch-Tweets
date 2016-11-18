@@ -285,6 +285,5 @@ class FetchTweets_PluginUtility extends FetchTweets_WPUtility {
         return $_aLabels;
         
     }    
-        
-    
+            
 }
