@@ -1,15 +1,18 @@
 <?php
 /**
-    Provides methods to retrieve information of a particular Fetch Tweets template.
-    
-    @package          Fetch Tweets
-    @copyright        Copyright (c) 2013, Michael Uno
-    @authorurl        http://michaeluno.jp
-    @license          http://opensource.org/licenses/gpl-2.0.php GNU Public License
-    @since            2.3.9
-    
-*/
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
+ */
 
+/**
+ * Provides methods to retrieve information of a particular Fetch Tweets template.
+ *  
+ * @since            2.3.9
+ */
 class FetchTweets_Template {
     
     /**
