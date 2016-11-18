@@ -30,28 +30,55 @@ class FetchTweets__FormSection__ClearCache extends FetchTweets__FormSection__Bas
      * @return      array
      */
     protected function _getFields( $oFactory ) {
-        return array(
+        $_oHTTPRequestTable = new FetchTweets_DatabaseTable_ft_http_requests;
+        return array(         
+            array(
+                'field_id'          => 'http_requests',
+                'title'             => __( 'Size', 'fetch-tweets' ),
+                'content'           => "<p>"
+                        . $_oHTTPRequestTable->getTableSize()
+                    . "</p>",
+            ),
             array(    
-                'field_id'          => 'clear_caches',
-                'title'             => __( 'Clear Tweet Caches', 'fetch-tweets' ),
+                'field_id'          => 'clear_all',
+                'title'             => __( 'Operation', 'fetch-tweets' ),
                 'type'              => 'submit',
                 'href'              => add_query_arg(
                     $_GET,
                     admin_url( $this->getElement( $GLOBALS, 'pagenow', 'edit.php' ) )
                 ),
-                'label'             => __( 'Clear', 'fetch-tweets' ),
-                'description'       => __( 'If you need to refresh the fetched tweets, clear the caches.', 'fetch-tweets' ),
+                'label'             => __( 'Clear All', 'fetch-tweets' ),
                 'attributes'        => array(
                     'class' => 'button button-secondary',  
                 ),
+                'save'              => false,
             ),   
+            array(    
+                'field_id'          => 'clear_expired',
+                'type'              => 'submit',
+                'href'              => add_query_arg(
+                    $_GET,
+                    admin_url( $this->getElement( $GLOBALS, 'pagenow', 'edit.php' ) )
+                ),
+                'label'             => __( 'Clear Expired', 'fetch-tweets' ),
+                'attributes'        => array(
+                    'class' => 'button button-secondary',  
+                ),
+                'save'              => false,
+            ),               
         );
     }
         
     protected function _construct( $oFactory ) {
         add_action( 
-            "submit_{$oFactory->oProp->sClassName}_{$this->_sSectionID}_clear_caches", 
-            array( $this, 'replyToSubmitField' ),   // callback
+            "submit_{$oFactory->oProp->sClassName}_{$this->_sSectionID}_clear_all", 
+            array( $this, 'replyToClearAllCaches' ),   // callback
+            10, // priority
+            5   // number of parameters
+        );
+        add_action( 
+            "submit_{$oFactory->oProp->sClassName}_{$this->_sSectionID}_clear_expired", 
+            array( $this, 'replyToClearExpiredCaches' ),   // callback
             10, // priority
             5   // number of parameters
         );        
@@ -59,13 +86,26 @@ class FetchTweets__FormSection__ClearCache extends FetchTweets__FormSection__Bas
         /**
          * @callback        action      submit_{class name}_{section id}_{field id}
          */
-        public function replyToSubmitField() {
+        public function replyToClearAllCaches() {
             $_aParams = func_get_args();
+            
+            // Clear transients
             $this->clearTransients();
+
+            // Delete all rows
+            $_oHTTPRequestTable = new FetchTweets_DatabaseTable_ft_http_requests;
+            $_oHTTPRequestTable->deleteAll();
             
             $_oFactory = $_aParams[ 2 ];
-            $_oFactory->setSettingNotice( __( 'The caches have been cleared.', 'fetch-tweets' ), 'updated' );
+            $_oFactory->setSettingNotice( __( 'All the caches have been cleared.', 'fetch-tweets' ), 'updated' );
         }
         
-        
+        public function replyToClearExpiredCaches() {
+            $_aParams = func_get_args();
+            $_oFactory = $_aParams[ 2 ];
+            $_oHTTPRequestTable = new FetchTweets_DatabaseTable_ft_http_requests;
+            $_oHTTPRequestTable->deleteExpired();
+            $_oFactory->setSettingNotice( __( 'Expired caches have been cleared.', 'fetch-tweets' ), 'updated' );
+        }
+
 }
