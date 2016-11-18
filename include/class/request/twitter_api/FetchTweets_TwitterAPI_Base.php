@@ -109,10 +109,16 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
         return $this->_getTweetsExtracted( $_aResponse );
        
     }
+    
+    
         /**
          * @return      array
          */
         protected function _getTweetsExtracted( $aResponse ) {
+            
+            if ( $this->___isError( $aResponse ) ) {
+                return $aResponse;
+            }
             
             // If the target element path is not set, enclose the response in an array.
             // This is used by tweet ids. In this case, the entire tweet array is returned by the response.
@@ -126,6 +132,22 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
                 : $this->getElementAsArray( $aResponse, $this->_aTargetElementPath );            
             
         }
+            /**
+             * @return          boolean
+             */
+            private function ___isError( $aResponse ) {
+                
+                $_aError = $this->getElement( $aResponse, array( 'errors', 0, ) );
+                if ( isset( $_aError[ 'message' ], $_aError[ 'code' ] ) ) {                
+                    return true;
+                }
+                $_sError = $this->getElement( $aResponse, 'error', '' );
+                if ( $_sError ) {
+                    return true;
+                }
+                return false;
+                
+            }
         
         /**
          * @return      string
@@ -149,17 +171,9 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
         protected function _getAPIResponse( $sRequestURI ) {
             
             $_sRequestURI    = $this->___getRequestURISanitized( $sRequestURI );            
-            
-            // Check if it has been already requested. If so return an error.
-            if ( $this->hasBeenCalled( $_sRequestURI ) ) {
-                return array( 
-                    'error' => __( 'Excessive requests have been made. Please reload the page.', 'fetch-tweets' ) 
-                );
-            }
-            
+                        
             // Check the rate limit.
             if ( $this->___hasExceededRateLimit() ) {
-// @todo Returns the cached data anyway if possible.  
                 return array( 
                     'error' => __( 'The number of API requests exceeded the rate limit. Please try it later.', 'fetch-tweets' ) 
                 );
@@ -168,7 +182,7 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
             $_iCacheDuration = ( integer ) $this->getElement( $this->_aArguments, array( 'cache' ), 1200 );
             
             // Let third party modify the request uri.
-            // This differs from the `fetch_tweets_filter_formatted_api_request_uri` filter as it is done after formatting and includes some sensitive values such as api keys and nonce values.
+            // This filter differs from the `fetch_tweets_filter_formatting_api_request_uri` filter as it is done after formatting and includes some sensitive values such as api keys and nonce values.
             $_sRequestURI    = apply_filters( 'fetch_tweets_filter_api_request_uri', $_sRequestURI );
             
             // Check a cache and use it if available.      
@@ -178,7 +192,7 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
                     
 var_dump( 'using cache: ' . $_sRequestURI );
 FetchTweets_Debug::log( 'using cache: ' . $_sRequestURI );
-        
+// var_dump( $_aCache );        
                     return $_aCache;
                 }
             }
@@ -187,18 +201,31 @@ FetchTweets_Debug::log( 'using cache: ' . $_sRequestURI );
             $_aResponse = $this->___oTwitterOAuth->get( $_sRequestURI );   
             $_aResponse = $this->getAsArray( $_aResponse );
 
+            $_bCacheErrors = ( boolean ) $this->_oOption->get( array( 'cache_settings', 'cache_for_errors' ), false );
+            if ( $this->___isError( $_aResponse ) && ! $_bCacheErrors ) {
+                return $_aResponse;
+            }            
+            
             // Set cache
             $this->___oCache->set( $_sRequestURI, $_aResponse, $_iCacheDuration );
 var_dump( 'setting cache: ' . $_sRequestURI );
 FetchTweets_Debug::log( 'setting cache: ' . $_sRequestURI );
+
+            // Schedule the action to run in the background with WP Cron. If already scheduled, skip.
+            // Add embedding elements in the background which is slow to process.
+            $this->___scheduleOembedRoutine( $_sRequestURI, $_iCacheDuration, $this->_aTargetElementPath );
+
             return $_aResponse;
 
         }    
-        
+            /**
+             * @return      string
+             * @since       2.5.0
+             */
             private function ___getRequestURISanitized( $sRequestURI ) {
                 return add_query_arg(
                     array(
-                        'tweet_mode' => 'extended', // preventes truncated tweets.
+                        'tweet_mode' => 'extended', // prevents truncated tweets.
                     ),
                     trim( $sRequestURI )
                 );
@@ -206,6 +233,7 @@ FetchTweets_Debug::log( 'setting cache: ' . $_sRequestURI );
            
             /**
              * @return      boolean
+             * @since       2.5.0
              */
             private function ___hasExceededRateLimit() {
                 
@@ -238,13 +266,36 @@ FetchTweets_Debug::log( 'setting cache: ' . $_sRequestURI );
                     $_aStatusKeys   = apply_filters( 'fetch_tweets_filter_request_rate_limit_status_keys', array( 'statuses', 'search', 'lists' ) );    // keys can be added such as 'help', 'users' etc
                     $this->___oTwitterOAuth->setCacheDuration( 15 * 60 );
                     $_iOriginalCachingMode = $this->___oTwitterOAuth->iCachingMode;
-                    $this->___oTwitterOAuth->setCachingMode( 0 );   // use cache if available
+                    $this->___oTwitterOAuth->setCachingMode( 0 ); // use cache if available.
                     $_aResult = $this->___oTwitterOAuth->get( 'https://api.twitter.com/1.1/application/rate_limit_status.json?resources=' . implode( ',', $_aStatusKeys ) );
                     $this->___oTwitterOAuth->setCachingMode( $_iOriginalCachingMode );                  
                     return $_aResult;
               
                 }
  
-
+            /** 
+             * Schedules an oEmbed embedding background routine.
+             * 
+             * @return      boolean     True if scheduled. Otherwise, false.
+             */
+            private function ___scheduleOembedRoutine( $sRequestURI, $iCacheDuration, $naTargetElementPath ) {
+                
+                $_aArguments = array( $sRequestURI, $iCacheDuration, $naTargetElementPath );
+                if ( wp_next_scheduled( 'fetch_tweets_action_add_oembed_elements_to_api_request_cache', $_aArguments ) ) { 
+                    return false; 
+                }
+                // the FetchTweets_Event class will check this action hook and executes it with WP Cron.
+                $_bCancelled = wp_schedule_single_event( 
+                    time(), 
+                    'fetch_tweets_action_add_oembed_elements_to_api_request_cache',     
+                    $_aArguments    // must be enclosed in an array.
+                );    
+                $_bScheduled = false !== $_bCancelled;
+                if ( $_bScheduled ) {
+                    new FetchTweets_Event__BackgroundPageload;
+                }
+                return $_bScheduled;
+                
+            }
  
 }
