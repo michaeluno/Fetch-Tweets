@@ -37,7 +37,8 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
      * @remark      called from the shortcode callback.
      */
     public function get() {   
-
+    
+        // Note that `$this->aArguments` property gets updated.
         $_asTweets   = $this->getTweets();  
         if ( is_string( $_asTweets ) ) {
             return $_asTweets;  // error
@@ -45,7 +46,10 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
 
         // Output the tweets by applying the template 
         $_aTweets = $_asTweets;
-        $_oTemplate = new FetchTweets_Output_Tweet___Template( $_aTweets, $this->_aArguments );
+        $_oTemplate = new FetchTweets_Output_Tweet___Template( 
+            $_aTweets, 
+            $this->_aArguments 
+        );
         return $_oTemplate->get();  
         
     }
@@ -57,7 +61,7 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
      * 
      * @remark      The `$_aArguments` property will be updated.
      * @since       2.5.0
-     * @return      array
+     * @return      array|string        A string error message will be returned for errors. Otherwise, fetched tweets.
      */
     public function getTweets() {    
         

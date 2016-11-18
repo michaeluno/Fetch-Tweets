@@ -6,19 +6,19 @@ abstract class FetchTweets_Template_Settings {
     
     // Do not modify these properties.
     protected $sParentAdminPaggeClassName = 'FetchTweets_AdminPage';
-    protected $sTemplateID = '';    // assigned in the constructor.
-    protected $sParentPageSlug = 'fetch_tweets_templates';    // in the url, the ... part in ?page=... 
+    protected $sTemplateID                = '';    // assigned in the constructor.
+    protected $sParentPageSlug            = 'fetch_tweets_templates';    // in the url, the ... part in ?page=... 
     
-    /*
+    /**
      * These must be overridden in the extended class.
-     * */
-    protected $sParentTabSlug = '';    // in the url, the ... part in &tab=...
-    protected $sTemplateName = '';    // the template name
-    protected $sSectionID = '';    // sets the main section ID; it's okay to have more than one section IDs though. 
+     */
+    protected $sParentTabSlug             = '';    // in the url, the ... part in &tab=...
+    protected $sTemplateName              = '';    // the template name
+    protected $sSectionID                 = '';    // sets the main section ID; it's okay to have more than one section IDs though. 
     
-    /*
-     * No need to modify the constructor.
-     * */
+    /**
+     * Sets up hooks.
+     */
     public function __construct( $sTemplateDirPath='' ) {
         
         $_sTemplateDirPath = $sTemplateDirPath ? $sTemplateDirPath : dirname( __FILE__ );
@@ -34,16 +34,16 @@ abstract class FetchTweets_Template_Settings {
         add_filter( "fields_" . $this->sParentAdminPaggeClassName, array( $this, 'addSettingFields' ) );
 
         // validation_{page slug}_{tab slug}
-        add_filter( "validation_{$this->sParentPageSlug}_{$this->sParentTabSlug}", array( $this, 'validateSettings' ), 10, 2 );
+        add_filter( "validation_{$this->sParentPageSlug}_{$this->sParentTabSlug}", array( $this, 'validateSettings' ), 10, 4 );
             
         // Adds the Settings link in the template listing table.
         add_filter( 'fetch_tweets_filter_template_listing_table_action_links', array( $this, '_replyToAddSettingsLink' ), 10, 2 );
         
     }
     
-    /*
-     *     No need to modify these method.
-     * */
+    /**
+     * @internal        No need to modify these method.
+     */
     public function _replyToAddInPageTab( $aTabs ) {
     
         return array(
@@ -70,12 +70,15 @@ abstract class FetchTweets_Template_Settings {
         
     }
 
-    /*
-     * The following methods should be overridden in the extended class.
-     */
-    public function addSettingSections( $aSections ) { return $aSections; }
-    public function addSettingFields( $aFields ) { return $aFields; }
-    public function validateSettings( $aInput, $aOldInput ) { return $aInput; }
-    
-    
+    /* Methods to override. */
+    public function addSettingSections( $aSections ) { 
+        return $aSections; 
+    }
+    public function addSettingFields( $aFields ) { 
+        return $aFields; 
+    }
+    public function validateSettings( $aInputs, $aOldInputs, $oAdminPage, $aSubmitInfo ) { 
+        return $aInput; 
+    }
+ 
 }
