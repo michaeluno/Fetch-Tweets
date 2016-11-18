@@ -246,6 +246,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 == Changelog ==
 
 = 2.5.0 =
+- Added the `Sidebar` template.
 - Added an option for deleting settings upon plugin uninstallation.
 - Added the ability to export/import settings.
 - Added the `Manage Options` tab in the setting page.
