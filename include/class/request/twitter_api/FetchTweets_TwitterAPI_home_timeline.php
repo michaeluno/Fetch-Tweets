@@ -26,7 +26,7 @@ class FetchTweets_TwitterAPI_home_timeline extends FetchTweets_TwitterAPI_Base {
      */
     protected function _getRequestURI() {
         
-        add_filter( 'fetch_tweets_filter_formatted_api_request_uri', array( __CLASS__, 'replyToDropCacheHashQueryArgument' ) );
+        add_filter( 'fetch_tweets_filter_formatting_api_request_uri', array( __CLASS__, 'replyToDropCacheHashQueryArgument' ) );
         
         return add_query_arg( 
             array(
@@ -52,7 +52,7 @@ class FetchTweets_TwitterAPI_home_timeline extends FetchTweets_TwitterAPI_Base {
      * Sanitizes the Twitter API request URI before it is sent.
      * Drops the `cache_hash` key-value from the query string as it is not the part of Twitter API.
      * @since       2.5.0
-     * @callback    filter      fetch_tweets_filter_formatted_api_request_uri
+     * @callback    filter      fetch_tweets_filter_formatting_api_request_uri
      * @return      string
      */
     static public function replyToDropCacheHashQueryArgument( $sURL ) {
