@@ -284,7 +284,7 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
             if ( isset( $_aError[ 'message' ], $_aError[ 'code' ] ) ) {
                 return '<strong>' . FetchTweets_Commons::NAME . '</strong>: ' 
                     . $_aError[ 'message' ] . ' ' 
-                    . __( 'Code', 'fetch-tweets' ) . ':' . $_aError[ 'code' ];
+                    . __( 'Code', 'fetch-tweets' ) . ': ' . $_aError[ 'code' ];
             }
             
             $_sError = $this->getElement( $_aTweets, 'error', '' );
