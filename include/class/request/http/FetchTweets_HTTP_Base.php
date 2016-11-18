@@ -127,6 +127,13 @@ abstract class FetchTweets_HTTP_Base extends FetchTweets_PluginUtility {
             return $aArguments;
             
         }
+        
+    /**
+     * Sets the request type which gets set to the `type` column in a row of the cache.
+     */
+    public function setType( $sType ) {
+        $this->_sRequestType = $sType;
+    }
     
     /**
      * Returns the HTTP status code of the last request.
