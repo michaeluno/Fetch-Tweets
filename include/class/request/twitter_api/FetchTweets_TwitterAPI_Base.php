@@ -184,15 +184,11 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
             // Let third party modify the request uri.
             // This filter differs from the `fetch_tweets_filter_formatting_api_request_uri` filter as it is done after formatting and includes some sensitive values such as api keys and nonce values.
             $_sRequestURI    = apply_filters( 'fetch_tweets_filter_api_request_uri', $_sRequestURI );
-            
+
             // Check a cache and use it if available.      
             if ( ! $this->getElement( $this->_aArguments, array( 'force_caching' ), false ) ) {
                 $_aCache = $this->___oCache->get( $_sRequestURI, $_iCacheDuration );
                 if ( ! empty( $_aCache ) ) {
-                    
-var_dump( 'using cache: ' . $_sRequestURI );
-FetchTweets_Debug::log( 'using cache: ' . $_sRequestURI );
-// var_dump( $_aCache );        
                     return $_aCache;
                 }
             }
@@ -208,8 +204,6 @@ FetchTweets_Debug::log( 'using cache: ' . $_sRequestURI );
             
             // Set cache
             $this->___oCache->set( $_sRequestURI, $_aResponse, $_iCacheDuration );
-var_dump( 'setting cache: ' . $_sRequestURI );
-FetchTweets_Debug::log( 'setting cache: ' . $_sRequestURI );
 
             // Schedule the action to run in the background with WP Cron. If already scheduled, skip.
             // Add embedding elements in the background which is slow to process.

@@ -33,7 +33,7 @@ class FetchTweets_Event__BackgroundPageload extends FetchTweets_PluginUtility {
             
             $_oOption = FetchTweets_Option::getInstance();
             $_sURL    = 'intense' === $_oOption->get( array( 'cache_settings', 'caching_mode' ) )
-                ? self::getCurrentURL( array( 'updating-caches' => 1 ) )
+                ? self::getCurrentFrontendURL( array( 'updating-caches' => 1 ) )
                 : site_url( "/wp-cron.php?updating-caches" );
             wp_remote_get( 
                 $_sURL, 

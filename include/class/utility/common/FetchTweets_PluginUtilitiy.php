@@ -1,21 +1,25 @@
 <?php
 /**
- *    Provides utility plugin specific methods.
- *
- * @package     Fetch Tweets
- * @copyright   Copyright (c) 2013, Michael Uno
- * @authorurl   http://michaeluno.jp
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.3.6
+ * Fetch Tweets
  * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
  */
 
+/**
+ * Provides utility plugin specific methods.
+ *
+ * @since       2.3.6
+ */
 class FetchTweets_PluginUtility extends FetchTweets_WPUtility {
     
     /**
+     * Retrieves the current url without GET queries.
      * @return      string
      */
-    static public function getCurrentURL( /* $aQueries=array() */ ) {
+    static public function getCurrentFrontendURL( /* $aQueries=array() */ ) {
         $_aParams = func_get_args() + array( array() );
         $aQueries = $_aParams[ 0 ];
         return home_url( 
