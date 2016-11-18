@@ -9,7 +9,7 @@
  */
 
 /**
- * Handles Twitter API requests.
+ * Handles caching for Twitter API requests.
  * 
  * @since             2.5.0
  */
@@ -47,9 +47,7 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
         $_bResult     = $this->___oCacheTable->setCache( 
             $this->___getCacheName( $sRequestURI ), // name
             $mData,
-            $iCacheDuration // when 0 is passed, use a default value of 86400 (one day). So pass 0 to renew the cache.
-                ? ( integer ) $iCacheDuration
-                : 86400, // cache life span
+            ( integer ) $iCacheDuration,
             array( // extra column items
                 'request_uri' => $sRequestURI,
                 'type'        => 'twitter_api_request',
@@ -64,7 +62,8 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
      * 
      * @param       string      $sRequestURI        The request URI. Note that the URL query parameters should only include user defined ones.
      * Do not include time specific items such as nonce, timestamps, signature. 
-     * @retrurn     array
+     * @param       integer     $iCacheDuration     The cache duration of the retrieving cache. If `-1` is passed, the cache will be retrieved anyway.
+     * @return      array       The cached data. If it is expired, an empty array will be returned. To force retrieving the cache, pass `-1` to the cache duration parameter.
      */
     public function get( $sRequestURI, $iCacheDuration ) {
         
@@ -73,6 +72,11 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
             $iCacheDuration
         );   
 
+        // Force getting the cache if the cache duration is -1. Used in the background cache modification.
+        if ( -1 === $iCacheDuration ) {
+            return $_aCache[ 'data' ];
+        }        
+        
         /**
          * Allow external components to modify the remained time, 
          * which can be used to trick the below check and return the stored data anyway.
@@ -97,5 +101,5 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
         private function ___getCacheName( $sURI ) {
             return 'twitter_api_request_' . md5( $sURI );
         }
-         
+     
 }
