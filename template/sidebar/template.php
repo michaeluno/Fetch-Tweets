@@ -46,45 +46,42 @@ $_aDefaultTemplateOptions = array(
 );
 
 
-// Some new setting items are not stored in the database, so merge the saved options with the defined default values.
-$aArguments = $aArguments + 
-    $_oUtil->uniteArrays( 
-        $_oUtil->getElementAsArray( $aOptions, 'fetch_tweets_template_sidebar' ), 
-        $_aDefaultTemplateOptions 
-    ); 
+// Some new setting items are not stored in the database, so merge the saved options with the defined default values.     
+$aTemplateOptions = $_oUtil->uniteArrays( 
+    $_oUtil->getElementAsArray( $aOptions, 'fetch_tweets_template_sidebar' ), 
+    $_aDefaultTemplateOptions
+);
 
-// Finalize the template option values.
-$aArguments['width']                     = isset( $aArguments['width'] ) ? $aArguments['width'] : $aArguments['width']['size'];
-$aArguments['width_unit']                = isset( $aArguments['width_unit'] ) ? $aArguments['width_unit'] : $aArguments['width']['unit'];
-$aArguments['height']                    = isset( $aArguments['height'] ) ? $aArguments['height']: $aArguments['height']['size'];
-$aArguments['height_unit']               = isset( $aArguments['height_unit'] ) ? $aArguments['height_unit'] : $aArguments['height']['unit'];
-$aArguments['margin_top']                = isset( $aArguments['margin_top'] ) ? $aArguments['margin_top'] : $aArguments['margins'][0]['size'];
-$aArguments['margin_top_unit']           = isset( $aArguments['margin_top_unit'] ) ? $aArguments['margin_top_unit'] : $aArguments['margins'][0]['unit'];
-$aArguments['margin_right']              = isset( $aArguments['margin_right'] ) ? $aArguments['margin_right'] : $aArguments['margins'][1]['size'];
-$aArguments['margin_right_unit']         = isset( $aArguments['margin_right_unit'] ) ? $aArguments['margin_right_unit'] : $aArguments['margins'][1]['unit'];
-$aArguments['margin_bottom']             = isset( $aArguments['margin_bottom'] ) ? $aArguments['margin_bottom'] : $aArguments['margins'][2]['size'];
-$aArguments['margin_bottom_unit']        = isset( $aArguments['margin_bottom_unit'] ) ? $aArguments['margin_bottom_unit'] : $aArguments['margins'][2]['unit'];
-$aArguments['margin_left']               = isset( $aArguments['margin_left'] ) ? $aArguments['margin_left'] : $aArguments['margins'][3]['size'];
-$aArguments['margin_left_unit']          = isset( $aArguments['margin_left_unit'] ) ? $aArguments['margin_left_unit'] : $aArguments['margins'][3]['unit'];
-$aArguments['padding_top']               = isset( $aArguments['padding_top'] ) ? $aArguments['padding_top'] : $aArguments['paddings'][0]['size'];
-$aArguments['padding_top_unit']          = isset( $aArguments['padding_top_unit'] ) ? $aArguments['padding_top_unit'] : $aArguments['paddings'][0]['unit'];
-$aArguments['padding_right']             = isset( $aArguments['padding_right'] ) ? $aArguments['padding_right'] : $aArguments['paddings'][1]['size'];
-$aArguments['padding_right_unit']        = isset( $aArguments['padding_right_unit'] ) ? $aArguments['padding_right_unit'] : $aArguments['paddings'][1]['unit'];
-$aArguments['padding_bottom']            = isset( $aArguments['padding_bottom'] ) ? $aArguments['padding_bottom'] : $aArguments['paddings'][2]['size'];
-$aArguments['padding_bottom_unit']       = isset( $aArguments['padding_bottom_unit'] ) ? $aArguments['padding_bottom_unit'] : $aArguments['paddings'][2]['unit'];
-$aArguments['padding_left']              = isset( $aArguments['padding_left'] ) ? $aArguments['padding_left'] : $aArguments['paddings'][3]['size'];
-$aArguments['padding_left_unit']         = isset( $aArguments['padding_left_unit'] ) ? $aArguments['padding_left_unit'] : $aArguments['paddings'][3]['unit'];
-$aArguments['intent_buttons']            = isset( $aArguments['intent_buttons'] ) ? $aArguments['intent_buttons'] : ( ! $aArguments['visibilities']['intent_buttons'] ? 0 : $aArguments['intent_buttons'] );    // 0: do not show, 1: icons and text, 2: only icons, 3: only text.
-$aArguments['intent_button_script']      = isset( $aArguments['intent_button_script'] ) ? $aArguments['intent_button_script'] : $aArguments['intent_script'];
-$aArguments['follow_button_screen_name'] = isset( $aArguments['follow_button_screen_name'] ) 
-    ? $aArguments['follow_button_screen_name'] 
-    : ( $aArguments['follow_button_elements']['screen_name'] 
-        ? $aArguments['follow_button_elements']['screen_name'] 
-        : "false" 
-    );
-$aArguments['follow_button_count']       = isset( $aArguments['follow_button_count'] ) 
-    ? $aArguments['follow_button_count'] 
-    : ( $aArguments['follow_button_elements']['follower_count'] ? $aArguments['follow_button_elements']['follower_count'] : "false" );
+$aArguments['avatar_size']               = isset( $aArguments['avatar_size'] ) ? $aArguments['avatar_size'] : $aTemplateOptions['avatar_size'];
+$aArguments['avatar_position']           = isset( $aArguments['avatar_position'] ) ? $aArguments['avatar_position'] : $aTemplateOptions['avatar_position'];
+$aArguments['width']                     = isset( $aArguments['width'] ) ? $aArguments['width'] : $aTemplateOptions['width']['size'];
+$aArguments['width_unit']                = isset( $aArguments['width_unit'] ) ? $aArguments['width_unit'] : $aTemplateOptions['width']['unit'];
+$aArguments['height']                    = isset( $aArguments['height'] ) ? $aArguments['height']: $aTemplateOptions['height']['size'];
+$aArguments['height_unit']               = isset( $aArguments['height_unit'] ) ? $aArguments['height_unit'] : $aTemplateOptions['height']['unit'];
+$aArguments['background_color']          = isset( $aArguments['background_color'] ) ? $aArguments['background_color'] : $aTemplateOptions['background_color'];
+$aArguments['visibilities']              = isset( $aArguments['visibilities'] ) ? $aArguments['visibilities'] : $aTemplateOptions['visibilities'];
+$aArguments['margin_top']                = isset( $aArguments['margin_top'] ) ? $aArguments['margin_top'] : $aTemplateOptions['margins'][0]['size'];
+$aArguments['margin_top_unit']           = isset( $aArguments['margin_top_unit'] ) ? $aArguments['margin_top_unit'] : $aTemplateOptions['margins'][0]['unit'];
+$aArguments['margin_right']              = isset( $aArguments['margin_right'] ) ? $aArguments['margin_right'] : $aTemplateOptions['margins'][1]['size'];
+$aArguments['margin_right_unit']         = isset( $aArguments['margin_right_unit'] ) ? $aArguments['margin_right_unit'] : $aTemplateOptions['margins'][1]['unit'];
+$aArguments['margin_bottom']             = isset( $aArguments['margin_bottom'] ) ? $aArguments['margin_bottom'] : $aTemplateOptions['margins'][2]['size'];
+$aArguments['margin_bottom_unit']        = isset( $aArguments['margin_bottom_unit'] ) ? $aArguments['margin_bottom_unit'] : $aTemplateOptions['margins'][2]['unit'];
+$aArguments['margin_left']               = isset( $aArguments['margin_left'] ) ? $aArguments['margin_left'] : $aTemplateOptions['margins'][3]['size'];
+$aArguments['margin_left_unit']          = isset( $aArguments['margin_left_unit'] ) ? $aArguments['margin_left_unit'] : $aTemplateOptions['margins'][3]['unit'];
+$aArguments['padding_top']               = isset( $aArguments['padding_top'] ) ? $aArguments['padding_top'] : $aTemplateOptions['paddings'][0]['size'];
+$aArguments['padding_top_unit']          = isset( $aArguments['padding_top_unit'] ) ? $aArguments['padding_top_unit'] : $aTemplateOptions['paddings'][0]['unit'];
+$aArguments['padding_right']             = isset( $aArguments['padding_right'] ) ? $aArguments['padding_right'] : $aTemplateOptions['paddings'][1]['size'];
+$aArguments['padding_right_unit']        = isset( $aArguments['padding_right_unit'] ) ? $aArguments['padding_right_unit'] : $aTemplateOptions['paddings'][1]['unit'];
+$aArguments['padding_bottom']            = isset( $aArguments['padding_bottom'] ) ? $aArguments['padding_bottom'] : $aTemplateOptions['paddings'][2]['size'];
+$aArguments['padding_bottom_unit']       = isset( $aArguments['padding_bottom_unit'] ) ? $aArguments['padding_bottom_unit'] : $aTemplateOptions['paddings'][2]['unit'];
+$aArguments['padding_left']              = isset( $aArguments['padding_left'] ) ? $aArguments['padding_left'] : $aTemplateOptions['paddings'][3]['size'];
+$aArguments['padding_left_unit']         = isset( $aArguments['padding_left_unit'] ) ? $aArguments['padding_left_unit'] : $aTemplateOptions['paddings'][3]['unit'];
+$aArguments['intent_buttons']            = isset( $aArguments['intent_buttons'] ) ? $aArguments['intent_buttons'] : ( ! $aArguments['visibilities']['intent_buttons'] ? 0 : $aTemplateOptions['intent_buttons'] );    // 0: do not show, 1: icons and text, 2: only icons, 3: only text.
+$aArguments['intent_button_script']      = isset( $aArguments['intent_button_script'] ) ? $aArguments['intent_button_script'] : $aTemplateOptions['intent_script'];
+
+$aArguments['follow_button_elements']    = isset( $aArguments['follow_button_elements'] ) ? $aArguments['follow_button_elements'] : $aTemplateOptions['follow_button_elements'];
+$aArguments['follow_button_screen_name'] = isset( $aArguments['follow_button_screen_name'] ) ? $aArguments['follow_button_screen_name'] : ( $aArguments['follow_button_elements']['screen_name'] ? $aArguments['follow_button_elements']['screen_name'] : "false" );
+$aArguments['follow_button_count']       = isset( $aArguments['follow_button_count'] ) ? $aArguments['follow_button_count'] : ( $aArguments['follow_button_elements']['follower_count'] ? $aArguments['follow_button_elements']['follower_count'] : "false" );
 
 
 $sWidth             = $aArguments['width'] ? "max-width: " . $aArguments['width'] . $aArguments['width_unit'] . "; " : '';
@@ -109,8 +106,9 @@ $bIsSSL             = is_ssl();
 $sURLReplyuButton   = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ) );
 $sURLRetweetButton  = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/retweet_48x16.png' ) );
 $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/favorite_48x16.png' ) );
-$sAvatarPosition    = $aArguments[ 'avatar_position' ];
+
 $sOppsiteAvatarPos  = 'left' === $aArguments[ 'avatar_position' ] ? 'right' : 'left';
+
 /*
  * For debugging - uncomment the following lines to see the contents of the arrays.
  */ 
