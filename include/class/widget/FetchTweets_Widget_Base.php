@@ -24,7 +24,7 @@ abstract class FetchTweets_Widget_Base extends WP_Widget {
         'external_media'      => 1,            // [2.3.3+] 1 or 0        
         // template options      
         'template'            => null,
-        'avatar_size'         => 48,
+        'avatar_size'         => 24,
         'width'               => 100,
         'width_unit'          => '%',     
         'height'              => 400,
