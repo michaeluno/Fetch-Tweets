@@ -144,13 +144,17 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
              */
             private function ___getMediaElementEmbedded( $aTweet ) {
                 
-                if ( isset( $aTweet[ 'entities' ][ 'urls' ] ) ) {
+                // @todo examine whether it does not have to be extended entities.
+                
+                // Do not fetch external media if already set.
+                if ( isset( $aTweet[ 'entities' ][ 'urls' ] ) && ! isset( $aTweet[ 'entities' ][ 'embed_external_media' ] ) ) {
                     $aTweet[ 'entities' ][ 'embed_external_media' ] = $this->___getExternalMedia( 
                         $aTweet[ 'entities' ][ 'urls' ] 
                     );
                 }
-                                
-                if ( isset( $aTweet[ 'extended_entities' ][ 'media' ] ) ) {
+                
+                // These are media within Twitter.com.
+                if ( isset( $aTweet[ 'extended_entities' ][ 'media' ] ) && ! isset( $aTweet[ 'entities' ][ 'embed_twitter_media' ] ) ) {
                     $aTweet[ 'entities' ][ 'embed_twitter_media' ] = FetchTweets_TweetFormatter::getTwitterMedia( 
                         $aTweet[ 'extended_entities' ][ 'media' ] 
                     );
