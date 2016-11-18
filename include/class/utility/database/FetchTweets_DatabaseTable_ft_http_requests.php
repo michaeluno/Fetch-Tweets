@@ -37,7 +37,6 @@ class FetchTweets_DatabaseTable_ft_http_requests extends FetchTweets_DatabaseTab
             cache mediumblob,
             modified_time datetime NOT NULL default '0000-00-00 00:00:00',
             expiration_time datetime NOT NULL default '0000-00-00 00:00:00',
- test varchar(20),
             PRIMARY KEY  (name)
         ) " . $this->_getCharactersetCollation() . ";";    
     }
@@ -57,9 +56,7 @@ class FetchTweets_DatabaseTable_ft_http_requests extends FetchTweets_DatabaseTab
             'modified_time'     => '0000-00-00 00:00:00',
             'expiration_time'   => '0000-00-00 00:00:00',
         );
-         
-        return $this->setRow( 
-            array(
+        $_aRow = array(
                 'name'  => $sName,
                 'cache' => maybe_serialize( $mData ),
             ) 
@@ -67,8 +64,12 @@ class FetchTweets_DatabaseTable_ft_http_requests extends FetchTweets_DatabaseTab
             + array(
                 'modified_time'   => date( 'Y-m-d H:i:s' ), 
                 'expiration_time' => date( 'Y-m-d H:i:s', time() + $iDuration ),
-            )
-        );
+            );
+// @todo Examine whether not setting a column can omit the non-updating column item.
+        if ( -1 === $iDuration ) {
+            unset( $_aRow[ 'expiration_time' ] );
+        }
+        return $this->setRow( $_aRow );
         
     }
         /**
