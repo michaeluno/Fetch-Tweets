@@ -62,6 +62,11 @@ class FetchTweets__FormSection__Cache extends FetchTweets__FormSection__Base {
                     'size'     => 7,
                     'unit'     => 86400,
                 ),
+                'attributes'   => array(
+                    'size'  => array(
+                        'min'   => 1
+                    ),
+                ),
             ),                
             array(  
                 'field_id'          => 'submit_cache_settings',
