@@ -34,7 +34,7 @@ class FetchTweets_Output_Tweet___Format extends FetchTweets_PluginUtility {
      * @return      array
      */
     public function get() {
-FetchTweets_Debug::log( $this->___aTweets );    
+    
         $_aTweets = $this->___getTweetsFormatted( $this->___aTweets );
                 
         // Sort by time - the array is passed by reference.
@@ -52,7 +52,7 @@ FetchTweets_Debug::log( $this->___aTweets );
         return $_aTweets;
 
     }
-    
+        
         /**
          * Drops unnecessary tweets and formats the creation time.
          * 
