@@ -95,7 +95,7 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
      */
     public function replyToModifyCacheRemainedTime( $aCache, $iCacheDuration, $aArguments, $sType='wp_remote_get' ) {
 
-        // Do nothing for API requests.
+        // Do nothing for API requests. It is handled in a separate routine.
         if ( $this->___isTwitterAPIRequest( $aCache[ 'request_uri' ] ) ) {
             return $aCache;
         }
@@ -116,6 +116,10 @@ class FetchTweets__Action_HTTPCacheRenewal extends FetchTweets__Action_Base {
                 $aArguments,
                 $sType
             );
+            
+            if ( $_bScheduled ) {
+                new FetchTweets_Event__BackgroundPageload;
+            }            
 
             // Tell the plugin it is not expired. 
             $aCache[ 'remained_time' ] = time();
