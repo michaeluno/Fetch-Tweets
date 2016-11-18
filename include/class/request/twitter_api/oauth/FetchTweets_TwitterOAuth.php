@@ -172,6 +172,12 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
         $this->http_code = $_oHTTP->getStatusCode();
         $this->url = $sURL; 
         
+        remove_filter( 
+            'fetch_tweets_filter_http_response_cache_name', 
+            array( __CLASS__, 'replyToGetCacheNameSanitized' ), 
+            10
+        );        
+        
         return $_sResponse;
         
     }
