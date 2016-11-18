@@ -20,7 +20,7 @@ class FetchTweets_WidgetByTag extends FetchTweets_Widget_Base {
                 
         $this->_aStructure_FormElements = $this->_aStructure_FormElements + array(
             'selected_tag_slugs' => array(),
-            'operator'           => 'AND',        
+            'operator'           => 'IN',        
         );
                 
         parent::__construct(
