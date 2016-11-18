@@ -47,7 +47,22 @@ class FetchTweets__FormSection__Cache extends FetchTweets__FormSection__Base {
                 ),
                 'after_label'    => '<br />',
                 'default'        => 'normal',
-            ),    
+            ),
+            array(
+                'field_id'       => 'clearing_inteval',
+                'title'          => __( 'Clearing Cache Interval', 'fetch-tweets' ),
+                'type'           => 'size',
+                'units'          => array(
+                    3600      => __( 'hour(s)', 'fetch-tweets' ),
+                    86400     => __( 'day(s)', 'fetch-tweets' ),
+                    604800    => __( 'week(s)', 'fetch-tweets' ),
+                ),
+                'description'    => __( 'An interval to clear expired caches.', 'fetch-tweets' ),
+                'default'        => array(
+                    'size'     => 7,
+                    'unit'     => 86400,
+                ),
+            ),                
             array(  
                 'field_id'          => 'submit_cache_settings',
                 'type'              => 'submit',
@@ -62,5 +77,19 @@ class FetchTweets__FormSection__Cache extends FetchTweets__FormSection__Base {
             ),     
         );
     }
-  
+ 
+    protected function _validate( $aInputs, $aOldInputs, $oFactory, $aSubmitInfo ) {
+        
+        // If a new interval is set, remove the scheduled one. A new schedule is done by a separate handelr class.
+        if ( 
+            $this->getElement( $aInputs, array( 'clearing_inteval', 'size' ), 7 ) * $this->getElement( $aInputs, array( 'clearing_inteval', 'unit' ), 86400 )
+            !== $this->getElement( $aOldInputs, array( 'clearing_inteval', 'size' ), 7 ) * $this->getElement( $aOldInputs, array( 'clearing_inteval', 'unit' ), 86400 )
+        ) {            
+            wp_clear_scheduled_hook( 'fetch_tweets_action_http_cache_removal', array() );
+        }
+    
+        return $aInputs;
+        
+    }
+ 
 }
