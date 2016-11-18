@@ -100,8 +100,8 @@ class FetchTweets_Template_Settings_Sidebar extends FetchTweets_Template_Setting
 				'em'    => 'em',
 			),
 			'default'       => array(
-				'size'	=> 400,
-				'unit'	=> 'px',
+				'size'	=> 100,
+				'unit'	=> '%',
 			),
 			'delimiter' => '<br />',
 		);		

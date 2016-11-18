@@ -113,8 +113,8 @@ class FetchTweets_Template_Settings_Single extends FetchTweets_Template_Settings
 				'em' => 'em',
 			),
 			'default' => array(
-				'size'	=> 400,
-				'unit'	=> 'px',
+				'size'	=> 100,
+				'unit'	=> '%',
 			),
 			'delimiter' => '<br />',
 		);

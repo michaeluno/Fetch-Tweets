@@ -34,7 +34,7 @@ $aDefaultTemplateValues = array(
     'fetch_tweets_template_single_avatar_size'              => 48,
     'fetch_tweets_template_single_avatar_position'          => 'left',
     'fetch_tweets_template_single_width'                    => array( 'size' => 100, 'unit' => '%' ),
-    'fetch_tweets_template_single_height'                   => array( 'size' => 400, 'unit' => 'px' ),
+    'fetch_tweets_template_single_height'                   => array( 'size' => 100, 'unit' => '%' ),
     'fetch_tweets_template_single_background_color'         => 'transparent',
     'fetch_tweets_template_single_intent_buttons'           => 2,
     'fetch_tweets_template_single_intent_script'            => 1,    

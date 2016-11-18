@@ -15,7 +15,7 @@ $_aDefaultTemplateOptions = array(
     'avatar_size'       => 24,
     'avatar_position'   => 'left',
     'width'             => array( 'size' => 100, 'unit' => '%' ),
-    'height'            => array( 'size' => 400, 'unit' => 'px' ),
+    'height'            => array( 'size' => 100, 'unit' => '%' ),
     'background_color'  => 'transparent',
     'intent_buttons'    => 2,
     'intent_script'     => 1,
