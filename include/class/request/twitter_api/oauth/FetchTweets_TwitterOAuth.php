@@ -119,7 +119,7 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
             10, 
             3 
         );
-    
+
         switch ( $sMethod ) {
             case 'POST':
                 $_oHTTP     = new FetchTweets_HTTP_Post( 
@@ -149,7 +149,9 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
                 );
                 break;
         }
-        $_sResponse = $_oHTTP->get( $this->iCachingMode );
+        $_sResponse = $_oHTTP->get( 
+            $this->iCachingMode     // 3 is set not to set a cache by default. A separate cache handler class handles caching except credentials.
+        );  
         
         // Must update the properties. The status code is referred when redirected back from twitter.com in the API authentication process.
         $this->http_code = $_oHTTP->getStatusCode();
