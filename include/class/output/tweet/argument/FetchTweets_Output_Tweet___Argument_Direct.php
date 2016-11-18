@@ -92,7 +92,7 @@ class FetchTweets_Output_Tweet___Argument_Direct extends FetchTweets_Output_Twee
                  */
                 private function ___getRuleIDsByTag( $aTags, $aArguments ) {                    
                     return isset( $aArguments[ 'tag_field_type' ] ) && in_array( strtolower( $aArguments[ 'tag_field_type' ] ), array( 'id', 'slug' ) )
-                        ? $this->___getPostIDsByTag( 
+                        ? $this->getPostIDsByTag( 
                             $aTags, 
                             $aArguments[ 'tag_field_type' ], 
                             trim( $aArguments[ 'operator' ] ) 
@@ -110,61 +110,9 @@ class FetchTweets_Output_Tweet___Argument_Direct extends FetchTweets_Output_Twee
                             $_aTerm        = get_term_by( 'name', $_sTermName, FetchTweets_Commons::TagSlug, ARRAY_A );
                             $_aTermSlugs[] = $_aTerm[ 'slug' ];
                         }
-                        return $this->___getPostIDsByTag( $_aTermSlugs, 'slug', $sOperator );
+                        return $this->getPostIDsByTag( $_aTermSlugs, 'slug', $sOperator );
                                 
                     }
-                    /**
-                     * @return      array
-                     */
-                    private function ___getPostIDsByTag( $aTermSlugs, $sFieldType='slug', $sOperator='AND' ) {
-
-                        if ( empty( $aTermSlugs ) ) {
-                            return array();
-                        }
-
-                        $_oResults   = new WP_Query( 
-                            array(
-                                'post_type'      => FetchTweets_Commons::PostTypeSlug,    // fetch_tweets
-                                'posts_per_page' => -1, // ALL posts
-                                'fields'         => 'ids',
-                                'tax_query'      => array(
-                                    array(
-                                        'taxonomy'  => FetchTweets_Commons::TagSlug,    // fetch_tweets_tag
-                                        'field'     => $this->___getFieldKeySanitized( $sFieldType ),    // id or slug
-                                        'terms'     => $aTermSlugs,    // the array of term slugs
-                                        'operator'  => $this->___getOperatorSanitized( $sOperator ),    // 'IN', 'NOT IN', 'AND. If the item is only one, use AND.
-                                    )
-                                )
-                            )
-                        );
-                        return $_oResults->posts;
-                        
-                    }
-                        /**
-                         * @return      string
-                         */
-                        private function ___getFieldKeySanitized( $sField ) {
-                            switch( strtolower( trim( $sField ) ) ) {
-                                case 'id':
-                                    return 'id';
-                                default:
-                                case 'slug':
-                                    return 'slug';
-                            }        
-                        }
-                        /**
-                         * @return      string
-                         */
-                        private function ___getOperatorSanitized( $sOperator ) {
-                            switch( strtoupper( trim( $sOperator ) ) ) {
-                                case 'NOT IN':
-                                    return 'NOT IN';
-                                case 'AND':
-                                    return 'AND';
-                                default:
-                                case 'IN':
-                                    return 'IN';                                
-                            }
-                        }
+                
  
 }

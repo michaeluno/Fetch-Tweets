@@ -16,6 +16,63 @@
 class FetchTweets_PluginUtility extends FetchTweets_WPUtility {
     
     /**
+     * Retrieves post Ids by plugin taxonomy terms.
+     * @remark      This methods is accessed by the Feeder extension.
+     * @return      array
+     */
+    static public function getPostIDsByTag( $aTermSlugs, $sFieldType='slug', $sOperator='AND' ) {
+
+        if ( empty( $aTermSlugs ) ) {
+            return array();
+        }
+
+        $_oResults = new WP_Query( 
+            array(
+                'post_type'      => FetchTweets_Commons::PostTypeSlug,    // fetch_tweets
+                'posts_per_page' => -1, // ALL posts
+                'fields'         => 'ids',
+                'tax_query'      => array(
+                    array(
+                        'taxonomy'  => FetchTweets_Commons::TagSlug,    // fetch_tweets_tag
+                        'field'     => self::___getFieldKeySanitized( $sFieldType ),    // id or slug
+                        'terms'     => $aTermSlugs,    // the array of term slugs
+                        'operator'  => self::___getOperatorSanitized( $sOperator ),    // 'IN', 'NOT IN', 'AND. If the item is only one, use AND.
+                    )
+                )
+            )
+        );
+        return $_oResults->posts;
+        
+    }
+        /**
+         * @return      string
+         */
+        static private function ___getFieldKeySanitized( $sField ) {
+            switch( strtolower( trim( $sField ) ) ) {
+                case 'id':
+                    return 'id';
+                default:
+                case 'slug':
+                    return 'slug';
+            }        
+        }
+        /**
+         * @return      string
+         */
+        static private function ___getOperatorSanitized( $sOperator ) {
+            switch( strtoupper( trim( $sOperator ) ) ) {
+                case 'NOT IN':
+                    return 'NOT IN';
+                case 'AND':
+                    return 'AND';
+                default:
+                case 'IN':
+                    return 'IN';                                
+            }
+        }    
+    
+    
+    /**
      * Retrieves the current url without GET queries.
      * @return      string
      */
