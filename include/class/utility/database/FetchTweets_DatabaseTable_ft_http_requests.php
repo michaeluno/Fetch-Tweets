@@ -235,4 +235,13 @@ class FetchTweets_DatabaseTable_ft_http_requests extends FetchTweets_DatabaseTab
         
     }
     
+    /**
+     * @since       2.5.0
+     */
+    public function deleteAll() {
+        $this->getVariable(
+            "Truncate table `{$this->aArguments[ 'table_name' ]}`"
+        );        
+    }
+    
 }
