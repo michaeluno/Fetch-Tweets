@@ -63,8 +63,7 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
         $GLOBALS[ 'arrFetchTweets_FinalClasses' ] = $this->_oUtil->getElementAsArray(
             $GLOBALS,
             'arrFetchTweets_Classes'
-        );        
-        $GLOBALS[ 'arrFetchTweets_oEmbed' ]       = array();                
+        );            
         
     }
     
