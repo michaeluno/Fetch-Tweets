@@ -1,5 +1,14 @@
 <?php
 /**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
+ */
+
+/**
  * Provides option formatting methods.
  * 
  * @since       2.3.9       Moved some properties and methods from the base class.
@@ -187,11 +196,8 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         $_bOptionsModified = false;
         
         // Set up the options array.
-        $_vOptions   = get_option( $sOptionKey, array() );
-        $aOptions    = FetchTweets_Utilities::uniteArrays( 
-            ( false === $_vOptions ) ? array() : ( array ) $_vOptions, 
-            self::$aStructure_Options 
-        );     
+        $_aOptions   = $this->getAsArray( get_option( $sOptionKey, array() ) );
+        $aOptions    = $this->uniteArrays( $_aOptions, self::$aStructure_Options );     
         
         // If the v1 option array structure is present, format the options for backward compatibility
         if ( isset( $aOptions['fetch_tweets_settings'] ) || isset( $aOptions['fetch_tweets_templates'] ) ) {
@@ -200,7 +206,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         }
 
         // If the template option array is empty, retrieve the active template arrays.
-        if ( empty( $aOptions['arrTemplates'] ) ) {
+        if ( empty( $aOptions[ 'arrTemplates' ] ) ) {
             $_aDefaultTemplate = $this->findDefaultTemplateDetails();
             $aOptions['arrTemplates'][ $_aDefaultTemplate['sSlug'] ] = $_aDefaultTemplate;
             $aOptions['arrDefaultTemplate'] = $_aDefaultTemplate;
@@ -211,7 +217,9 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         foreach( $aOptions['arrTemplates'] as $_sOldSlug => &$aTemplate ) {
             
             // the 'sSlug' key is added since v2.3.9 so if it is set, the structure is up to date.
-            if ( isset( $aTemplate['sSlug'] ) ) { continue; }
+            if ( isset( $aTemplate['sSlug'] ) ) { 
+                continue; 
+            }
             
             unset( $aOptions['arrTemplates'][ $_sOldSlug ] );
             $_aTemplate = $this->_formatTemplateArray( $aTemplate );
@@ -252,10 +260,10 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
             ? $sDirPath
             : FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'plain';
         $_aDefaultTemplate = $this->getTemplateArrayByDirPath( $sDirPath );
-        $_aDefaultTemplate['bIsActive'] = true;
-        $_aDefaultTemplate['bIsDefault'] = true;    
-        $_aDefaultTemplate['fIsActive'] = true;     // backward compatibility
-        $_aDefaultTemplate['fIsDefault'] = true;    // backward compatibility
+        $_aDefaultTemplate[ 'bIsActive' ]  = true;
+        $_aDefaultTemplate[ 'bIsDefault' ] = true;    
+        $_aDefaultTemplate[ 'fIsActive' ]  = true;     // backward compatibility
+        $_aDefaultTemplate[ 'fIsDefault' ] = true;     // backward compatibility
         $_aDefault[ $sDirPath ] = $_aDefaultTemplate;
         return $_aDefault[ $sDirPath ];
         

@@ -1,8 +1,17 @@
 <?php
 /**
+ * Fetch Tweets
+ * 
+ * Fetches and displays tweets from twitter.com.
+ * 
+ * http://en.michaeluno.jp/fetch-tweets/
+ * Copyright (c) 2013-2016 Michael Uno; Licensed GPLv2
+ */
+
+/**
  * Provides methods for template options.
  */
-abstract class FetchTweets_Option_Templates {
+abstract class FetchTweets_Option_Templates extends FetchTweets_PluginUtility {
   
     /**
      * Caches the active templates.
