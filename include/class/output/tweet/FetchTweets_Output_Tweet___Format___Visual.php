@@ -11,7 +11,7 @@
 /**
  * Formats tweet visuals.
  */
-class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_PluginUtility {
+class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_TweetFormatter {
     
     private $___aTweets = array();
     
@@ -26,8 +26,7 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_PluginUtili
         
         $this->___aTweet           = $this->getAsArray( $aTweet );
         $this->___aArguments       = $aArguments;
-        $this->___oOption          = FetchTweets_Option::getInstance();
-        $this->___bIsSSL           = is_ssl();        
+        $this->___oOption          = FetchTweets_Option::getInstance();     
         
     }
     
@@ -53,8 +52,13 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_PluginUtili
          */
         private function ___getTweetVisualsFormatted( array $aTweet, $iProfileImageSize ) {
             
+            // For JSON feeds, still the 'full_text' element is not set but uses 'text'.
+            if ( isset( $aTweet[ 'text' ] ) && ! isset( $aTweet[ 'full_text' ] ) ) {
+                 $aTweet[ 'full_text' ] = $aTweet[ 'text' ];
+            }
+            
             // If it is a retweet.
-            if ( isset( $aTweet[ 'retweeted_status' ][ 'full_text' ] ) ) {
+            if ( isset( $aTweet[ 'retweeted_status' ][ 'full_text' ] ) || isset( $aTweet[ 'retweeted_status' ][ 'text' ] ) ) {
                 $aTweet[ 'retweeted_status' ] = $this->___getTweetVisualsFormatted( $aTweet[ 'retweeted_status' ], $iProfileImageSize );
             }
                 
@@ -68,10 +72,10 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_PluginUtili
             // Make the urls in the text hyper-links.
             if ( isset( $aTweet[ 'full_text' ], $aTweet[ 'entities' ] ) ) {    
                 $aTweet[ 'entities' ]  = $aTweet[ 'entities' ] + self::$___aEntities;
-                $aTweet[ 'full_text' ] = $this->___getURLsClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'urls' ] );
-                $aTweet[ 'full_text' ] = $this->___getMediaClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'media' ] );
-                $aTweet[ 'full_text' ] = $this->___getHashTagsClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'hashtags' ] );
-                $aTweet[ 'full_text' ] = $this->___getUsersClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'user_mentions' ] );
+                $aTweet[ 'full_text' ] = $this->getURLsClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'urls' ] );
+                $aTweet[ 'full_text' ] = $this->getMediaClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'media' ] );
+                $aTweet[ 'full_text' ] = $this->getHashTagsClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'hashtags' ] );
+                $aTweet[ 'full_text' ] = $this->getUsersClickable( $aTweet[ 'full_text' ], $aTweet[ 'entities' ][ 'user_mentions' ] );
             }
                                     
             // Adjust the profile image size.
@@ -80,8 +84,8 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_PluginUtili
                     'profile_image_url'         => null,         
                     'profile_image_url_https'   => null,
                 );                
-                $aTweet[ 'user' ][ 'profile_image_url' ]        = $this->___getProfileImageSizeAdjusted( $aTweet[ 'user' ][ 'profile_image_url' ], $iProfileImageSize );
-                $aTweet[ 'user' ][ 'profile_image_url_https' ]  = $this->___getProfileImageSizeAdjusted( $aTweet[ 'user' ][ 'profile_image_url_https' ], $iProfileImageSize );
+                $aTweet[ 'user' ][ 'profile_image_url' ]        = $this->getProfileImageSizeAdjusted( $aTweet[ 'user' ][ 'profile_image_url' ], $iProfileImageSize );
+                $aTweet[ 'user' ][ 'profile_image_url_https' ]  = $this->getProfileImageSizeAdjusted( $aTweet[ 'user' ][ 'profile_image_url_https' ], $iProfileImageSize );
             }   
             
             // The request set `extended` for the rendering mode.
@@ -123,195 +127,22 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_PluginUtili
                     // the plugin inserts this element in the background
                     $aTweet[ '_media' ] .= $this->getElement( $aTweet, array( 'entities', 'embed_external_media' ), '' );
                 }
-            
+
                 // Insert twitter media files at the bottom of the tweet. 
-    // FetchTweets_Debug::log( $aMedia );                 
                 if ( $bTwitterMedia ) {
-    // @todo handle `sextended_entities`      
+// @todo handle `extended_entities`      
                     
-                    // the plugin inserts this element in the background
+                    $_aMedia               = $this->getElementAsArray( $aTweet, array( 'extended_entities', 'media' ) );
                     if ( isset( $aTweet[ 'entities' ][ 'embed_twitter_media' ] ) ) {                        
-                        $aTweet[ '_media' ]   .= $aTweet[ 'entities' ][ 'embed_twitter_media' ]; 
+                        // the plugin inserts this element in the background
+                        $aTweet[ '_media' ]   .= $aTweet[ 'entities' ][ 'embed_twitter_media' ];                       
                     } else {
-                        $_aMedia               = $this->getElementAsArray( $aTweet, array( 'extended_entities', 'media' ) );
-                        $aTweet[ '_media' ]    = $this->___getTwitterMedia( $_aMedia );
-                        $aTweet[ 'full_text' ] = $this->___getMediaLinksRemoved( $aTweet[ 'full_text' ], $_aMedia );
+                        $aTweet[ '_media' ]   .= $this->getTwitterMedia( $_aMedia );
                     }
+                    $aTweet[ 'full_text' ] = $this->getMediaLinksRemoved( $aTweet[ 'full_text' ], $_aMedia );
                         
                 }            
                 return $aTweet;
-                
-            }
-            
-                /**
-                 * Returns the Twitter media files to the tweet text.
-                 * 
-                 * @remark          Currently only photos are supported.
-                 * @since           1.2.0
-                 */ 
-                private function ___getTwitterMedia( array $aMedia ) {
-
-                    $_aOutput = array();
-                    foreach( $aMedia as $_aMedium ) {
-                        
-                        // avoid undefined index warnings.
-                        $_aMedium = $_aMedium + self::$___aMedia;
-                        
-                        if ( 'photo' !== $_aMedium[ 'type' ] || ! $_aMedium[ 'media_url' ] ) { 
-                            continue; 
-                        }
-                        
-                        $_aOutput[] = "<div class='fetch-tweets-media-photo'>"
-                                . "<a href='" . esc_url( $_aMedium['expanded_url'] ) . "'>"
-                                    . "<img "
-                                            . "src='" . esc_url( $this->___bIsSSL ? $_aMedium[ 'media_url_https' ] : $_aMedium[ 'media_url' ] ) . "' "
-                                            . "alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "' "
-                                        . "/>"
-                                . "</a>"
-                            . "</div><!-- fetch-tweets-media-photo -->";
-
-                    }
-                    return empty( $_aOutput ) 
-                            ? ''
-                            : "<div class='fetch-tweets-media'>" 
-                                . implode( PHP_EOL, $_aOutput ) 
-                            . "</div><!-- fetch-tweets-media -->";
-                    
-                }
-    
-            /**
-             * Converts plain urls to a hyper-link.
-             * 
-             * There are urls in the tweet text. So they need to be converted into hyper links.
-             */
-            private function ___getURLsClickable( $sTweet, $aURLs ) {
-                        
-                foreach( ( array ) $aURLs as $_aURLDetails ) {
-                    
-                    $_aURLDetails = $_aURLDetails + array(    // avoid undefined index warnings.
-                        'url' => null,
-                        'expanded_url' => null,
-                        'display_url' => null,
-                    );
-
-                    $sTweet = str_replace( 
-                        $_aURLDetails['url'],    // needle 
-                        "<a href='" . esc_url( $_aURLDetails['expanded_url'] ) . "' target='_blank' rel='nofollow'>{$_aURLDetails['display_url']}</a>",     // replace
-                        $sTweet     // haystack
-                    );    
-                    
-                }
-                return $sTweet;
-                
-            }
-            
-            static private $___aMedia = array(
-                'media_url'         => null, 'media_url_https'   => null,
-                'url'               => null, 'display_url'       => null,
-                'expanded_url'      => null, 'type'              => null,
-                'id'                => null, 'id_str'            => null,                
-                'indices'           => null, 'sizes'             => null,  
-            );
-            /**
-             * Converts media links in the tweet text.
-             */
-            private function ___getMediaClickable( $sTweet, $aMedia ) {
-                foreach( ( array ) $aMedia as $_aDetails ) {
-                    $_aDetails = $_aDetails + self::$___aMedia;
-                    $sTweet = str_replace( 
-                        $_aDetails[ 'url' ],    // needle 
-                        "<a href='" . esc_url( $_aDetails[ 'expanded_url' ] ) . "' target='_blank' rel='nofollow'>"
-                            . $_aDetails[ 'display_url' ]
-                            . "</a>",     // replace
-                        $sTweet     // haystack
-                    );    
-                }
-                return $sTweet;
-            }
-            private function  ___getMediaLinksRemoved( $sTweet, $aMedia ) {
-                foreach( ( array ) $aMedia as $_aDetails ) {
-                    $_aDetails = $_aDetails + self::$___aMedia;
-                    $sTweet = str_replace( 
-                        $_aDetails[ 'url' ],  // needle 
-                        '',                   // replace
-                        $sTweet               // haystack
-                    );    
-                }
-                return $sTweet;
-            }
-            
-            /**
-             * Converts hashtags into hyper links.
-             * 
-             * There are urls in the tweet text. So we need to convert them into hyper links.
-             */
-            private function ___getHashTagsClickable( $sTweet, $aHashTags ) {
-                
-                foreach( ( array ) $aHashTags as $_aDetails ) {
-                    
-                    $_aDetails = $_aDetails + array(    // avoid undefined index warnings.
-                        'full_text'      => null,
-                        'indices'   => null,
-                    );
-                    
-                    $sTweet = preg_replace( 
-                        '/#(\Q' . $_aDetails['full_text'] . '\E)(\W|$)/',     // needle
-                        '<a href="' . esc_url( 'https://twitter.com/search?q=%23$1&src=hash' ) . '" target="_blank" rel="nofollow">#$1</a>$2',    // replacement
-                        $sTweet     // haystack
-                    );
-                    
-                }
-                return $sTweet;
-                
-            }
-            private function ___getUsersClickable( $sTweet, $aMentions ) {
-                
-                // There are urls in the tweet text. So they need to be converted into hyper links.
-                foreach( ( array ) $aMentions as $_aDetails ) {
-                    
-                    $_aDetails = $_aDetails + array(    // avoid undefined index warnings.
-                        'screen_name'   => null,
-                        'name'          => null,
-                        'id'            => null, 
-                        'id_str'        => null,
-                        'indices'       => null,
-                    );
-                    
-                    $sTweet = preg_replace( 
-                        '/@(\Q' . $_aDetails['screen_name'] . '\E)(\W|$)/i',     // needle, case insensitive
-                        '<a href="' . esc_url( 'https://twitter.com/$1' ) . '" target="_blank" rel="nofollow">@$1</a>$2',    // replacement
-                        $sTweet     // haystack
-                    );
-                    
-                }
-                return $sTweet;
-                
-            }
-    
-            /**
-             * 
-             * url format example: 
-             *     http://a0.twimg.com/profile_images/.../..._normal.jpeg
-             *     https://si0.twimg.com/profile_images/../..._normal.jpeg        
-             * @see            https://dev.twitter.com/docs/user-profile-images-and-banners
-             */
-            private function ___getProfileImageSizeAdjusted( $strURL, $intImageSize ) {
-
-                if ( empty( $strURL ) ) { return $strURL; }
-                
-                $intImageSize = ! is_numeric( $intImageSize ) ? 48 : $intImageSize;
-                
-                $strNeedle = '/\/.+\K(_normal)(?=(\..+$)|$)/';
-                if ( $intImageSize <= 24 ) {
-                    return preg_replace( $strNeedle, '_mini', $strURL );
-                }
-                if ( $intImageSize <= 48 ) {
-                    return $strURL;
-                }
-                if ( $intImageSize <= 73 ) {
-                    return preg_replace( $strNeedle, '_bigger', $strURL );
-                }
-                return preg_replace( $strNeedle, '', $strURL );    // the original picture size.
                 
             }
  
