@@ -45,18 +45,18 @@ class FetchTweets_WidgetByTag extends FetchTweets_Widget_Base {
         fetchTweets( 
             array(     
                 'tag_field_type'        => 'slug',
-                'tags'                  => $aInstance['selected_tag_slugs'],
-                'count'                 => $aInstance['count'],
-                'operator'              => $aInstance['operator'],
-                'twitter_media'         => $aInstance['twitter_media'],
-                'external_media'        => $aInstance['external_media'],
-                // Template Options
-                'template'              => $aInstance['template'],
-                'avatar_size'           => $aInstance['avatar_size'],
-                'height'                => $aInstance['height'],
-                'height_unit'           => $aInstance['height_unit'],
-                'width'                 => $aInstance['width'],
-                'width_unit'            => $aInstance['width_unit'],                        
+                'tags'                  => $aInstance[ 'selected_tag_slugs' ],
+                'count'                 => $aInstance[ 'count' ],
+                'operator'              => $aInstance[ 'operator' ],
+                'twitter_media'         => $aInstance[ 'twitter_media' ],
+                'external_media'        => $aInstance[ 'external_media' ],
+                // Template Options                    
+                'template'              => $aInstance[ 'template' ],
+                'avatar_size'           => $aInstance[ 'avatar_size' ],
+                'height'                => $aInstance[ 'height' ],
+                'height_unit'           => $aInstance[ 'height_unit' ],
+                'width'                 => $aInstance[ 'width' ],
+                'width_unit'            => $aInstance[ 'width_unit' ],  
             ) 
         );    
         
