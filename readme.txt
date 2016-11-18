@@ -252,6 +252,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 - Fixed a bug that multiple media were not displayed.
 - Fixed an issue that some tweets were truncated.
 - Fixed a bug that retweet media were not displayed.
+- Changed the default height to 100% from 400px of the `Plain` template option.
 - Changed the default value of the `operator` argument to `IN` from `AND` used when fetching tweets with tags.
 - Refined the caching mechanism.
 - Updated the [Admin Page Framework](http://admin-page-framework/michaeluno.jp/) library.

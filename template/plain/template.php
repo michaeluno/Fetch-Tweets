@@ -8,12 +8,14 @@
  * @see     https://dev.twitter.com/overview/terms/display-requirements
  */
  
+$_oUtil = new FetchTweets_PluginUtility;
+
 // Set the default template option values.
 $aDefaultTemplateValues = array(
     'fetch_tweets_template_plain_avatar_size'       => 48,
     'fetch_tweets_template_plain_avatar_position'   => 'left',
     'fetch_tweets_template_plain_width'             => array( 'size' => 100, 'unit' => '%' ),
-    'fetch_tweets_template_plain_height'            => array( 'size' => 400, 'unit' => 'px' ),
+    'fetch_tweets_template_plain_height'            => array( 'size' => 100, 'unit' => '%' ),
     'fetch_tweets_template_plain_background_color'  => 'transparent',
     'fetch_tweets_template_plain_intent_buttons'    => 2,
     'fetch_tweets_template_plain_intent_script'     => 1,
@@ -43,14 +45,11 @@ $aDefaultTemplateValues = array(
     ),    
 );
 
-// Retrieve the default template option values.
-if ( ! isset( $aOptions['fetch_tweets_template_plain'] ) ) {    // for the first time of calling the template.
-    $aOptions['fetch_tweets_template_plain'] = $aDefaultTemplateValues;
-    update_option( FetchTweets_Commons::AdminOptionKey, $aOptions );
-}
-
 // Some new setting items are not stored in the database, so merge the saved options with the defined default values.
-$aTemplateOptions = FetchTweets_Utilities::uniteArrays( $aOptions['fetch_tweets_template_plain'], $aDefaultTemplateValues );    // unites arrays recursively.
+$aTemplateOptions = $_oUtil->uniteArrays( 
+    $aOptions[ 'fetch_tweets_template_plain' ],
+    $aDefaultTemplateValues 
+);    
 
 // Finalize the template option values.
 $aArgs['avatar_size']               = isset( $aArgs['avatar_size'] ) ? $aArgs['avatar_size'] : $aTemplateOptions['fetch_tweets_template_plain_avatar_size'];
@@ -120,11 +119,15 @@ $sURLFavoriteButton = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/f
     <?php foreach ( $aTweets as $_aDetail ) : ?>
     <?php 
         // If the necessary key is not set, skip.
-        if ( ! isset( $_aDetail['user'] ) ) { continue; }
+        if ( ! isset( $_aDetail['user'] ) ) { 
+            continue; 
+        }
         
         // Check if it's a retweet.
         $_bIsRetweet = isset( $_aDetail['retweeted_status']['text'] );
-        if ( $_bIsRetweet && ! $aArgs['include_rts'] ) { continue; }
+        if ( $_bIsRetweet && ! $aArgs['include_rts'] ) { 
+            continue; 
+        }
         $aTweet                 = $_bIsRetweet ? $_aDetail['retweeted_status'] : $_aDetail;
         $sRetweetClassSelector  = $_bIsRetweet ? 'fetch-tweets-retweet' : '';
         
