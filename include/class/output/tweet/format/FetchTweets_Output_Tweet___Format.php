@@ -182,9 +182,6 @@ class FetchTweets_Output_Tweet___Format extends FetchTweets_PluginUtility {
         private function ___getTweetFormatted( $aTweet, $iProfileImageSize=48 ) {
             
             // Convert the 'created_at' value to be numeric time.
-            // if ( isset( $aTweet[ 'created_at' ] ) ) {
-                // $aTweet[ 'created_at' ]            = strtotime( $aTweet[ 'created_at' ] );        
-            // }
             $aTweet[ '_created_at_timestamp' ] = isset( $aTweet[ 'created_at' ] )
                 ? strtotime( $aTweet[ 'created_at' ] )
                 : time();
