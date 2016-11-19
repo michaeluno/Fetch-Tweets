@@ -43,8 +43,8 @@ if ( $_oOption->get( 'delete', 'delete_upon_uninstall' ) ) {
     $_oOption->delete();
     $_oTable  = new FetchTweets_DatabaseTable_ft_http_requests;
     $_oTable->uninstall();        
-    $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
-    $_oTable->uninstall();            
+    // $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
+    // $_oTable->uninstall();            
 }
 
 // Delete transients
