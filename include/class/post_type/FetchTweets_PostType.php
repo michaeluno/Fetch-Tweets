@@ -126,7 +126,6 @@ class FetchTweets_PostType extends FetchTweets_AdminPageFramework_PostType {
             . fetchTweets( 
                 array( 
                     'id'    => $GLOBALS[ 'post' ]->ID,
-                    'count' => get_post_meta( $GLOBALS[ 'post' ]->ID, 'item_count', true ),
                 ),
                 false // do not echo but return the output
             );    
