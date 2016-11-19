@@ -4,7 +4,7 @@ Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.3
 Tested up to:       4.6.1
-Stable tag:         2.5.0
+Stable tag:         2.5.1
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -247,7 +247,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
-= 2.5.1 =
+= 2.5.1 - 11/20/20106 =
 - Added embedded media options.
 - Fixed an incompatibility issue of the time format in templates with Fetch Tweets v2.5 or below.
 - Fixed a bug with the Plain template that caused a warning of undefined index when resetting the plugin options.
