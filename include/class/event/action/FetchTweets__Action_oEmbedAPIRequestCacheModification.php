@@ -11,7 +11,7 @@
  * Renews HTTP request caches in the background.
  * 
  * @since       2.5.0
- * @action      schedule|add    fetch_tweets_action_add_oembed_elements_to_api_request_cache
+ * @action      add     fetch_tweets_action_add_oembed_elements_to_api_request_cache
  */
 class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets__Action_Base {
     
