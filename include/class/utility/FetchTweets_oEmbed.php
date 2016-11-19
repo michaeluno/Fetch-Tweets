@@ -75,7 +75,9 @@ class FetchTweets_oEmbed extends WP_oEmbed {
         $_oHTTP     = new FetchTweets_HTTP_Get( 
             $url,
             $this->___getCacheDuration(),
-            $args
+            array(
+                'timeout'     => 5,
+            ) + $args
         );    
         $_oHTTP->setType( 'oembed_get' ); // mark the request type
 		$request = $_oHTTP->get(
