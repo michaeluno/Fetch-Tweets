@@ -207,8 +207,14 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
 
             // Schedule the action to run in the background with WP Cron. If already scheduled, skip.
             // Add embedding elements in the background which is slow to process.
-            $this->___scheduleOembedRoutine( $_sRequestURI, $_iCacheDuration, $this->_aTargetElementPath );
-
+            $_bScheduled = $this->scheduleWPCronActionOnce(
+                'fetch_tweets_action_add_oembed_elements_to_api_request_cache',
+                array( $_sRequestURI, $_iCacheDuration, $this->_aTargetElementPath )
+            );
+            if ( $_bScheduled ) {
+                new FetchTweets_Event__BackgroundPageload;
+            }
+            
             return $_aResponse;
 
         }    
@@ -266,30 +272,5 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
                     return $_aResult;
               
                 }
- 
-            /** 
-             * Schedules an oEmbed embedding background routine.
-             * 
-             * @return      boolean     True if scheduled. Otherwise, false.
-             */
-            private function ___scheduleOembedRoutine( $sRequestURI, $iCacheDuration, $naTargetElementPath ) {
-                
-                $_aArguments = array( $sRequestURI, $iCacheDuration, $naTargetElementPath );
-                if ( wp_next_scheduled( 'fetch_tweets_action_add_oembed_elements_to_api_request_cache', $_aArguments ) ) { 
-                    return false; 
-                }
-                // the FetchTweets_Event class will check this action hook and executes it with WP Cron.
-                $_bCancelled = wp_schedule_single_event( 
-                    time(), 
-                    'fetch_tweets_action_add_oembed_elements_to_api_request_cache',     
-                    $_aArguments    // must be enclosed in an array.
-                );    
-                $_bScheduled = false !== $_bCancelled;
-                if ( $_bScheduled ) {
-                    new FetchTweets_Event__BackgroundPageload;
-                }
-                return $_bScheduled;
-                
-            }
  
 }
