@@ -74,11 +74,13 @@ class FetchTweets_oEmbed extends WP_oEmbed {
         // Use a custom HTTP client.
         $_oHTTP     = new FetchTweets_HTTP_Get( 
             $url,
-            60 * 60 * 24 * 7,   // 1 week cache duration
+            $this->___getCacheDuration(),
             $args
         );    
         $_oHTTP->setType( 'oembed_get' ); // mark the request type
-		$request = $_oHTTP->get();
+		$request = $_oHTTP->get(
+            $this->___shouldSetCache() ? 0 : 3
+        );
         
 		if ( $html = wp_remote_retrieve_body( $request ) ) {
 
@@ -133,7 +135,20 @@ class FetchTweets_oEmbed extends WP_oEmbed {
 			return $providers['xml'];
 		else
 			return false;
-	}        
+	}  
+        /**
+         * @return      integer
+         */
+        private function ___getCacheDuration() {
+            return FetchTweets_Option::get( array( 'oembed', 'cache_duration', 'size' ), 1 )
+                * FetchTweets_Option::get( array( 'oembed', 'cache_duration', 'unit' ), 86400 );
+        }
+        /**
+         * @return      boolean
+         */
+        private function ___shouldSetCache() {
+            return FetchTweets_Option::get( array( 'oembed', 'cache_discover' ), true );
+        }
         
     
     /**
