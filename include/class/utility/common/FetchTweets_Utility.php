@@ -185,7 +185,8 @@ class FetchTweets_Utility extends FetchTweets_AdminPageFramework_FrameworkUtilit
     /**
      * Retrieves the server set allowed maximum PHP script execution time.
      * 
-     * @since            1.3.4
+     * @since           1.3.4
+     * @return          integer
      */
     static public function getAllowedMaxExecutionTime( $iDefault=30, $iMax=120 ) {
         
