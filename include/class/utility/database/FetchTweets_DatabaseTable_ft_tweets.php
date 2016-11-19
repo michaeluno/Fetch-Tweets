@@ -10,7 +10,7 @@
 /**
  * Creates plugin specific database tables.
  * 
- * @since       2.5.0
+ * @deprecated  Not implemented at the moment
  */
 class FetchTweets_DatabaseTable_ft_tweets extends FetchTweets_DatabaseTable_Base {
     /**
