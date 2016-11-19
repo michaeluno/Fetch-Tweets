@@ -47,7 +47,7 @@ $aDefaultTemplateValues = array(
 
 // Some new setting items are not stored in the database, so merge the saved options with the defined default values.
 $aTemplateOptions = $_oUtil->uniteArrays( 
-    $aOptions[ 'fetch_tweets_template_plain' ],
+    $_oUtil->getElementAsArray( $aOptions, 'fetch_tweets_template_plain' ),
     $aDefaultTemplateValues 
 );    
 
