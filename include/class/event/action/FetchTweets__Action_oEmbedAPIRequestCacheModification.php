@@ -188,17 +188,15 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
                         if ( empty( $__aURLDetails[ 'expanded_url' ] ) ) { 
                             continue; 
                         }
-                        
                         $_sEmbed = $_oEmbed->get_html( 
                             $__aURLDetails[ 'expanded_url' ], 
                             array( 
-                                // 'discover' => false, 
+                                'discover' => FetchTweets_Option::get( array( 'oembed', 'discover' ), false ),
                             ) 
                         );
-      
                         if ( empty( $_sEmbed ) ) { 
                             continue; 
-                        }                       
+                        }                
                         $_aOutput[] = "<div class='fetch-tweets-external-media'>"
                                 . $_sEmbed
                             . "</div>";
