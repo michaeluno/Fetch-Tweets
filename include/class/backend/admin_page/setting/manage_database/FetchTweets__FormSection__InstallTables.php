@@ -40,14 +40,13 @@ class FetchTweets__FormSection__InstallTables extends FetchTweets__FormSection__
                 'save'              => false,
                 'value'             => __( 'HTTP Requests', 'fetch-tweets' ),
             ),
-            array(
-                'field_id'          => 'tweets',
-                'type'              => 'submit',
-                'skip_confirmation' => true,                   
-                // 'show_title_column' => false,
-                'save'              => false,
-                'value'             => __( 'Tweets', 'fetch-tweets' ),
-            )                   
+            // array(
+                // 'field_id'          => 'tweets',
+                // 'type'              => 'submit',
+                // 'skip_confirmation' => true,                   
+                // 'save'              => false,
+                // 'value'             => __( 'Tweets', 'fetch-tweets' ),
+            // )                   
         );
     }
         
@@ -73,17 +72,17 @@ class FetchTweets__FormSection__InstallTables extends FetchTweets__FormSection__
             return $aInputs;
         }       
 
-        if ( 'tweets' === $aSubmitInfo[ 'field_id' ] ) {
-            $_bSuccedd = $this->_handleTable_tweets();
-            $oAdminPage->setSettingNotice( 
-                sprintf( 
-                    $this->_getTheHandlingMessage( $_bSuccedd ),
-                   __( 'Tweets', 'fetch-tweets' )
-                ),
-                $_bSuccedd ? 'updated' : 'error'
-            );            
-            return $aInputs;
-        }               
+        // if ( 'tweets' === $aSubmitInfo[ 'field_id' ] ) {
+            // $_bSuccedd = $this->_handleTable_tweets();
+            // $oAdminPage->setSettingNotice( 
+                // sprintf( 
+                    // $this->_getTheHandlingMessage( $_bSuccedd ),
+                   // __( 'Tweets', 'fetch-tweets' )
+                // ),
+                // $_bSuccedd ? 'updated' : 'error'
+            // );            
+            // return $aInputs;
+        // }               
        
         // An invalid value is found. Set a field error array and an admin notice and return the old values.
         if ( ! $_bVerified ) {
@@ -120,9 +119,9 @@ class FetchTweets__FormSection__InstallTables extends FetchTweets__FormSection__
          * @return      boolean
          */        
         protected function _handleTable_tweets() {
-            $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
-            $_aResult = $_oTable->upgrade();
-            return ! empty( $_aResult );
+            // $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
+            // $_aResult = $_oTable->upgrade();
+            // return ! empty( $_aResult );
         }        
        
 }

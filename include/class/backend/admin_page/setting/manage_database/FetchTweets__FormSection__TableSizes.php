@@ -32,7 +32,7 @@ class FetchTweets__FormSection__TableSizes extends FetchTweets__FormSection__Bas
     protected function _getFields( $oFactory ) {
                 
         $_oHTTPRequestTable = new FetchTweets_DatabaseTable_ft_http_requests;                
-        $_oTweetsTable      = new FetchTweets_DatabaseTable_ft_tweets;                
+        // $_oTweetsTable      = new FetchTweets_DatabaseTable_ft_tweets;                
         return array(         
             array(
                 'field_id'          => 'http_requests',
@@ -41,13 +41,13 @@ class FetchTweets__FormSection__TableSizes extends FetchTweets__FormSection__Bas
                         . $_oHTTPRequestTable->getTableSize()
                     . "</p>",
             ),
-            array(
-                'field_id'          => 'tweets',
-                'title'             => __( 'Tweets', 'fetch-tweets' ),
-                'content'           => "<p>"
-                        . $_oTweetsTable->getTableSize()
-                    . "</p>",              
-            )                   
+            // array(
+                // 'field_id'          => 'tweets',
+                // 'title'             => __( 'Tweets', 'fetch-tweets' ),
+                // 'content'           => "<p>"
+                        // . $_oTweetsTable->getTableSize()
+                    // . "</p>",              
+            // )                   
         );
     }
         

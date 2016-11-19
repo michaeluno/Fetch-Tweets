@@ -186,9 +186,11 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
          */
         private function ___handleCustomDatabaseTables() {
             $_oTable  = new FetchTweets_DatabaseTable_ft_http_requests;
-            $_oTable->upgrade();        
-            $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
-            $_oTable->upgrade();                          
+            $_oTable->upgrade();  
+            
+            // Not implemented yet
+            // $_oTable  = new FetchTweets_DatabaseTable_ft_tweets;
+            // $_oTable->upgrade();                          
         }
     
         /**

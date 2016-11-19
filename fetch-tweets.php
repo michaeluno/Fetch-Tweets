@@ -220,15 +220,15 @@ final class FetchTweets_Commons extends FetchTweets_Commons_Base {
      * @since       2.5.0
      */
     static public $aDatabaseTables = array(
-        'ft_tweets'        => array(
-            'name'              => 'ft_tweets', // serves as the table name suffix
-            'version'           => '0.0.1',
-            'across_network'    => true,
-            'class_name'        => 'FetchTweets_DatabaseTable_ft_tweets',
-        ),
+        // 'ft_tweets'        => array(
+            // 'name'              => 'ft_tweets', // serves as the table name suffix
+            // 'version'           => '0.0.1',
+            // 'across_network'    => true,
+            // 'class_name'        => 'FetchTweets_DatabaseTable_ft_tweets',
+        // ),
         'ft_http_requests' => array(
             'name'              => 'ft_http_requests',  // serves as the table name suffix
-            'version'           => '0.0.2',
+            'version'           => '0.0.1',
             'across_network'    => true,
             'class_name'        => 'FetchTweets_DatabaseTable_ft_http_requests',
         ),
