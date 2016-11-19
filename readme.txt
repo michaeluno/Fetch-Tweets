@@ -248,6 +248,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 == Changelog ==
 
 = 2.5.1 =
+- Added embedded media options.
 - Fixed a warning `declaration of FetchTweets_Template_Settings_Single::validateSettings() should be compatible with ...`.
 
 = 2.5.0 - 11/19/2016 =

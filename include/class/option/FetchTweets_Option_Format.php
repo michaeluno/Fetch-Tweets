@@ -66,6 +66,16 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
             'delete_upon_uninstall'    => false,
         ),
         
+        // 2.5.1+
+        'oembed'                    => array(
+            'discover'          => false,
+            'cache_discover'    => true,
+            'cache_duration'    => array(
+                'size'  => 1,
+                'unit'  => 86400,
+            ),
+        ),
+        
     );
     
     public $aStructure_DefaultParams = array(

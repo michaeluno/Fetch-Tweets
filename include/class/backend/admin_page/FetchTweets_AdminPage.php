@@ -80,6 +80,16 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
         
     }
     
+    /**
+     * Set the default options.
+     */
+    public function options_FetchTweets_AdminPage( $aOptions ) {
+        return $this->oUtil->uniteArrays(
+            $aOptions,
+            $this->oOption->get()
+        );
+    }
+    
         /**
          * Defines the plugin pages.
          */
