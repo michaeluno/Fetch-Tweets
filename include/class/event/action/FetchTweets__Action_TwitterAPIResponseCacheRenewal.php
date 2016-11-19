@@ -74,14 +74,16 @@ class FetchTweets__Action_TwitterAPIResponseCacheRenewal extends FetchTweets__Ac
         // Check if it is expired.
         if ( 0 >= $aCache[ 'remained_time' ] ) {
 
-            // It is expired. So schedule a task that renews the cache in the background.
-            $_bScheduled = $this->___scheduleBackgroundCacheRenewal( 
-                $aCache[ 'request_uri' ], 
-                $iCacheDuration,
-                $aArguments,
-                $sType
-            );
-            
+            // It is expired. So schedule a task that renews the cache in the background.            
+            $_bScheduled = $this->scheduleWPCronActionOnce( 
+                $this->_sActionName, 
+                array(
+                    $aCache[ 'request_uri' ], 
+                    $iCacheDuration,
+                    $aArguments,
+                    $sType                
+                )
+            );                  
             if ( $_bScheduled ) {
                 new FetchTweets_Event__BackgroundPageload;
             }
@@ -94,30 +96,5 @@ class FetchTweets__Action_TwitterAPIResponseCacheRenewal extends FetchTweets__Ac
         return $aCache;
                 
     }
-        /**
-         * 
-         * @return      boolean
-         */
-        private function ___scheduleBackgroundCacheRenewal( $sURL, $iCacheDuration, $aArguments, $sType ) {
-                  
-            $_aArguments  = array(
-                $sURL,
-                $iCacheDuration,
-                $aArguments,
-                $sType
-            );
-            if ( wp_next_scheduled( $this->_sActionName, $_aArguments ) ) {
-                return false; 
-            }
-            $_bCancelled = wp_schedule_single_event( 
-                time(), // now
-                $this->_sActionName, // the FetchTweets_Event class will check this action hook and executes it with WP Cron.
-                $_aArguments // must be enclosed in an array.
-            );          
-            return false === $_bCancelled
-                ? false
-                : true;
-            
-        }
         
 }
