@@ -75,6 +75,7 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
     public function replyToPluginActivation() {
         
         $this->_checkRequirements();
+        $this->_installDatabaseTables();
                 
     }
         /**
@@ -94,6 +95,14 @@ final class FetchTweets_Bootstrap extends FetchTweets_AdminPageFramework_PluginB
                     true    // is in the activation hook. This will exit the script.
                 );
             }   
+        }
+    
+        /**
+         * @since       2.5.0
+         */
+        private function _installDatabaseTables() {
+            $_oHTTPCacheDB = new FetchTweets_DatabaseTable_ft_http_requests;
+            $_oHTTPCacheDB->install();
         }
     
     /**
