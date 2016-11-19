@@ -39,7 +39,7 @@ if ( ! class_exists( 'FetchTweets_Commons' ) ) {
 
 // Delete the plugin option
 $_oOption  = FetchTweets_Option::getInstance();
-if ( $_oOption->get( 'delete', 'delete_upon_uninstall' ) ) {
+if ( $_oOption->get( array( 'delete', 'delete_upon_uninstall' ) ) ) {
     $_oOption->delete();
     $_oTable  = new FetchTweets_DatabaseTable_ft_http_requests;
     $_oTable->uninstall();        
