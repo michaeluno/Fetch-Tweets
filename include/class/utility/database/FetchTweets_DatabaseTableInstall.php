@@ -33,7 +33,7 @@ class FetchTweets_DatabaseTableInstall extends FetchTweets_PluginUtility {
             }
             $_sVersion   = $this->getElement( $_aTable, 'version', '' );
             
-            $_sClassName = $this->getElement( $_aTable, 'class_name', '' )
+            $_sClassName = $this->getElement( $_aTable, 'class_name', '' );
             if ( class_exists( $_sClassName ) ) {                
                 $_oTable     = new $_sClassName;
                 $_oTable->$_sMethodName();
