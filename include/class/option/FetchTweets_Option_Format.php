@@ -40,7 +40,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         'cache_settings'            => array(
             'cache_for_errors'  => false,
             'caching_mode'      => 'normal',    // 2.1+
-            'clearing_inteval'  => array(   // 2.5.0+
+            'clearing_interval' => array(   // 2.5.0+
                 'size'  => 7,
                 'unit'  => 86400,
             ),

@@ -49,7 +49,7 @@ class FetchTweets__FormSection__Cache extends FetchTweets__FormSection__Base {
                 'default'        => 'normal',
             ),
             array(
-                'field_id'       => 'clearing_inteval',
+                'field_id'       => 'clearing_interval',
                 'title'          => __( 'Clearing Cache Interval', 'fetch-tweets' ),
                 'type'           => 'size',
                 'units'          => array(
@@ -87,8 +87,8 @@ class FetchTweets__FormSection__Cache extends FetchTweets__FormSection__Base {
         
         // If a new interval is set, remove the scheduled one. A new schedule is done by a separate handelr class.
         if ( 
-            $this->getElement( $aInputs, array( 'clearing_inteval', 'size' ), 7 ) * $this->getElement( $aInputs, array( 'clearing_inteval', 'unit' ), 86400 )
-            !== $this->getElement( $aOldInputs, array( 'clearing_inteval', 'size' ), 7 ) * $this->getElement( $aOldInputs, array( 'clearing_inteval', 'unit' ), 86400 )
+            $this->getElement( $aInputs, array( 'clearing_interval', 'size' ), 7 ) * $this->getElement( $aInputs, array( 'clearing_interval', 'unit' ), 86400 )
+            !== $this->getElement( $aOldInputs, array( 'clearing_interval', 'size' ), 7 ) * $this->getElement( $aOldInputs, array( 'clearing_interval', 'unit' ), 86400 )
         ) {            
             wp_clear_scheduled_hook( 'fetch_tweets_action_http_cache_removal', array() );
         }
