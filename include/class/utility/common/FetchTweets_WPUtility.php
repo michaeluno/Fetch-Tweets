@@ -11,6 +11,29 @@
 class FetchTweets_WPUtility extends FetchTweets_Utility {
     
     /**
+     * Schedules WP Cron action once.
+     * 
+     * @since       2.5.1
+     * @param       string      $sActionName        The WordPress action tag name.
+     * @param       array       $aArguments         The arguments to pass to the callback that handles the action.
+     * @param       integer     $iSchedulingTime    The scheduling time from now in seconds. If it should be done in one hour from now, set `3600`.
+     * @return      boolean     True if scheduled; otherwise, false.
+     */
+    static public function scheduleWPCronActionOnce( $sActionName, array $aArguments, $iSchedulingTime=0 ) {
+                   
+        if ( wp_next_scheduled( $sActionName, $aArguments ) ) { 
+            return false; 
+        }
+        $_bCancelled = wp_schedule_single_event( 
+            time() + $iSchedulingTime, 
+            $sActionName,
+            $aArguments    // must be enclosed in an array.
+        );    
+        return false !== $_bCancelled;
+        
+    }
+    
+    /**
      * Removes transients that have the given prefix.
      * 
      * @since   1.3.5
