@@ -65,7 +65,7 @@ abstract class FetchTweets_DatabaseTable_Base {
                             
         $_sExistingVersion = get_option( 
             $this->aArguments[ 'name' ]  . '_version',
-            $this->aArguments[ 'version' ]  // default
+            '0'  // $this->aArguments[ 'version' ]  // default
         );
         
         // If the existent version is above or equal to the set version in the argument, do not upgrade.
