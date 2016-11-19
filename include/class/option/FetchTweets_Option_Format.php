@@ -68,6 +68,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         
         // 2.5.1+
         'oembed'                    => array(
+            'enabled'           => true,
             'discover'          => false,
             'cache_discover'    => true,
             'cache_duration'    => array(

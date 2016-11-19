@@ -205,19 +205,34 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
             // Set cache
             $this->___oCache->set( $_sRequestURI, $_aResponse, $_iCacheDuration );
 
-            // Schedule the action to run in the background with WP Cron. If already scheduled, skip.
             // Add embedding elements in the background which is slow to process.
-            $_bScheduled = $this->scheduleWPCronActionOnce(
-                'fetch_tweets_action_add_oembed_elements_to_api_request_cache',
-                array( $_sRequestURI, $_iCacheDuration, $this->_aTargetElementPath )
+            $this->___scheduleOEmbedCacheModificationRoutine( 
+                $_sRequestURI, 
+                $_iCacheDuration, 
+                $this->_aTargetElementPath 
             );
-            if ( $_bScheduled ) {
-                new FetchTweets_Event__BackgroundPageload;
-            }
             
             return $_aResponse;
 
         }    
+        
+            /**
+             * Schedule an action routine to run in the background with WP Cron. If already scheduled, skip.
+             * Add embedding elements in the background which is slow to process.
+             * @since       2.5.1
+             */
+            private function ___scheduleOEmbedCacheModificationRoutine( $_sRequestURI, $_iCacheDuration, $aTargetElementPath ) {
+                if ( ! $this->_oOption->get( array( 'oembed', 'enabled' ), true ) ) {
+                    return;
+                }
+                $_bScheduled = $this->scheduleWPCronActionOnce(
+                    'fetch_tweets_action_add_oembed_elements_to_api_request_cache',
+                    array( $_sRequestURI, $_iCacheDuration, $aTargetElementPath )
+                );
+                if ( $_bScheduled ) {
+                    new FetchTweets_Event__BackgroundPageload;
+                }                
+            }
             /**
              * @return      string
              * @since       2.5.0

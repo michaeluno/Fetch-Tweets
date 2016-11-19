@@ -15,42 +15,123 @@
  */
 class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets__Action_Base {
     
-    protected $_sActionName = 'fetch_tweets_action_add_oembed_elements_to_api_request_cache';
-    
+    protected $_sActionName = 'fetch_tweets_action_add_oembed_elements_to_api_request_cache';    
     protected $_iArguments  = 3;
         
+    /* Class specific properties */
+    private $___aTweets = array();
+    private $___oEmbed;
+    
+    /**
+     * The script started time.
+     */
+    private $___iStarted = 0;
+    
+    /**
+     * An count for updated tweets.
+     */
+    private $___iUpdated = 0;
+    
+    /**
+     * An offset margin in seconds for oEmbed HTTP requests.
+     * @remark  oEmbed http request for each time limit is 5 seconds so this should be longer than that
+     */
+    private $___iOffset  = 10;
+    
+    protected function _construct() {
+        $this->___iStarted = time();
+    }
+    
     /**
      * 
      */
-    protected function _doAction( /* $_sRequestURI, $_iCacheDuration, $naTargetElementPath */ ) {
+    protected function _doAction( /* $_sRequestURI, $_iCacheDuration, $_naTargetElementPath */ ) {
         
         $_aParams             = func_get_args() + array( '', -1, null );
         $_sRequestURI         = $_aParams[ 0 ];
+        $_iCacheDuration      = $_aParams[ 1 ];
         $_naTargetElementPath = $_aParams[ 2 ];
 
-        $_oCache = new FetchTweets_TwitterAPI___CacheHandler;        
-        
-        $_aResponse      = $_oCache->get( 
-            $_sRequestURI, 
+        $_oCache              = new FetchTweets_TwitterAPI___CacheHandler;
+        $_aResponse           = $_oCache->get( 
+            $_sRequestURI,
             -1   // cache duration - do not trigger a cache renewal task and force retrieval.
         );
-
-        // If expired or does not exist, it will be empty.
-        if ( empty( $_aResponse ) || $this->___isError( $_aResponse ) ) {
+        
+        if ( ! $this->___shouldProceed( $_aResponse ) ) {
             return;
         }
         
-        $_aTweets = $this->getTweetsExtracted( $_aResponse, $_naTargetElementPath );
-        $_aTweets = $this->___getMediaElementsEmbedded( $_aTweets );
-        $this->___setTweets( $_aResponse, $_aTweets, $_naTargetElementPath );
+        // Timelimite
+        $this->___oEmbed     = new FetchTweets_oEmbed;
+        $this->___iTimeLimit = $this->___getTimeLimit();
+        $this->___aTweets    = $this->getTweetsExtracted( $_aResponse, $_naTargetElementPath );
+        $this->___iUpdated   = 0;
+        
+        try {
+            
+            if ( $this->___iTimeLimit < time() ) {
+                throw new Exception( 'Time is up!' );
+            }            
+            $this->___setMediaElementsEmbedded( $this->___aTweets );  
+          
+        }
+        catch( Exception $oException ) {
+            
+            // Timed out. Reschedule the routine.
+            $_bScheduled = $this->scheduleWPCronActionOnce(
+                $this->_sActionName,
+                array( $_sRequestURI, $_iCacheDuration, $_naTargetElementPath )
+            );
+            if ( $_bScheduled ) {
+                new FetchTweets_Event__BackgroundPageload;
+            }
+            
+        }    
+
+        // If no item is updated, no need to update caches in the database.
+        if ( ! $this->___iUpdated ) {
+            return;
+        }        
+        // Update the cache.
+        $this->___setTweets( $_aResponse, $this->___aTweets, $_naTargetElementPath );
         $_oCache->set( 
             $_sRequestURI,  // cache name
             $_aResponse,    // data
             -1              // cache duration - do not update the expiration column
         );
-        
+
     }
     
+        /**
+         * @return      boolean
+         */
+        private function ___shouldProceed( $_aResponse ) {
+            
+            // If expired or does not exist, it will be empty.
+            if ( empty( $_aResponse ) || $this->___isError( $_aResponse ) ) {
+                return false;
+            }
+            
+            // HTTP request time out will be 5 so if the max execution time is too short, do nothing.
+            $_iMaxExecution = $this->getAllowedMaxExecutionTime();
+            if ( 0 !== $_iMaxExecution && ( $this->___iOffset + 2 ) >= $_iMaxExecution ) {
+                return false;
+            }
+            return true;
+        }
+        
+        /**
+         * Determine the time when the script stops.
+         * @return      integer
+         */
+        private function ___getTimeLimit() {
+            $_iMaxExecution = $this->getAllowedMaxExecutionTime();            
+            return 0 === $_iMaxExecution
+                ? $this->___iStarted + 600   // 10 minutes as maximum
+                : $this->___iStarted + $_iMaxExecution - $this->___iOffset;
+        }
+        
         /**
          * @return          boolean
          */
@@ -113,13 +194,14 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
         }    
 
         /**
-         * Adds the embeddable media elements to the tweets array.
-         * 
-         * @remark           This should be called from an action event which runs in the background because this takes some time.
-         * @since            1.3.0
+         * Update the tweets by inserting embeddable external media elements.
+         * @since       2.5.1
+         * @return      void
+         * @throw
          */
-        private function ___getMediaElementsEmbedded( $aTweets ) {
-
+        private function ___setMediaElementsEmbedded( &$aTweets ) {
+            
+            
             foreach( $aTweets as $_isIndex => $_aTweet ) {
                                 
                 // Check if it is a re-tweet.
@@ -127,12 +209,19 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
                     $_aTweet[ 'retweeted_status' ] = $this->___getMediaElementEmbedded( $_aTweet[ 'retweeted_status' ] );
                 }
                 
+                // Update the tweet
                 $aTweets[ $_isIndex ] = $this->___getMediaElementEmbedded( $_aTweet );
-                        
+                $this->___iUpdated++;
+                
+                // Check time
+                if ( $this->___iTimeLimit < time() ) {
+                    throw new Exception( 'Time is up!' );
+                }
+                     
             }                    
-            return $aTweets;
         
         }
+ 
             /**
              * Adds the embeddable media element to the single tweet element.
              * 
@@ -177,9 +266,7 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
                  * @since           1.2.0
                  */ 
                 private function ___getExternalMedia( $aURLs ) {
-                    
-                    $_oEmbed = new FetchTweets_oEmbed;
-                    
+                                        
                     // There are urls in the tweet text. So they need to be converted into hyper links.
                     $_aOutput = array();
                     foreach( ( array ) $aURLs as $__aURLDetails ) {
@@ -188,12 +275,17 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
                         if ( empty( $__aURLDetails[ 'expanded_url' ] ) ) { 
                             continue; 
                         }
-                        $_sEmbed = $_oEmbed->get_html( 
+                        $_sEmbed = $this->___oEmbed->get_html( 
                             $__aURLDetails[ 'expanded_url' ], 
                             array( 
                                 'discover' => FetchTweets_Option::get( array( 'oembed', 'discover' ), false ),
                             ) 
                         );
+                        
+                        if ( $this->___iTimeLimit < time() ) {
+                            throw new Exception( 'Time is up!' );
+                        }
+                        
                         if ( empty( $_sEmbed ) ) { 
                             continue; 
                         }                

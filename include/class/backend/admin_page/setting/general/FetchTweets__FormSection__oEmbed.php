@@ -32,6 +32,13 @@ class FetchTweets__FormSection__oEmbed extends FetchTweets__FormSection__Base {
     protected function _getFields( $oFactory ) {
         return array(
             array(
+                'field_id'          => 'enabled',
+                'title'             => __( 'oEmbed', 'fetch-tweets' ),
+                'type'              => 'checkbox',
+                'label'             => __( 'Replace external media links with embedded elements.', 'fetch-tweets' ),
+                'default'           => true,
+            ),        
+            array(
                 'field_id'          => 'discover',
                 'title'             => __( 'Discover', 'fetch-tweets' ),
                 'type'              => 'checkbox',
