@@ -45,18 +45,4 @@ final class FetchTweets_Debug extends FetchTweets_AdminPageFramework_Debug {
            
     }  
     
-    /**
-     * @todo        deprecate this method.
-     */    
-    static public function getOption( $strKey ) {
-
-        if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) return;
-        
-        $oOption = & $GLOBALS['oFetchTweets_Option'];        
-        if ( ! isset( $oOption->aOptions[ $strKey ] ) ) return;
-        
-        self::dump( $oOption->aOptions[ $strKey ] );
-        
-    }
-
 }
