@@ -237,9 +237,9 @@ class FetchTweets_Template_Settings_Single extends FetchTweets_Template_Settings
 		return $aFields;		
 	}
 	
-	public function validateSettings( $arrInput, $arrOriginal ) {
+	public function validateSettings( $aInputs, $aOldInputs, $oAdminPage, $aSubmitInfo ) {
 		
-		return $arrInput;
+		return $aInputs;
 		
 	}
 	
