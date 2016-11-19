@@ -1,5 +1,8 @@
 == Change log ==
 
+= 2.5.1 =
+- Fixed an incompatibility issue of the time format in templates with Fetch Tweets v2.5 or below.
+
 = 2.5.0 =
 - Changed the default value of the height to 100%.
 

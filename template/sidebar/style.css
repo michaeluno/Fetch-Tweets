@@ -4,7 +4,7 @@
  * Author:         Michael Uno
  * Author URI:     http://en.michaeluno.jp
  * Description:    Displays tweets for multiple accounts optimized for sidebars.
- * Version:        0.0.1
+ * Version:        1.0.0
  * License:        GNU General Public License v2 or later
  * License URI:    http://www.gnu.org/licenses/gpl-2.0.html
  * Tags:           default
@@ -81,17 +81,18 @@ div.fetch-tweets-sidebar-body > p.fetch-tweets-sidebar-text {
 .fetch-tweets-sidebar-text > .fetch-tweets-sidebar-retweet-credit a {
 	text-decoration: none;
 }
-.fetch-tweets-sidebar .fetch-tweets-sidebar-body > .fetch-tweets-sidebar-external-media {
+.fetch-tweets-sidebar .fetch-tweets-sidebar-body > .fetch-tweets-external-media {
 	clear: both;
+    margin: 0.4em 0;
 }
-.fetch-tweets-sidebar .fetch-tweets-sidebar-media > .fetch-tweets-sidebar-media-photo {
+.fetch-tweets-sidebar .fetch-tweets-media > .fetch-tweets-media-photo {
 }
-.fetch-tweets-sidebar .fetch-tweets-sidebar-body > .fetch-tweets-sidebar-external-media img,
-.fetch-tweets-sidebar .fetch-tweets-sidebar-media > .fetch-tweets-sidebar-media-photo img {
+.fetch-tweets-sidebar .fetch-tweets-sidebar-body > .fetch-tweets-external-media img,
+.fetch-tweets-sidebar .fetch-tweets-media > .fetch-tweets-media-photo img {
 	max-width: 100%;
 	height: auto;	
 }
-.fetch-tweets-sidebar .fetch-tweets-sidebar-body > .fetch-tweets-sidebar-media {
+.fetch-tweets-sidebar .fetch-tweets-sidebar-body > .fetch-tweets-media {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 }

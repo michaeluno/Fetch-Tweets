@@ -4,7 +4,7 @@
  * Author:         Michael Uno
  * Author URI:     http://en.michaeluno.jp
  * Description:    Displays tweets for a single account.
- * Version:        2.5.0
+ * Version:        2.5.1
  * License:        GNU General Public License v2 or later
  * License URI:    http://www.gnu.org/licenses/gpl-2.0.html
  * Tags:           single
@@ -75,7 +75,7 @@ div.fetch-tweets-single-user-profile > .fetch-tweets-single-user-name a {
 	float: right;  
 	margin-left: 1em;
 	margin-top: 0.8em;
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
 	font-size: 80%;
 	line-height: 80%;
 }
@@ -98,6 +98,7 @@ div.fetch-tweets-single-body > p.fetch-tweets-single-text {
 }
 .fetch-tweets-single-container .fetch-tweets-external-media {
 	clear: both;
+    margin: 0.4em 0;
 }
 .fetch-tweets-single-container .fetch-tweets-external-media img,
 .fetch-tweets-single-container .fetch-tweets-media > .fetch-tweets-media-photo img {

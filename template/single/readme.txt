@@ -1,5 +1,9 @@
 == Change log ==
 
+= 2.5.1 =
+- Fixed an incompatibility issue of the time format in templates with Fetch Tweets v2.5 or below.
+- Tweaked the style for media elements.
+
 = 2.5.0 =
 - Changed the default height to 100% from 400px.
 

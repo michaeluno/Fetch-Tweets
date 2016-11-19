@@ -4,7 +4,7 @@
  * Author:         Michael Uno
  * Author URI:     http://en.michaeluno.jp
  * Description:    Displays tweets for multiple accounts. 
- * Version:        2.5.0
+ * Version:        2.5.1
  * License:        GNU General Public License v2 or later
  * License URI:    http://www.gnu.org/licenses/gpl-2.0.html
  * Tags:           default
@@ -73,6 +73,7 @@ div.fetch-tweets-body > p.fetch-tweets-text {
 }
 .fetch-tweets .fetch-tweets-body > .fetch-tweets-external-media {
 	clear: both;
+    margin: 0.4em 0;
 }
 .fetch-tweets .fetch-tweets-media > .fetch-tweets-media-photo {
 }

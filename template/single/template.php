@@ -8,6 +8,8 @@
  * @see     https://dev.twitter.com/overview/terms/display-requirements
  */
  
+$_oUtil = new FetchTweets_PluginUtility;
+ 
 /*
  * Prepare variables for options.
  */
@@ -118,7 +120,6 @@ $sPaddingLeft       = empty( $aArgs['padding_left'] ) ? "" : $aArgs['padding_lef
 $sMargins           = ( $sMarginTop ? "margin-top: {$sMarginTop}; " : "" ) . ( $sMarginRight ? "margin-right: {$sMarginRight}; " : "" ) . ( $sMarginBottom ? "margin-bottom: {$sMarginBottom}; " : "" ) . ( $sMarginLeft ? "margin-left: {$sMarginLeft}; " : "" );
 $sPaddings          = ( $sPaddingTop ? "padding-top: {$sPaddingTop}; " : "" ) . ( $sPaddingRight ? "padding-right: {$sPaddingRight}; " : "" ) . ( $sPaddingBottom ? "padding-bottom: {$sPaddingBottom}; " : "" ) . ( $sPaddingLeft ? "padding-left: {$sPaddingLeft}; " : "" );
 $sMarginForImage    = $aArgs['visibilities']['avatar'] ? ( ( $aArgs['avatar_position'] == 'left' ? "margin-left: " : "margin-right: " ) . ( ( int ) $aArgs['avatar_size'] + 10 ) . "px" ) : "";
-$iGMTOffset         = ( integer ) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 $sURLUserAvatar     = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, $aArgs['avatar_size'] ) );
 $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar, 100 ) );
 
@@ -209,7 +210,7 @@ $sURLUserAvatarAlt  = esc_url( getTwitterProfileImageURLBySize( $sURLUserAvatar,
                     <?php if ( $aArgs['visibilities']['time'] ) : ?>
                     <span class='fetch-tweets-single-tweet-created-at'>
                         <a href='<?php echo esc_url( 'https://twitter.com/' . $aTweet['user']['screen_name'] . '/status/' . $aTweet['id_str'] ); ?>' target='_blank'>
-                            <?php echo human_time_diff( strtotime( $aTweet[ 'created_at' ] ), current_time('timestamp') - $iGMTOffset ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
+                            <?php echo $_oUtil->getLegibleTimeDifference( $aTweet[ 'created_at' ] ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
                         </a>            
                     </span>
                     <?php endif; ?>

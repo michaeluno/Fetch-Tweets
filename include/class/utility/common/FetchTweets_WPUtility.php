@@ -10,6 +10,23 @@
 
 class FetchTweets_WPUtility extends FetchTweets_Utility {
     
+    static private $___iGMTOffset;
+    /**
+     * 
+     * @return      string
+     */
+    static public function getLegibleTimeDifference( $isTime ) {
+        self::$___iGMTOffset = isset( self::$___iGMTOffset )
+            ? self::$___iGMTOffset
+            : ( integer ) ( get_option( 'gmt_offset' ) * 60 * 60 );
+        return human_time_diff( 
+            is_string( $isTime ) 
+                ? strtotime( $isTime )
+                : $isTime,  // assumes a timestamp
+            current_time( 'timestamp' ) - self::$___iGMTOffset
+        );
+    }
+    
     /**
      * Schedules WP Cron action once.
      * 

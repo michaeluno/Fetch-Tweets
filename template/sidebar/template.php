@@ -101,7 +101,6 @@ $sPaddings          = ( $sPaddingTop ? "padding-top: {$sPaddingTop}; " : "" ) . 
 $iHeightForAvatar   = $aArguments[ 'visibilities' ][ 'avatar' ] 
     ? ( int ) $aArguments[ 'avatar_size' ] . 'px'
     : '';
-$iGMTOffset         = ( integer ) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 $bIsSSL             = is_ssl();
 $sURLReplyuButton   = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/reply_48x16.png' ) );
 $sURLRetweetButton  = esc_url( FetchTweets_Commons::getPluginURL( 'asset/image/retweet_48x16.png' ) );
@@ -174,7 +173,7 @@ $sOppsiteAvatarPos  = 'left' === $aArguments[ 'avatar_position' ] ? 'right' : 'l
                 <?php if ( $aArguments['visibilities']['time'] ) : ?>
                 <span class='fetch-tweets-sidebar-tweet-created-at'>
                     <a href='<?php echo esc_url( "https://twitter.com/" . $aTweet['user']['screen_name'] . "/status/" . $aTweet['id_str'] ); ?>' target='_blank'>
-                        <?php echo human_time_diff( strtotime( $aTweet[ 'created_at' ] ), current_time( 'timestamp' ) - $iGMTOffset ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
+                        <?php echo $_oUtil->getLegibleTimeDifference( $aTweet[ 'created_at' ] ) . ' ' . __( 'ago', 'fetch-tweets' ); ?>
                     </a>            
                 </span>
                 <?php endif; ?>
