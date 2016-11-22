@@ -55,7 +55,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
         if ( isset( $_GET['page'] ) && 'fetch_tweets_templates' === $_GET['page'] ) {
             add_action( 'admin_menu', array( $this, '_replyToProcessBulkActionForTemplateListTable' ) );            
         }
-                
+        
     }
     
         public function _replyToProcessBulkActionForTemplateListTable() {
@@ -75,6 +75,8 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
         if ( $_sCapability ) {
             $this->setCapability( $_sCapability );
         }
+        
+        // $this->setPluginSettingsLinkLabel( '' ); // pass an empty string to disable it.
 
         $this->_setUpPages();
         
@@ -97,6 +99,9 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
             
             $_sPostTypeSlug = FetchTweets_Commons::PostTypeSlug;
             $this->setRootMenuPageBySlug( "edit.php?post_type={$_sPostTypeSlug}"  );
+            
+            new FetchTweets__AdminPage__Setting( $this );   // needs to load first for the 'Settings' plugins action link.
+            
             $this->addSubMenuItems(
                 array(
                     'title'         => __( 'Add Rule by Screen Name', 'fetch-tweets' ),
@@ -134,7 +139,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
                     'order'         => 70,
                 )
             );
-            new FetchTweets__AdminPage__Setting( $this );
+            
             new FetchTweets_AdminPage_Template(
                 $this,
                 'fetch_tweets_templates',
