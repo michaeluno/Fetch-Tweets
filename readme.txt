@@ -2,9 +2,9 @@
 Contributors:       Michael Uno, miunosoft
 Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
-Requires at least:  3.3
+Requires at least:  3.4
 Tested up to:       4.6.1
-Stable tag:         2.5.1
+Stable tag:         2.5.2
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -247,7 +247,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
-= 2.5.2 =
+= 2.5.2 - 11/23/2016 =
 - Fixed a bug that hash-tags in tweets were no longer linked, introduced in v2.5.0.
 - Fixed a bug that embedded media were not updated after caches were renewed.
 - Fixed a warning "Declaration of FetchTweets__FormSection__AddRuleByList::_getArguments() should be compatible with..." appeared in the `Add Rule by List` page.
