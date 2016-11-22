@@ -27,7 +27,7 @@ class FetchTweets__FormSection__AddRuleByList extends FetchTweets__FormSection__
         );
     }
     
-    protected function _getArguments() {
+    protected function _getArguments( $oFactory ) {
         $_aArguments =  array(
             'section_id'    => $this->_sSectionID,
             'title'         => __( 'Specify the Screen Name', 'fetch-tweets' ),

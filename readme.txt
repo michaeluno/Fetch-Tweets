@@ -247,6 +247,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
+= 2.5.2 =
+- Fixed a warning "Declaration of FetchTweets__FormSection__AddRuleByList::_getArguments() should be compatible with..." appeared in the `Add Rule by List` page.
+
 = 2.5.1 - 11/20/20106 =
 - Added embedded media options.
 - Fixed an incompatibility issue of the time format in templates with Fetch Tweets v2.5 or below.
