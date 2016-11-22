@@ -60,12 +60,13 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
     /**'
      * Retrieve the cache.
      * 
-     * @param       string      $sRequestURI        The request URI. Note that the URL query parameters should only include user defined ones.
+     * @param       string      $sRequestURI            The request URI. Note that the URL query parameters should only include user defined ones.
      * Do not include time specific items such as nonce, timestamps, signature. 
-     * @param       integer     $iCacheDuration     The cache duration of the retrieving cache. If `-1` is passed, the cache will be retrieved anyway.
+     * @param       integer     $iCacheDuration         The cache duration of the retrieving cache. If `-1` is passed, the cache will be retrieved anyway.
+     * @param       null|array  $naTargetElementPath    The element path that contains tweets as it differs among different request types.
      * @return      array       The cached data. If it is expired, an empty array will be returned. To force retrieving the cache, pass `-1` to the cache duration parameter.
      */
-    public function get( $sRequestURI, $iCacheDuration ) {
+    public function get( $sRequestURI, $iCacheDuration, $naTargetElementPath=null ) {
         
         $_aCache = $this->___oCacheTable->getCache(  
             $this->___getCacheName( $sRequestURI ), 
@@ -86,8 +87,9 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
             'fetch_tweets_filter_twitter_api_response_cache',
             $_aCache,
             $iCacheDuration,
-            array(),        // http arguments
-            'twitter_api_request'   // request type
+            array(),                 // http arguments
+            'twitter_api_request',   // request type
+            $naTargetElementPath     // the dimensional path of the tweets element
         );        
         if ( 0 >= $_aCache[ 'remained_time' ] ) {
             return array();

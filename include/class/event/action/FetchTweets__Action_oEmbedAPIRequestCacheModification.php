@@ -69,7 +69,6 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
         $this->___iUpdated   = 0;
         
         try {
-            
             if ( $this->___iTimeLimit < time() ) {
                 throw new Exception( 'Time is up!' );
             }            
@@ -201,7 +200,6 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
          */
         private function ___setMediaElementsEmbedded( &$aTweets ) {
             
-            
             foreach( $aTweets as $_isIndex => $_aTweet ) {
                                 
                 // Check if it is a re-tweet.
@@ -275,6 +273,7 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
                         if ( empty( $__aURLDetails[ 'expanded_url' ] ) ) { 
                             continue; 
                         }
+
                         $_sEmbed = $this->___oEmbed->get_html( 
                             $__aURLDetails[ 'expanded_url' ], 
                             array( 

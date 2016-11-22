@@ -29,11 +29,25 @@ class FetchTweets_TwitterAPI_custom_query extends FetchTweets_TwitterAPI_Base {
      */
     public function get() {
         
-        $_sResponseKey      = $this->getElement( $this->_aArguments, array( 'response_key' ), '' );
-        $this->_aTargetElementPath = $this->getStringIntoArray( $_sResponseKey, ',' );
+        $this->_aTargetElementPath = $this->___getResponseKey();
         return parent::get();
 
     }
+        /**
+         * @return      array|null
+         * @since       2.5.2
+         */
+        private function ___getResponseKey() {
+            
+            $_ansResponseKey = $this->getElement( $this->_aArguments, array( 'response_key' ), null );
+            if ( ! isset( $_ansResponseKey ) ) {
+                return null;
+            }
+            return is_string( $_ansResponseKey )
+                ? $this->getStringIntoArray( $$_ansResponseKey, ',' )
+                : $_ansResponseKey;
+                
+        }
     
     /**
      * @return      string

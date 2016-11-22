@@ -187,7 +187,7 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
 
             // Check a cache and use it if available.      
             if ( ! $this->getElement( $this->_aArguments, array( 'force_caching' ), false ) ) {
-                $_aCache = $this->___oCache->get( $_sRequestURI, $_iCacheDuration );
+                $_aCache = $this->___oCache->get( $_sRequestURI, $_iCacheDuration, $this->_aTargetElementPath );
                 if ( ! empty( $_aCache ) ) {
                     return $_aCache;
                 }
@@ -209,7 +209,7 @@ class FetchTweets_TwitterAPI_Base extends FetchTweets_PluginUtility {
             $this->___scheduleOEmbedCacheModificationRoutine( 
                 $_sRequestURI, 
                 $_iCacheDuration, 
-                $this->_aTargetElementPath 
+                $this->_aTargetElementPath
             );
             
             return $_aResponse;

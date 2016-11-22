@@ -248,6 +248,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 == Changelog ==
 
 = 2.5.2 =
+- Fixed a bug that embedded media were not updated after caches were renewed.
 - Fixed a warning "Declaration of FetchTweets__FormSection__AddRuleByList::_getArguments() should be compatible with..." appeared in the `Add Rule by List` page.
 
 = 2.5.1 - 11/20/20106 =
