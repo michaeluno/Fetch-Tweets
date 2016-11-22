@@ -229,9 +229,16 @@ class FetchTweets_Template {
         if ( isset( $this->aData[ $sKey ] ) ) {
             return $this->aData[ $sKey ];
         }
-        $_aData = $this->_getTemplateData( $this->getDirPath() . DIRECTORY_SEPARATOR . 'style.css' );
+        $_sPath = $this->getDirPath() . DIRECTORY_SEPARATOR . 'style.css';
+        if ( ! file_exists( $_sPath ) ) {
+            $_aData = array();
+        } else {            
+            $_aData = $this->_getTemplateData( $_sPath );
+        }
         $this->aData = $_aData + $this->aData;
-        return $this->aData[ $sKey ];
+        return isset( $this->aData[ $sKey ] )
+            ? $this->aData[ $sKey ]
+            : null;
         
     }    
         

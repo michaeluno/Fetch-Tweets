@@ -248,6 +248,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 == Changelog ==
 
 = 2.5.2 - 11/23/2016 =
+- Fixed a warning that occurred in the `Manage Rules` page when a template is manually deleted while it is assigned to a rule.
 - Fixed a bug that the `Settings` action link in plugins.php was linked to the wrong page.
 - Fixed a bug that hash-tags in tweets were no longer linked, introduced in v2.5.0.
 - Fixed a bug that embedded media were not updated after caches were renewed.

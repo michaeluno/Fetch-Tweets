@@ -205,7 +205,8 @@ class FetchTweets_PostType extends FetchTweets_AdminPageFramework_PostType {
 
         $_sTemplateSlug = get_post_meta( $iPostID, 'fetch_tweets_template', true );
         $_oTemplate     = new FetchTweets_Template( $_sTemplateSlug );
-        return $sCell . $_oTemplate->get( 'sName' );
+        $_sName         = $_oTemplate->get( 'sName' );
+        return $sCell . $_sName;
         
     }
     
