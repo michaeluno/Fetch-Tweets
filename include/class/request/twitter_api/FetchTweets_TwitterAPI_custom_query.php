@@ -44,7 +44,7 @@ class FetchTweets_TwitterAPI_custom_query extends FetchTweets_TwitterAPI_Base {
                 return null;
             }
             return is_string( $_ansResponseKey )
-                ? $this->getStringIntoArray( $$_ansResponseKey, ',' )
+                ? $this->getStringIntoArray( $_ansResponseKey, ',' )
                 : $_ansResponseKey;
                 
         }
