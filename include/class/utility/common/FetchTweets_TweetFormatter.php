@@ -112,14 +112,14 @@ class FetchTweets_TweetFormatter extends FetchTweets_PluginUtility {
     static public function getHashTagsClickable( $sTweet, $aHashTags ) {
         
         foreach( ( array ) $aHashTags as $_aDetails ) {
-            
+
             $_aDetails = $_aDetails + array(    // avoid undefined index warnings.
-                'full_text'      => null,
+                'text'      => null,    // not that this is not a tweet but a hash-tag
                 'indices'   => null,
             );
             
             $sTweet = preg_replace( 
-                '/#(\Q' . $_aDetails['full_text'] . '\E)(\W|$)/',     // needle
+                '/#(\Q' . $_aDetails[ 'text' ] . '\E)(\W|$)/',     // needle
                 '<a href="' . esc_url( 'https://twitter.com/search?q=%23$1&src=hash' ) . '" target="_blank" rel="nofollow">#$1</a>$2',    // replacement
                 $sTweet     // haystack
             );
@@ -142,7 +142,7 @@ class FetchTweets_TweetFormatter extends FetchTweets_PluginUtility {
             );
             
             $sTweet = preg_replace( 
-                '/@(\Q' . $_aDetails['screen_name'] . '\E)(\W|$)/i',     // needle, case insensitive
+                '/@(\Q' . $_aDetails[ 'screen_name' ] . '\E)(\W|$)/i',     // needle, case insensitive
                 '<a href="' . esc_url( 'https://twitter.com/$1' ) . '" target="_blank" rel="nofollow">@$1</a>$2',    // replacement
                 $sTweet     // haystack
             );
