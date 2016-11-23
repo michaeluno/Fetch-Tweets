@@ -222,9 +222,8 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
 
         // If the template option array is empty, retrieve the active template arrays.
         if ( empty( $aOptions[ 'arrTemplates' ] ) ) {
-            $_aDefaultTemplate = $this->findDefaultTemplateDetails();
-            $aOptions['arrTemplates'][ $_aDefaultTemplate['sSlug'] ] = $_aDefaultTemplate;
-            $aOptions['arrDefaultTemplate'] = $_aDefaultTemplate;
+            $aOptions[ 'arrTemplates' ]       = $this->___getNativelyActivatedTemplates();
+            $aOptions[ 'arrDefaultTemplate' ] = $this->findDefaultTemplateDetails();
             $_bOptionsModified = true;
         } 
         
@@ -256,7 +255,30 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
         }
         return $aOptions;
                 
-    }
+    }    
+        /**
+         * Returns natively activated template details.
+         * @remark      The natively active templates are `Plain`, `Single`, and `Sidebar`.
+         * @return      array       Returns details of natively active templates.
+         * @since       2.5.3
+         */
+        private function ___getNativelyActivatedTemplates() {
+            
+            $_aNativelyActivatedTemplate = array(
+                'plain'   => FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'plain',
+                'single'  => FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'single',
+                'sidebar' => FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'sidebar',
+            );
+            $_aTemplates = array();
+            foreach( $_aNativelyActivatedTemplate as $_sTemplateDirectoryPath ) {
+                $_aTemplate = $this->getTemplateArrayByDirPath( $_sTemplateDirectoryPath );
+                $_aTemplate[ 'bIsActive' ]  = true;
+                $_aTemplate[ 'fIsActive' ]  = true;     // backward compatibility
+                $_aTemplates[ $_aTemplate[ 'sSlug' ] ] = $_aTemplate;
+            }
+            return $_aTemplates;
+        
+        }
     
     /**
      * Finds the default template and retrieves the detail information of the template.

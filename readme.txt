@@ -247,6 +247,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
+= 2.5.3 =
+- Changed the natively activated templates to include `Single` and `Sidebar`.
+
 = 2.5.2 - 11/23/2016 =
 - Fixed a warning that occurred in the `Manage Rules` page when a template is manually deleted while it is assigned to a rule.
 - Fixed a bug that the `Settings` action link in plugins.php was linked to the wrong page.
