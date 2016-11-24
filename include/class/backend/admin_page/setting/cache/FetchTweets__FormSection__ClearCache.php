@@ -30,19 +30,56 @@ class FetchTweets__FormSection__ClearCache extends FetchTweets__FormSection__Bas
      * @return      array
      */
     protected function _getFields( $oFactory ) {
-        $_oHTTPRequestTable = new FetchTweets_DatabaseTable_ft_http_requests;
-        return array(         
+        $_oHTTPRequestTable = new FetchTweets_DatabaseTable_ft_http_requests;        
+        return array(                 
+            array(
+                'field_id'          => '_database_name',
+                'title'             => __( 'Database Name', 'fetch-tweets' ),
+                'content'           => "<p>"
+                        . DB_NAME
+                    . "</p>",                                
+                'hidden'            => ! $this->isDebugMode(),
+            ),        
+            array(
+                'field_id'          => '_table_name',
+                'title'             => __( 'Table Name', 'fetch-tweets' ),
+                'content'           => "<p>"
+                        . $_oHTTPRequestTable->getTableName()
+                    . "</p>",                                
+                'hidden'            => ! $this->isDebugMode(),
+            ),
+            array(
+                'field_id'          => '_database_current_time',
+                'title'             => __( 'Database Current Time', 'fetch-tweets' ),
+                'content'           => "<p>"
+                        . $_oHTTPRequestTable->getVariable( "select NOW()" )
+                    . "</p>",                                
+                'hidden'            => ! $this->isDebugMode(),
+            ),  
+            array(
+                'field_id'          => '_database_time_zone',
+                'title'             => __( 'Database Time Zone', 'fetch-tweets' ),
+                'content'           => "<p>"
+                        . $_oHTTPRequestTable->getVariable( "SELECT TIMEDIFF(NOW(), UTC_TIMESTAMP)" )
+                    . "</p>",                                
+                'hidden'            => ! $this->isDebugMode(),
+            ),              
+            
             array(
                 'field_id'          => 'http_requests',
                 'title'             => __( 'Size', 'fetch-tweets' ),
-                'content'           => "<p>"
+                'content'           => 
+                    "<p>"
                         . $_oHTTPRequestTable->getTableSize()
-                    . "</p>",
+                    . "</p>",                        
             ),
             array(    
                 'field_id'          => 'clear_all',
-                'title'             => __( 'Operation', 'fetch-tweets' ),
+                'title'             => __( 'All', 'fetch-tweets' ),
                 'type'              => 'submit',
+                'before_fields'      => "<p style='margin-bottom: 1em;'>" 
+                        . sprintf( '%1$s Items', $_oHTTPRequestTable->getTotalItemCount() ) 
+                    . "</p>",
                 'href'              => add_query_arg(
                     $_GET,
                     admin_url( $this->getElement( $GLOBALS, 'pagenow', 'edit.php' ) )
@@ -55,7 +92,11 @@ class FetchTweets__FormSection__ClearCache extends FetchTweets__FormSection__Bas
             ),   
             array(    
                 'field_id'          => 'clear_expired',
+                'title'             => __( 'Expired', 'fetch-tweets' ),
                 'type'              => 'submit',
+                'before_fields'      => "<p style='margin-bottom: 1em;'>" 
+                        . sprintf( '%1$s Items', $_oHTTPRequestTable->getExpiredItemCount() ) 
+                    . "</p>",
                 'href'              => add_query_arg(
                     $_GET,
                     admin_url( $this->getElement( $GLOBALS, 'pagenow', 'edit.php' ) )

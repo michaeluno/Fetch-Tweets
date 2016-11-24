@@ -198,7 +198,18 @@ class FetchTweets_DatabaseTable_ft_http_requests extends FetchTweets_DatabaseTab
                     
                 );
             }     
-            
+                
+    /**
+     * Retrieves a count of expired rows.
+     * @sine        2.5.3
+     * @return      integer
+     */
+    public function getExpiredItemCount() {
+        return $this->getVariable( 
+            "SELECT COUNT(*) FROM `{$this->aArguments[ 'table_name' ]}` "
+            . "WHERE expiration_time < UTC_TIMESTAMP()"     // not using NOW() as NOW() is GMT compatible
+        );                
+    }
     
     /**
      * Deletes the cache(s) by given cache name(s).
@@ -227,11 +238,12 @@ class FetchTweets_DatabaseTable_ft_http_requests extends FetchTweets_DatabaseTab
 
         $sExpiryTime = $sExpiryTime
             ? $sExpiryTime
-            : "NOW()";
+            : "UTC_TIMESTAMP()";    // NOW() <-- GMT compatible
         $this->getVariable(
             "DELETE FROM `{$this->aArguments[ 'table_name' ]}` "
             . "WHERE expiration_time < {$sExpiryTime}" 
         ); 
+        $this->getVariable( "OPTIMIZE TABLE `{$this->aArguments[ 'table_name' ]}`;" );
         
     }
     

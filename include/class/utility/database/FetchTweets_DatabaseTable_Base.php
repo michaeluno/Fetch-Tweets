@@ -202,9 +202,12 @@ abstract class FetchTweets_DatabaseTable_Base {
     }
     
     /**
+     * ```
      * $wpdb->delete( 
      *  'table', 
-     *   array( 'ID' => 1 ), array( '%d' ) );
+     *   array( 'ID' => 1 ), array( '%d' ) 
+     * );
+     * ```
      * 
      * @param       array           $aWhere     An array which defines the where SQL query part. 
      * If empty, it attempts to delete all rows.
@@ -352,8 +355,29 @@ abstract class FetchTweets_DatabaseTable_Base {
         }
         return $_aRows;
     }
-        
+    
     /**
+     * Retrieves a total count of rows.
+     * @sine        2.5.3
+     * @return      integer     The total row count.
+     */
+    public function getTotalItemCount() {
+        return ( integer ) $this->getVariable( 
+            "SELECT COUNT(*) FROM `{$this->aArguments[ 'table_name' ]}`"
+        );
+    }    
+    
+    /**
+     * Retrieves the table name.
+     * @since       2.5.3
+     * @return      string
+     */
+    public function getTableName() {
+        return $this->aArguments[ 'table_name' ];
+    } 
+    
+    /**
+     * @since       2.5.0
      * @return      string
      */
     public function getTableSize() {
