@@ -258,7 +258,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
     }    
         /**
          * Returns natively activated template details.
-         * @remark      The natively active templates are `Plain`, `Single`, and `Sidebar`.
+         * @remark      The natively active templates are `Plain`, `Single`, `Sidebar`, and `Twitter`.
          * @return      array       Returns details of natively active templates.
          * @since       2.5.3
          */
@@ -268,6 +268,7 @@ abstract class FetchTweets_Option_Format extends FetchTweets_Option_Templates {
                 'plain'   => FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'plain',
                 'single'  => FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'single',
                 'sidebar' => FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'sidebar',
+                'twitter' => FetchTweets_Commons::getPluginDirPath() . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'twitter',
             );
             $_aTemplates = array();
             foreach( $_aNativelyActivatedTemplate as $_sTemplateDirectoryPath ) {

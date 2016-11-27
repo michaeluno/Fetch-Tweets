@@ -247,6 +247,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
+= 2.6.0 =
+- Added the `Twitter` template.
+
 = 2.5.3 - 11/25/2016 =
 - Added cache count indications in the `Cache` setting section. 
 - Fixed a bug that deleting expired caches were deleting unexpired items in some occasions.

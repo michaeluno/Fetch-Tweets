@@ -136,10 +136,10 @@ class FetchTweets_Option extends FetchTweets_Option_Format {
             $this->aOptions['twitter_connect']['access_secret']
         );
         $_aStatus = $_oConnect->getStatus();
-        $_aCredentials['screen_name'] = $_aStatus['screen_name'];
-        $_aCredentials['user_id'] = $_aStatus['id'];
-        $_aCredentials['is_connected'] = true;
-        $_aCredentials['connect_method'] = 'oauth';
+        $_aCredentials['screen_name']       = $_aStatus['screen_name'];
+        $_aCredentials['user_id']           = $_aStatus['id'];
+        $_aCredentials['is_connected']      = true;
+        $_aCredentials['connect_method']    = 'oauth';
         $this->saveCredentials( $_aCredentials );    // update the options
         return $_aCredentials;
         
