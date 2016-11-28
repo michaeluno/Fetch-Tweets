@@ -4,7 +4,7 @@ Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.4
 Tested up to:       4.6.1
-Stable tag:         2.5.3
+Stable tag:         2.6.0
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -239,15 +239,17 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Screenshots ==
 
-1. ***Tweets Displayed in Page and Sidebar***
-2. ***Fetching Rule Listing Table***
-3. ***Widget Settings***
-4. ***Manage Templates***
-5. ***Authentication***
+1. ***Twitter Template (Dark) ***
+2. ***Twitter Template (Light) ***
+3. ***Tweets Displayed in Page and Sidebar***
+4. ***Fetching Rule Listing Table***
+5. ***Widget Settings***
+6. ***Manage Templates***
+7. ***Authentication***
 
 == Changelog ==
 
-= 2.6.0 =
+= 2.6.0 - 11/28/2016 =
 - Added the `Twitter` template.
 
 = 2.5.3 - 11/25/2016 =
