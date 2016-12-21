@@ -201,6 +201,8 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
                     // Rule arguments here refers to the arguments set in the rule.
                     $_aRuleArguments = array();
                     $_aRuleArguments[ 'tweet_type' ]  = get_post_meta( $_iPostID, 'tweet_type', true );
+                    $_aRuleArguments[ 'tweet_type' ]  = $_aRuleArguments[ 'tweet_type' ]
+                        ? $_aRuleArguments[ 'tweet_type' ] : 'screen_name';
                     $_aRuleArguments[ 'count' ]       = get_post_meta( $_iPostID, 'item_count', true );                  
                     $_aRuleArguments[ 'include_rts' ] = get_post_meta( $_iPostID, 'include_rts', true );
                     $_aRuleArguments[ 'cache' ]       = get_post_meta( $_iPostID, 'cache', true );
@@ -294,14 +296,5 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
                     $_aArguments[ 'exclude_replies' ] = get_post_meta( $iPostID, 'exclude_replies', true );
                     return $_aArguments;
                 }
-                /**
-                 * This is for the default tweet type in case the tweet type cannot be retrieved.
-                 * @since   2.6.1
-                 * @param   integer     $iPostID
-                 * @return  array
-                 */
-                private function ___getArguments_( $iPostID ) {
-                    return $this->___getArguments_screen_name( $iPostID );
-                }
- 
+
 }
