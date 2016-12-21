@@ -249,6 +249,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
+= 2.6.1 =
+- Fixed a bug that caused an error "Call to undefined method FetchTweets_Output_Tweet::___getArguments_()".
+
 = 2.6.0 - 11/28/2016 =
 - Added the `Twitter` template.
 

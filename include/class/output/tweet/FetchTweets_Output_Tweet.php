@@ -204,7 +204,7 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
                     $_aRuleArguments[ 'count' ]       = get_post_meta( $_iPostID, 'item_count', true );                  
                     $_aRuleArguments[ 'include_rts' ] = get_post_meta( $_iPostID, 'include_rts', true );
                     $_aRuleArguments[ 'cache' ]       = get_post_meta( $_iPostID, 'cache', true );
-                    $_sMethodName                 = "___getArguments_{$_aRuleArguments[ 'tweet_type' ]}";
+                    $_sMethodName                     = "___getArguments_{$_aRuleArguments[ 'tweet_type' ]}";
                     $_aRuleArguments = $this->uniteArrays( 
                         $aDirectArguments,
                         $_aRuleArguments + $this->$_sMethodName( $_iPostID )
@@ -293,6 +293,15 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
                     $_aArguments[ 'screen_name' ]     = get_post_meta( $iPostID, 'screen_name', true );
                     $_aArguments[ 'exclude_replies' ] = get_post_meta( $iPostID, 'exclude_replies', true );
                     return $_aArguments;
-                }   
+                }
+                /**
+                 * This is for the default tweet type in case the tweet type cannot be retrieved.
+                 * @since   2.6.1
+                 * @param   integer     $iPostID
+                 * @return  array
+                 */
+                private function ___getArguments_( $iPostID ) {
+                    return $this->___getArguments_screen_name( $iPostID );
+                }
  
 }
