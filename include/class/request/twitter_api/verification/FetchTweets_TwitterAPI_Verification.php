@@ -97,7 +97,7 @@ class FetchTweets_TwitterAPI_Verification extends FetchTweets_PluginUtility {
      * @deprecated      2.5.0       Kept for backward compatibility. The Multiple Accounts extension uses this method.
      */
     static public function renderStatus( $aStatus ) {
-        $_oAPIStatus = new FetchTweets_Output_TwitterAPIStatus( $this->get() );
+        $_oAPIStatus = new FetchTweets_Output_TwitterAPIStatus( $aStatus );
         $_oAPIStatus->render();                
     }
 

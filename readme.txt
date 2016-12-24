@@ -4,7 +4,7 @@ Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.4
 Tested up to:       4.7.0
-Stable tag:         2.6.1
+Stable tag:         2.6.2
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -248,6 +248,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 7. ***Authentication***
 
 == Changelog ==
+
+= 2.6.2 - 12/24/2016 =
+- Fixed a bug that caused an error `Using $this when not in object context` when accessing a deprecated method.
 
 = 2.6.1 - 12/22/2016 =
 - Fixed a bug that caused an error "Call to undefined method FetchTweets_Output_Tweet::___getArguments_()".
