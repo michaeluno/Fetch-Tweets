@@ -67,7 +67,7 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
      * @return      array       The cached data. If it is expired, an empty array will be returned. To force retrieving the cache, pass `-1` to the cache duration parameter.
      */
     public function get( $sRequestURI, $iCacheDuration, $naTargetElementPath=null ) {
-        
+
         $_aCache = $this->___oCacheTable->getCache(  
             $this->___getCacheName( $sRequestURI ), 
             $iCacheDuration
@@ -90,7 +90,7 @@ class FetchTweets_TwitterAPI___CacheHandler extends FetchTweets_PluginUtility {
             array(),                 // http arguments
             'twitter_api_request',   // request type
             $naTargetElementPath     // the dimensional path of the tweets element
-        );        
+        );
         if ( 0 >= $_aCache[ 'remained_time' ] ) {
             return array();
         }

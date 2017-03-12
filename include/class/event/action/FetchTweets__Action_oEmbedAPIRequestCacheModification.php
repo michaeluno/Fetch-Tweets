@@ -62,7 +62,7 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
             return;
         }
         
-        // Timelimite
+        // Time limit
         $this->___oEmbed     = new FetchTweets_oEmbed;
         $this->___iTimeLimit = $this->___getTimeLimit();
         $this->___aTweets    = $this->getTweetsExtracted( $_aResponse, $_naTargetElementPath );
@@ -230,7 +230,7 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
              * @return           array            The modified tweet element array.
              */
             private function ___getMediaElementEmbedded( $aTweet ) {
-                
+
                 // @todo examine whether it does not have to be extended entities.
                 
                 // Do not fetch external media if already set.
