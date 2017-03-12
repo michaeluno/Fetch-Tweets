@@ -3,8 +3,8 @@ Contributors:       Michael Uno, miunosoft
 Donate link:        http://en.michaeluno.jp/donate
 Tags:               twitter, twitter widget, tweets, tweet, widget, widgets, post, posts, page, pages, custom post type, API, Twitter API, REST, oAuth, shortcode, sidebar, plugin, template
 Requires at least:  3.4
-Tested up to:       4.7.0
-Stable tag:         2.6.2
+Tested up to:       4.7.3
+Stable tag:         2.6.3
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -248,6 +248,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 7. ***Authentication***
 
 == Changelog ==
+
+= 2.6.3 - 03/13/2017 =
+- Fixed an issue that some media elements did not open in a new browser window.
 
 = 2.6.2 - 12/24/2016 =
 - Fixed a bug that caused an error `Using $this when not in object context` when accessing a deprecated method.

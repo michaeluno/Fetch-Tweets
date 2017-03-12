@@ -239,11 +239,12 @@ class FetchTweets__Action_oEmbedAPIRequestCacheModification extends FetchTweets_
                         $aTweet[ 'entities' ][ 'urls' ] 
                     );
                 }
-                
+
                 // These are media within Twitter.com.
                 if ( isset( $aTweet[ 'extended_entities' ][ 'media' ] ) && ! isset( $aTweet[ 'entities' ][ 'embed_twitter_media' ] ) ) {
                     $aTweet[ 'entities' ][ 'embed_twitter_media' ] = FetchTweets_TweetFormatter::getTwitterMedia( 
-                        $aTweet[ 'extended_entities' ][ 'media' ] 
+                        $aTweet[ 'extended_entities' ][ 'media' ],
+                        $aTweet[ 'full_text' ]
                     );
                 }
                 

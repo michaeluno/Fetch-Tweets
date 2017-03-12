@@ -86,7 +86,7 @@ class FetchTweets_Output_Tweet extends FetchTweets_Output_Base {
         if ( $_sError ) {
             return $_sError;
         }
-        
+
         // Format tweets
         $_oFormatter   = new FetchTweets_Output_Tweet___Format( 
             $_aTweets, 

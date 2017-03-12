@@ -28,8 +28,10 @@ class FetchTweets_TweetFormatter extends FetchTweets_PluginUtility {
      * 
      * @remark          Currently only photos are supported.
      * @since           1.2.0
+     * @since           2.6.3       Added the `$sTweetText` parameter.
+     * @return          string
      */ 
-    static public function getTwitterMedia( array $aMedia ) {
+    static public function getTwitterMedia( array $aMedia, $sTweetText='' ) {
 
         $_aOutput = array();
         foreach( $aMedia as $_aMedium ) {
@@ -40,12 +42,22 @@ class FetchTweets_TweetFormatter extends FetchTweets_PluginUtility {
             if ( 'photo' !== $_aMedium[ 'type' ] || ! $_aMedium[ 'media_url' ] ) { 
                 continue; 
             }
-            
+
+            $_sAltText  = "test " . __( 'Twitter Media', 'fetch-tweets' )
+                . (
+                    $sTweetText
+                        ? ' - ' . strip_tags( $sTweetText )
+                        : ''
+                );
+
             $_aOutput[] = "<div class='fetch-tweets-media-photo'>"
-                    . "<a href='" . esc_url( $_aMedium[ 'expanded_url' ] ) . "'>"
+                    . "<a "
+                          . "href='" . esc_url( $_aMedium[ 'expanded_url' ] ) . "' "
+                          . "target='_blank'"
+                    . ">"
                         . "<img "
                                 . "src='" . esc_url( is_ssl() ? $_aMedium[ 'media_url_https' ] : $_aMedium[ 'media_url' ] ) . "' "
-                                . "alt='" . esc_attr( __( 'Twitter Media', 'fetch-tweets' ) ) . "' "
+                                . "alt='" . esc_attr( $_sAltText ) . "' "
                             . "/>"
                     . "</a>"
                 . "</div><!-- fetch-tweets-media-photo -->";

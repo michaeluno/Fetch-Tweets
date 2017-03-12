@@ -56,7 +56,7 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_TweetFormat
             if ( isset( $aTweet[ 'text' ] ) && ! isset( $aTweet[ 'full_text' ] ) ) {
                 $aTweet[ 'full_text' ] = $aTweet[ 'text' ];
             }
-            
+
             // If it is a retweet.
             if ( isset( $aTweet[ 'retweeted_status' ][ 'full_text' ] ) || isset( $aTweet[ 'retweeted_status' ][ 'text' ] ) ) {
                 $aTweet[ 'retweeted_status' ] = $this->___getTweetVisualsFormatted( $aTweet[ 'retweeted_status' ], $iProfileImageSize );
@@ -130,14 +130,13 @@ class FetchTweets_Output_Tweet___Format___Visual extends FetchTweets_TweetFormat
 
                 // Insert twitter media files at the bottom of the tweet. 
                 if ( $bTwitterMedia ) {
-// @todo handle `extended_entities`      
-                    
+// @todo handle `extended_entities`
                     $_aMedia               = $this->getElementAsArray( $aTweet, array( 'extended_entities', 'media' ) );
                     if ( isset( $aTweet[ 'entities' ][ 'embed_twitter_media' ] ) ) {                        
                         // the plugin inserts this element in the background
                         $aTweet[ '_media' ]   .= $aTweet[ 'entities' ][ 'embed_twitter_media' ];                       
                     } else {
-                        $aTweet[ '_media' ]   .= $this->getTwitterMedia( $_aMedia );
+                        $aTweet[ '_media' ]   .= $this->getTwitterMedia( $_aMedia, $aTweet[ 'full_text' ] );
                     }
                     $aTweet[ 'full_text' ] = $this->getMediaLinksRemoved( $aTweet[ 'full_text' ], $_aMedia );
                         
