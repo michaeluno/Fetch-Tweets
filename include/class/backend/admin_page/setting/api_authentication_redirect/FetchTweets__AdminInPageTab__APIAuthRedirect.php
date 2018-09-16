@@ -47,7 +47,23 @@ class FetchTweets__AdminInPageTab__APIAuthRedirect extends FetchTweets__AdminInP
                 admin_url( $GLOBALS['pagenow'] ) 
             )
         );
-        
+
+        // For errors,
+        $_sSettingPage = add_query_arg(
+            array(
+                'post_type' => 'fetch_tweets',
+                'page' => 'fetch_tweets_settings',
+                'tab' => 'twitter_connect'
+            ),
+            admin_url( $GLOBALS['pagenow'] )
+        );
+        if ( isset( $_aRequestToken[ '<?xml version' ] ) ) {
+            // The TwitterOAuth library does not sanitize the error string.
+            $_sMessage = preg_replace( '/.+\?>/', '', $_aRequestToken[ '<?xml version' ] );
+            $oFactory->setSettingNotice( '<strong>' . FetchTweets_Commons::NAME . '</strong> ' . $_sMessage, 'error' );
+            exit( wp_redirect( $_sSettingPage ) );
+        }
+
         // Save temporary credentials to transient.
         $_aTemporaryTokens = array();
         $_aTemporaryTokens['oauth_token'] = $_aRequestToken['oauth_token'];
@@ -60,7 +76,11 @@ class FetchTweets__AdminInPageTab__APIAuthRedirect extends FetchTweets__AdminInP
                 wp_redirect( $_oConnect->getAuthorizeURL( $_aTemporaryTokens['oauth_token'] ) );    // goes to twitter.com
             break;
             default:    // Show notification if something went wrong.
-                die( __( 'Could not connect to Twitter. Refresh the page or try again later.', 'fetch-tweets' ) );
+                $oFactory->setSettingNotice(
+                    '<strong>' . FetchTweets_Commons::NAME . '</strong> '
+                        . __( 'Could not connect to Twitter. Refresh the page or try again later.', 'fetch-tweets' )
+                    , 'error' );
+                wp_redirect( $_sSettingPage );
         }
         exit;
         

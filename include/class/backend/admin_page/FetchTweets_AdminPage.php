@@ -163,7 +163,7 @@ class FetchTweets_AdminPage extends FetchTweets_AdminPageFramework {
         $this->_setUpStyles();
          
         if ( ! $this->oOption->isAuthKeysManuallySet() && ! $this->oOption->isAuthKeysAutomaticallySet() ) { 
-            $_sSettingPageURL = add_query_arg( array( 'post_type' => 'fetch_tweets', 'page' => 'fetch_tweets_settings', 'tab' => 'twitter_redirect' ), admin_url( $this->oProp->sPageNow ) ); 
+            $_sSettingPageURL = add_query_arg( array( 'post_type' => 'fetch_tweets', 'page' => 'fetch_tweets_settings', 'tab' => 'twitter_redirect' ), admin_url( $this->oProp->sPageNow ) );
             $this->setAdminNotice(
                 "<strong>" . FetchTweets_Commons::NAME . "</strong>: "
                 . sprintf( __( '<a href="%1$s">The API authentication keys need to be set</a> in order to use this plugin.', 'fetch-tweets' ), $_sSettingPageURL )
