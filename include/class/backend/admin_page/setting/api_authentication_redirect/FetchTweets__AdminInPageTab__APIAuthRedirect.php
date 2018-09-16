@@ -36,32 +36,34 @@ class FetchTweets__AdminInPageTab__APIAuthRedirect extends FetchTweets__AdminInP
         );
         $_oConnect->setCacheDuration( 0 );
         
-        // Get temporary credentials - Requesting authentication tokens, the parameter is the URL we will be redirected to.
-        $_aRequestToken = $_oConnect->getRequestToken( 
-            add_query_arg( 
-                array(
-                    'post_type' => 'fetch_tweets',
-                    'page' => 'fetch_tweets_settings',
-                    'tab' => 'twitter_callback'
-                ),
-                admin_url( $GLOBALS['pagenow'] ) 
-            )
+        // Get temporary credentials - Requesting authentication tokens, the parameter is the URL we will be redirected back to.
+        // As of May 2018, Twitter API requires the callback URL to be whitelisted in the registered App setting.
+        // @see https://twittercommunity.com/t/action-required-sign-in-with-twitter-users-must-whitelist-callback-urls/105342
+        $_sCallbackURL  = add_query_arg(
+            array(
+                'post_type' => 'fetch_tweets',
+                'page'      => 'fetch_tweets_settings',
+                'tab'       => 'twitter_callback'
+            ),
+            admin_url( $GLOBALS[ 'pagenow' ] )
         );
+        $_sCallbackURL  = 'http://michaeluno.sakura.ne.jp/apps/callback/callback.php?callback=' . base64_encode( $_sCallbackURL );
+        $_aRequestToken = $_oConnect->getRequestToken( $_sCallbackURL );
 
         // For errors,
         $_sSettingPage = add_query_arg(
             array(
                 'post_type' => 'fetch_tweets',
-                'page' => 'fetch_tweets_settings',
-                'tab' => 'twitter_connect'
+                'page'      => 'fetch_tweets_settings',
+                'tab'       => 'twitter_connect'
             ),
-            admin_url( $GLOBALS['pagenow'] )
+            admin_url( $GLOBALS[ 'pagenow' ] )
         );
         if ( isset( $_aRequestToken[ '<?xml version' ] ) ) {
             // The TwitterOAuth library does not sanitize the error string.
             $_sMessage = preg_replace( '/.+\?>/', '', $_aRequestToken[ '<?xml version' ] );
             $oFactory->setSettingNotice( '<strong>' . FetchTweets_Commons::NAME . '</strong> ' . $_sMessage, 'error' );
-            exit( wp_redirect( $_sSettingPage ) );
+            $this->goToURL( $_sSettingPage ); // will exit
         }
 
         // Save temporary credentials to transient.
@@ -73,14 +75,14 @@ class FetchTweets__AdminInPageTab__APIAuthRedirect extends FetchTweets__AdminInP
         // If last connection failed don't display authorization link.
         switch ( $_oConnect->http_code ) {
             case 200:    // Build authorize URL and redirect user to Twitter.
-                wp_redirect( $_oConnect->getAuthorizeURL( $_aTemporaryTokens['oauth_token'] ) );    // goes to twitter.com
+                $this->goToURL( $_oConnect->getAuthorizeURL( $_aTemporaryTokens['oauth_token'] ) );    // goes to twitter.com
             break;
             default:    // Show notification if something went wrong.
                 $oFactory->setSettingNotice(
                     '<strong>' . FetchTweets_Commons::NAME . '</strong> '
                         . __( 'Could not connect to Twitter. Refresh the page or try again later.', 'fetch-tweets' )
                     , 'error' );
-                wp_redirect( $_sSettingPage );
+                $this->goToURL( $_sSettingPage );
         }
         exit;
         

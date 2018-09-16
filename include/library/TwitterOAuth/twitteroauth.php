@@ -78,6 +78,8 @@ class TwitterFetchTweetsOAuth {
     $parameters['oauth_callback'] = $oauth_callback; 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
     $token = FetchTweetsOAuthUtil::parse_parameters($request);
+    // As of May 2018, the callback url must be whitelisted in the registered App settin
+    // @see https://twittercommunity.com/t/action-required-sign-in-with-twitter-users-must-whitelist-callback-urls/105342
     $_sOAuthToken = isset( $token[ 'oauth_token' ] ) ? $token[ 'oauth_token' ] : '';
     $_sOAuthTokenSecret = isset( $token[ 'oauth_token_secret' ] ) ? $token[ 'oauth_token_secret' ] : '';
     $this->token = new FetchTweetsOAuthConsumer( $_sOAuthToken, $_sOAuthTokenSecret );

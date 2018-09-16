@@ -23,7 +23,7 @@ class FetchTweets_TwitterOAuth extends TwitterFetchTweetsOAuth {
     public $iCachingMode   = 3; // do not set caches 
     public $iCacheDuration = 86400;
     public $aHTTPArguments = array();
-    
+
     /**
      * Sets a cache duration.
      * Use this method before performing the `get()` method.

@@ -250,6 +250,7 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 == Changelog ==
 
 = 2.6.4 =
+- Fixed an issue that the API authentication was no longer functioning due to the recent change of the [Twitter API policy](https://twittercommunity.com/t/action-required-sign-in-with-twitter-users-must-whitelist-callback-urls/105342).
 - Fixed an issue that an error from the Twitter server could not be displayed when trying authentication.
 - Fixed the PHP warning, `Notice: class-feed.php is <strong>deprecated</strong> since version 4.7.0! Use fetch_feed() instead.` in the `Extension` setting page.
 
