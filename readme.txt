@@ -5,7 +5,7 @@ Tags:               twitter, tweet, tweets, widget, timeline, feed
 Requires at least:  3.4
 Requires PHP:       5.2.4
 Tested up to:       4.7.3
-Stable tag:         2.6.3
+Stable tag:         2.6.4
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,7 +250,8 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
-= 2.6.4 =
+= 2.6.4 - 09/17/2018 =
+- Fixed an inappropriate characters in class file names which possibly caused plugin automatic update failures.
 - Fixed an issue that the API authentication was no longer functioning due to the recent change of the [Twitter API policy](https://twittercommunity.com/t/action-required-sign-in-with-twitter-users-must-whitelist-callback-urls/105342).
 - Fixed an issue that an error from the Twitter server could not be displayed when trying authentication.
 - Fixed the PHP warning, `Notice: class-feed.php is <strong>deprecated</strong> since version 4.7.0! Use fetch_feed() instead.` in the `Extension` setting page.
