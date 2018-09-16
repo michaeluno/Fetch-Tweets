@@ -249,6 +249,9 @@ Increase the value set to `max_allowed_packet` in the MySQL server configuration
 
 == Changelog ==
 
+= 2.6.4 =
+- Fixed the PHP warning, `Notice: class-feed.php is <strong>deprecated</strong> since version 4.7.0! Use fetch_feed() instead.` in the `Extension` setting page.
+
 = 2.6.3 - 03/13/2017 =
 - Fixed an issue that some media elements did not open in a new browser window.
 
